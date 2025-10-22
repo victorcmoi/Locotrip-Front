@@ -1,0 +1,41 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t next-app .
+
+      - name: Save Docker image to tar
+        run: docker save next-app | gzip > next-app.tar.gz
+
+      - name: Copy image to server via SSH
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: "51.75.119.104"
+          username: "vilef@BOOK-7M26V8QUO0"
+          key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPDxzhX4YZpJcbq1egySgSLmA7tkdGSOfV2V6DrNj4BQ vilef@BOOK-7M26V8QUO0"
+          source: "next-app.tar.gz"
+          target: "~/"
+
+      - name: Load and run on server
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: "51.75.119.104"
+          username: "vilef@BOOK-7M26V8QUO0"
+          key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPDxzhX4YZpJcbq1egySgSLmA7tkdGSOfV2V6DrNj4BQ vilef@BOOK-7M26V8QUO0"
+          script: |
+            docker load < ~/next-app.tar.gz
+            docker stop next-app || true
+            docker rm next-app || true
+            docker run -d -p 3000:3000 --name next-app next-app
