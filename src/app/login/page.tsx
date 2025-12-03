@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authService } from '@/services/auth.service';
+import { signIn } from 'next-auth/react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,14 +19,25 @@ export default function LoginPage() {
     setSuccess(false);
 
     try {
-      const response = await authService.login({ email, password });
-      console.log('Connexion réussie!', response);
-      setSuccess(true);
-      
-      // Rediriger vers la page d'accueil après 1 seconde
-      setTimeout(() => {
-        router.push('/');
-      }, 1000);
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError('Email ou mot de passe incorrect');
+        setLoading(false);
+        return;
+      }
+
+      if (result?.ok) {
+        setSuccess(true);
+        // Rediriger vers la page d'accueil après 1 seconde
+        setTimeout(() => {
+          router.push('/admin');
+        }, 1000);
+      }
     } catch (err) {
       console.error('Erreur de connexion:', err);
       setError(err instanceof Error ? err.message : 'Erreur de connexion');
