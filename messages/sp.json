@@ -1,0 +1,35 @@
+{
+  "common": {
+    "welcome": "Bienvenido",
+    "loading": "Cargando...",
+    "error": "Se produjo un error",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "search": "Buscar"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "experiences": "Experiencias",
+    "guides": "Guías",
+    "about": "Acerca de",
+    "contact": "Contacto"
+  },
+  "home": {
+    "title": "Viaja de manera diferente con guías locales apasionados",
+    "subtitle": "Descubre experiencias auténticas con guías locales",
+    "cta": "Descubrir experiencias"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "register": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "loginTitle": "Inicia sesión en tu cuenta",
+    "contactUs": "Contáctanos",
+    "haveProblem": "¿Tienes un problema?"
+  }
+}

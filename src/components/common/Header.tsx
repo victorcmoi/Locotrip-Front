@@ -10,6 +10,7 @@ import { CiUser } from "react-icons/ci";
 import { SlArrowDown } from "react-icons/sl";
 import { LuMessageCircleMore, LuTicket } from "react-icons/lu";
 import { IoNotificationsOutline } from "react-icons/io5";
+import { AUTH_ROUTES, HOME_ROUTES } from '@/utils/routes';
 
 export default function Header() {
     const { data: session, status } = useSession();
@@ -41,7 +42,7 @@ export default function Header() {
 
     return (
         <header className="w-full p-4 flex justify-between items-center">
-            <Link href="/">
+            <Link href={HOME_ROUTES.HOME}>
                 <Image 
                     src="/assets/logo_locotrip.png" 
                     alt="Locotrip Logo" 
@@ -62,7 +63,7 @@ export default function Header() {
                     
                     {/* Dropdown Langue */}
                     {isLangMenuOpen && (
-                        <div className="absolute top-full right-0 mt-2 bg-light border border-gray-light rounded-xl shadow-xl p-2 min-w-[150px] z-50">
+                        <div className="absolute top-full right-0 mt-2 bg-light border border-gray-light rounded-xl shadow-xl p-2 min-w-37.5 z-50">
                             <button className="w-full text-left p-2 hover:bg-gray-light rounded-lg">
                                 Français
                             </button>
@@ -79,7 +80,7 @@ export default function Header() {
                 {/* Menu Aide */}
                 {!isAuthenticated && (
                     <div className="nav-item">
-                        <Link href="/help">
+                        <Link href={HOME_ROUTES.HELP}>
                             <TfiHelpAlt size={24} />
                         </Link>
                     </div>
@@ -88,7 +89,7 @@ export default function Header() {
                 {/* Menu Message (Connecté seulement) */}
                 {isAuthenticated && (
                     <div className="nav-item">
-                        <Link href="/messages">
+                        <Link href={HOME_ROUTES.MESSAGES}>
                             <LuMessageCircleMore size={24} />
                         </Link>
                     </div>
@@ -97,7 +98,7 @@ export default function Header() {
                 {/* Menu Notifications (Connecté seulement) */}
                 {isAuthenticated && (
                     <div className="nav-item">
-                        <Link href="/notifications">
+                        <Link href={HOME_ROUTES.NOTIFICATIONS}>
                             <IoNotificationsOutline size={24} />
                         </Link>
                     </div>
@@ -127,19 +128,19 @@ export default function Header() {
 
                     {/* Dropdown Utilisateur */}
                     {isUserMenuOpen && (
-                        <div className="absolute top-full right-0 mt-2 bg-light border border-gray-light rounded-xl shadow-xl p-2 min-w-[200px] z-50">
+                        <div className="absolute top-full right-0 mt-2 bg-light border border-gray-light rounded-xl shadow-xl p-2 min-w-50 z-50">
                             {!isAuthenticated ? (
                                 // Menu non connecté
                                 <>
                                     <Link 
-                                        href="/login" 
+                                        href={AUTH_ROUTES.LOGIN} 
                                         className="block w-full text-left p-3 hover:bg-gray-light rounded-lg"
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
                                         Se connecter
                                     </Link>
                                     <Link 
-                                        href="/register" 
+                                        href={AUTH_ROUTES.REGISTER} 
                                         className="block w-full text-left p-3 hover:bg-gray-light rounded-lg"
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >

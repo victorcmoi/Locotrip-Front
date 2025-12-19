@@ -1,0 +1,35 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search"
+  },
+  "navigation": {
+    "home": "Home",
+    "experiences": "Experiences",
+    "guides": "Guides",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "home": {
+    "title": "Travel differently with passionate local guides",
+    "subtitle": "Discover authentic experiences with local guides",
+    "cta": "Discover experiences"
+  },
+  "auth": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "register": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "loginTitle": "Sign in to your account",
+    "contactUs": "Contact us",
+    "haveProblem": "Having trouble?"
+  }
+}
