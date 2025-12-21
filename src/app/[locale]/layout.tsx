@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
-import "../../styles/globals.css"
+import "../globals.css"
 import Header from "@/components/common/Header";
 import NextAuthProvider from "@/providers/auth.provider";
 import QueryClientProvider from "@/providers/query-client.provider";
