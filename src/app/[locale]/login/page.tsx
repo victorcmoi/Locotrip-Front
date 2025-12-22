@@ -1,17 +1,16 @@
+'use client';
+
 import { redirect } from "next/navigation";
 import React from "react";
+import Link from "next/link";
 import { checkLogin } from "@/lib/auth";
 import LoginForm from "@/components/auth/FormLogin";
-import { Link } from "@/i18n/navigation";
-import { HOME_ROUTES } from "@/utils/routes";
-import { useTranslations } from "next-intl";
+import { HOME_ROUTES, SUPPORT_ROUTES } from "@/utils/routes";
+import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 
-export default async function Page() {
-  if (await checkLogin()) {
-    redirect(HOME_ROUTES.HOME);
-  }
-
-  const t = useTranslations('auth');
+export default function Page() {
+  const dict = useTranslations();
+  const localizedPath = useLocalizedPath();
 
   return (
     <div className="flex min-h-screen flex-1">
@@ -19,12 +18,15 @@ export default async function Page() {
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div>
             <h2 className="mt-8 text-2xl/9 font-bold tracking-tight text-gray-900">
-              {t('loginTitle', { default: 'Connectez-vous à votre compte' })}
+              {dict.auth.login}
             </h2>
             <p className="mt-2 text-sm/6 text-gray-500">
               Un problème ?{' '}
-              <Link href="#" className="font-semibold text-green-600 hover:text-green-500">
-                Contactez-nous
+              <Link 
+                href={localizedPath(SUPPORT_ROUTES.CONTACT)} 
+                className="font-semibold text-green-600 hover:text-green-500"
+              >
+                {dict.navigation.contact}
               </Link>
             </p>
           </div>

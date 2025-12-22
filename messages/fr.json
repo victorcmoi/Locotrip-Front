@@ -14,12 +14,23 @@
     "experiences": "Expériences",
     "guides": "Guides",
     "about": "À propos",
-    "contact": "Contact"
+    "contact": "Contact",
+    "myAccount": "Mon compte",
+    "myBookings": "Mes réservations",
+    "profileManagement": "Gestion du profil",
+    "support": "Support / Aide"
   },
   "home": {
     "title": "Voyagez autrement avec des guides locaux passionnés",
-    "subtitle": "Découvrez des expériences authentiques avec des guides locaux",
-    "cta": "Découvrir les expériences"
+    "subtitle": "Découvrez les villes à travers les yeux de leurs habitants grâce à nos guides locaux expérimentés.",
+    "cta": "Découvrir les expériences",
+    "assistance": "Assistance",
+    "7/7": "7/7",
+    "visit": "Visite",
+    "private": "100% privée",
+    "activity": "Activité",
+    "customizable": "Personnalisable",
+    "localGuide": "Guide local"
   },
   "auth": {
     "login": "Se connecter",

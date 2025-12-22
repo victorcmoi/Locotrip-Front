@@ -95,21 +95,22 @@
     @apply font-semibold;
   }
 
-  span {
-    @apply text-primary;
-  }
-
-  button {
-    @apply bg-primary font-semibold rounded-full p-4.5 hover:bg-accent transition;
-  }
-
   input, textarea {
     @apply border border-light rounded-xl p-4.5 focus:outline-accent transition;
   } 
 }
 
 @layer components {
+  button {
+    @apply bg-primary font-semibold rounded-full p-4.5 hover:bg-accent transition;
+  }
+
   header .nav-item {
     @apply p-2 rounded-full hover:bg-gray-light transition;
   }
+
+  span {
+    @apply text-primary;
+  }
+
 }

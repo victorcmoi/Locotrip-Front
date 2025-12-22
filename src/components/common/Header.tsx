@@ -1,7 +1,7 @@
-'use client'; // ✅ Nécessaire pour utiliser les hooks React
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useSession, signOut } from 'next-auth/react'; // ✅ Import NextAuth
+import { useSession, signOut } from 'next-auth/react';
 import Image from "next/image";
 import Link from "next/link";
 import { MdLanguage } from "react-icons/md";
@@ -10,11 +10,14 @@ import { CiUser } from "react-icons/ci";
 import { SlArrowDown } from "react-icons/sl";
 import { LuMessageCircleMore, LuTicket } from "react-icons/lu";
 import { IoNotificationsOutline } from "react-icons/io5";
-import { AUTH_ROUTES, HOME_ROUTES } from '@/utils/routes';
+import { AUTH_ROUTES, HOME_ROUTES, BOOKINGS_ROUTES, USER_ROUTES, SUPPORT_ROUTES } from '@/utils/routes';
+import { useTranslations, useLocalizedPath } from '@/providers/i18n.provider';
 
 export default function Header() {
     const { data: session, status } = useSession();
     const isAuthenticated = status === "authenticated";
+    const dict = useTranslations();
+    const localizedPath = useLocalizedPath();
     
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
@@ -37,12 +40,12 @@ export default function Header() {
     }, []);
 
     const handleLogout = async () => {
-        await signOut({ callbackUrl: '/' });
+        await signOut({ callbackUrl: localizedPath('/') });
     };
 
     return (
         <header className="w-full p-4 flex justify-between items-center">
-            <Link href={HOME_ROUTES.HOME}>
+            <Link href={localizedPath(HOME_ROUTES.HOME)}>
                 <Image 
                     src="/assets/logo_locotrip.png" 
                     alt="Locotrip Logo" 
@@ -80,7 +83,7 @@ export default function Header() {
                 {/* Menu Aide */}
                 {!isAuthenticated && (
                     <div className="nav-item">
-                        <Link href={HOME_ROUTES.HELP}>
+                        <Link href={localizedPath(SUPPORT_ROUTES.HELP)}>
                             <TfiHelpAlt size={24} />
                         </Link>
                     </div>
@@ -89,7 +92,7 @@ export default function Header() {
                 {/* Menu Message (Connecté seulement) */}
                 {isAuthenticated && (
                     <div className="nav-item">
-                        <Link href={HOME_ROUTES.MESSAGES}>
+                        <Link href={localizedPath(HOME_ROUTES.MESSAGES)}>
                             <LuMessageCircleMore size={24} />
                         </Link>
                     </div>
@@ -98,7 +101,7 @@ export default function Header() {
                 {/* Menu Notifications (Connecté seulement) */}
                 {isAuthenticated && (
                     <div className="nav-item">
-                        <Link href={HOME_ROUTES.NOTIFICATIONS}>
+                        <Link href={localizedPath(HOME_ROUTES.NOTIFICATIONS)}>
                             <IoNotificationsOutline size={24} />
                         </Link>
                     </div>
@@ -133,24 +136,24 @@ export default function Header() {
                                 // Menu non connecté
                                 <>
                                     <Link 
-                                        href={AUTH_ROUTES.LOGIN} 
+                                        href={localizedPath(AUTH_ROUTES.LOGIN)} 
                                         className="block w-full text-left p-3 hover:bg-gray-light rounded-lg"
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
-                                        Se connecter
+                                        {dict.auth.login}
                                     </Link>
                                     <Link 
-                                        href={AUTH_ROUTES.REGISTER} 
+                                        href={localizedPath(AUTH_ROUTES.REGISTER)} 
                                         className="block w-full text-left p-3 hover:bg-gray-light rounded-lg"
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
-                                        S'inscrire
+                                        {dict.auth.register}
                                     </Link>
                                 </>
                             ) : (
                                 // Menu connecté
                                 <>
-                                    <p>Mon compte</p>
+                                    <p className="font-semibold px-3 py-2">{dict.navigation.myAccount || 'Mon compte'}</p>
                                     <div className="flex items-center gap-2 p-2">
                                         <div className="bg-accent text-light rounded-full p-3 flex items-center font-semibold">
                                             <p>
@@ -159,7 +162,7 @@ export default function Header() {
                                             </p>
                                         </div>
                                         <Link 
-                                            href="/profile" 
+                                            href={localizedPath(USER_ROUTES.PROFILE)} 
                                             className="block w-full text-left p-3 hover:bg-gray-light rounded-lg"
                                             onClick={() => setIsUserMenuOpen(false)}
                                         >
@@ -168,34 +171,33 @@ export default function Header() {
                                     </div>
                                     <hr className="my-2 border-gray-light" />
                                     <Link 
-                                        href="/bookings" 
-                                        className="block w-full text-left p-3 hover:bg-gray-light rounded-lg"
+                                        href={localizedPath(BOOKINGS_ROUTES.MY_BOOKINGS)} 
+                                        className="flex items-center gap-2 w-full text-left p-3 hover:bg-gray-light rounded-lg"
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
-                                        <LuTicket /> Mes réservations
+                                        <LuTicket /> {dict.navigation.myBookings || 'Mes réservations'}
                                     </Link>
                                     <Link 
-                                        href="/profile" 
-                                        className="block w-full text-left p-3 hover:bg-gray-light rounded-lg"
+                                        href={localizedPath(USER_ROUTES.PROFILE)} 
+                                        className="flex items-center gap-2 w-full text-left p-3 hover:bg-gray-light rounded-lg"
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
-                                        <CiUser /> Gestion du profil
+                                        <CiUser /> {dict.navigation.profileManagement || 'Gestion du profil'}
                                     </Link>
                                     <hr className="my-2 border-gray-light" />
                                     <Link 
-                                        href="/help" 
-                                        className="block w-full text-left p-3 hover:bg-gray-light rounded-lg"
+                                        href={localizedPath(SUPPORT_ROUTES.HELP)} 
+                                        className="flex items-center gap-2 w-full text-left p-3 hover:bg-gray-light rounded-lg"
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >
-                                        <TfiHelpAlt /> Support / Aide
+                                        <TfiHelpAlt /> {dict.navigation.support || 'Support / Aide'}
                                     </Link>
-                                    <Link 
-                                        href="#"
+                                    <button
                                         onClick={handleLogout}
-                                        className="hover:bg-gray-light rounded-lg text-error"
+                                        className="w-full text-left p-3 hover:bg-gray-light rounded-lg text-error"
                                     >
-                                        Déconnexion
-                                    </Link>
+                                        {dict.auth.logout}
+                                    </button>
                                 </>
                             )}
                         </div>

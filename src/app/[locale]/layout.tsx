@@ -4,11 +4,10 @@ import "../globals.css"
 import Header from "@/components/common/Header";
 import NextAuthProvider from "@/providers/auth.provider";
 import QueryClientProvider from "@/providers/query-client.provider";
+import { I18nProvider } from "@/providers/i18n.provider";
+import { getDictionary, hasLocale } from "./dictionnaries";
+import { notFound } from "next/navigation";
 import { Toaster } from "sonner";
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
-import { routing } from '@/i18n/routing';
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -20,37 +19,31 @@ export const metadata: Metadata = {
   description: "Plateforme de mise en relation pour voyager toute sérénité",
 };
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
+export async function generateStaticParams() {
+  return [{ lang: 'en-US' }, { lang: 'de' }]
 }
 
 export default async function RootLayout({
   children,
   params
-}: Readonly<{
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}>) {
+}: LayoutProps<'/[locale]'>) {
   const { locale } = await params;
   
-  if (!routing.locales.includes(locale as any)) {
-    notFound();
-  }
-
-  const messages = await getMessages();
+  if (!hasLocale(locale)) notFound();
+  const dict = await getDictionary(locale);
 
   return (
     <html lang={locale}>
       <body className={`${raleway.variable} antialiased`}>
-        <NextIntlClientProvider messages={messages}>
           <QueryClientProvider>
             <NextAuthProvider>
-              <Header />
-              {children}
-              <Toaster richColors />
+              <I18nProvider locale={locale} dict={dict}>
+                <Header />
+                {children}
+                <Toaster richColors />
+              </I18nProvider>
             </NextAuthProvider>
           </QueryClientProvider>
-        </NextIntlClientProvider>
       </body>
     </html>
   );
