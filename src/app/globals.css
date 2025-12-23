@@ -45,9 +45,9 @@
   
 
   /* Gradients */
-  --gradient-primary: linear-gradient(360deg, var(--color-accent) 0%, rgba(255, 255, 255, 0) 50%);
+  --gradient-primary: linear-gradient(360deg, var(--color-accent) 0%, rgba(255, 255, 255, 0) 100%);
   --gradient-secondary: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, #205352 100%);
-  --gradient-accent: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(32, 83, 82, 0.82) 100%);
+  --gradient-accent: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(32, 83, 82, 0.82) 50%);
   --gradient-accent-2: linear-gradient(180deg,  var(--color-secondary) 0%, rgba(226, 128, 32, 0.07) 100%);
 }
 
@@ -102,7 +102,7 @@
 
 @layer components {
   button {
-    @apply bg-primary font-semibold rounded-full p-4.5 hover:bg-accent transition;
+    @apply bg-primary font-semibold rounded-full p-4.5  transition;
   }
 
   header .nav-item {

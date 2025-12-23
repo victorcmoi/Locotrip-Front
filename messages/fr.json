@@ -18,7 +18,11 @@
     "myAccount": "Mon compte",
     "myBookings": "Mes réservations",
     "profileManagement": "Gestion du profil",
-    "support": "Support / Aide"
+    "support": "Support / Aide",
+    "french": "Français",
+    "english": "English",
+    "spanish": "Español",
+    "german": "Deutsch"
   },
   "home": {
     "title": "Voyagez autrement avec des guides locaux passionnés",
@@ -30,7 +34,18 @@
     "private": "100% privée",
     "activity": "Activité",
     "customizable": "Personnalisable",
-    "localGuide": "Guide local"
+    "localGuide": "Guide local",
+    "searchPlace": "Où allez-vous ?",
+    "searchDate": "28 Juin 2025",
+    "popularDestinationsStart": "Nos deux ",
+    "popularDestinationsHighlight": "destinations ",
+    "popularDestinationsEnd": "incontournables",
+    "france": "France",
+    "spain": "Espagne",
+    "avaibleGuides": "+2 Guides Disponibles",
+    "guidesTitleStart": "Découvrez vos ",
+    "guidesTitleHighlight": "guides ",
+    "guidesTitleEnd": "locaux"
   },
   "auth": {
     "login": "Se connecter",

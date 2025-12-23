@@ -44,7 +44,7 @@ export default function Header() {
     };
 
     return (
-        <header className="w-full p-4 flex justify-between items-center">
+        <header className="w-full p-4 flex justify-between items-center sticky top-0 bg-light shadow-md z-50">
             <Link href={localizedPath(HOME_ROUTES.HOME)}>
                 <Image 
                     src="/assets/logo_locotrip.png" 
@@ -68,13 +68,16 @@ export default function Header() {
                     {isLangMenuOpen && (
                         <div className="absolute top-full right-0 mt-2 bg-light border border-gray-light rounded-xl shadow-xl p-2 min-w-37.5 z-50">
                             <button className="w-full text-left p-2 hover:bg-gray-light rounded-lg">
-                                Français
+                                {dict.navigation.french}
                             </button>
                             <button className="w-full text-left p-2 hover:bg-gray-light rounded-lg">
-                                English
+                                {dict.navigation.english}
                             </button>
                             <button className="w-full text-left p-2 hover:bg-gray-light rounded-lg">
-                                Español
+                                {dict.navigation.spanish}
+                            </button>
+                            <button className="w-full text-left p-2 hover:bg-gray-light rounded-lg">
+                                {dict.navigation.german}
                             </button>
                         </div>
                     )}
@@ -83,7 +86,7 @@ export default function Header() {
                 {/* Menu Aide */}
                 {!isAuthenticated && (
                     <div className="nav-item">
-                        <Link href={localizedPath(SUPPORT_ROUTES.HELP)}>
+                        <Link href={localizedPath(SUPPORT_ROUTES.FAQ)}>
                             <TfiHelpAlt size={24} />
                         </Link>
                     </div>
@@ -186,7 +189,7 @@ export default function Header() {
                                     </Link>
                                     <hr className="my-2 border-gray-light" />
                                     <Link 
-                                        href={localizedPath(SUPPORT_ROUTES.HELP)} 
+                                        href={localizedPath(SUPPORT_ROUTES.FAQ)} 
                                         className="flex items-center gap-2 w-full text-left p-3 hover:bg-gray-light rounded-lg"
                                         onClick={() => setIsUserMenuOpen(false)}
                                     >

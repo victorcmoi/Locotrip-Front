@@ -10,7 +10,6 @@ export const guideSchema = z.object({
       lastName: z.string().optional(),
       role: z.string().optional(),
     })
-    .passthrough()
     .optional(),
   bio: z.string().nullish(),
   languages: z.string().nullish(),
@@ -21,7 +20,9 @@ export const guideSchema = z.object({
   internal_comment: z.string().nullish(),
   created_at: z.any().optional(),
   updated_at: z.any().optional(),
-}).passthrough();
+  reviewCount: z.number().optional(),
+  categories: z.array(z.string()).optional(),
+});
 
 export const guidesSchema = z.array(guideSchema);
 
