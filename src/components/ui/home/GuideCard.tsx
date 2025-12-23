@@ -22,7 +22,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
   ];
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 max-w-sm">
+    <div className="bg-light rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 max-w-sm">
       {/* Image de fond avec infos du guide */}
       <div className="relative h-48 w-full">
         <Image
@@ -40,7 +40,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
         />
 
         {/* Nom et localisation */}
-        <div className="absolute bottom-4 left-4 text-white">
+        <div className="absolute bottom-4 left-4 text-light">
           <div className="flex items-center gap-2 mb-1">
             <h3 className="text-2xl font-bold">
               {guide.user?.firstName} {guide.user?.lastName}
@@ -49,9 +49,9 @@ export default function GuideCard({ guide }: GuideCardProps) {
               <IoCheckmarkCircle className="text-[#7BCECC] text-3xl" />
             )}
           </div>
-          <div className="flex items-center gap-1 text-xl text-white">
+          <div className="flex items-center gap-1 text-xl text-light">
             <LuMapPin />
-            <span className="text-white">{guide.country}</span>
+            <span className="text-light">{guide.country}</span>
           </div>
         </div>
       </div>
@@ -65,22 +65,22 @@ export default function GuideCard({ guide }: GuideCardProps) {
               <AiFillStar key={i} className="text-secondary text-lg" />
             ))}
           </div>
-          <span className="text-gray text-sm">{guide.reviewCount} avis</span>
+          <span className="text-dark text-sm">{guide.reviewCount} avis</span>
         </div>
 
         {/* Langues */}
         {guide.languages && (
           <div className="mb-4 flex justify-center">
             <p className="text-sm">
-              <span className="font-semibold">Langue :</span>{" "}
-              <span className="text-gray">{guide.languages}</span>
+              <span className="font-bold text-dark">Langue :</span>{" "}
+              <span className="text-dark">{guide.languages}</span>
             </p>
           </div>
         )}
 
         {/* Bio */}
         {guide.bio && (
-          <p className="text-center text-sm text-gray italic mb-4 line-clamp-3">
+          <p className="text-center text-sm text-dark italic mb-4 line-clamp-3">
             "{guide.bio}"
           </p>
         )}
@@ -98,7 +98,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
         </div>
 
         {/* Bouton */}
-        <button className="w-full bg-primary hover:bg-accent text-white font-semibold py-3 rounded-full transition-colors duration-300">
+        <button className="w-full bg-primary hover:bg-accent text-light font-semibold py-3 rounded-full transition-colors duration-300">
           {dict.home.sendMessage || "Envoyer un message"}
         </button>
       </div>
