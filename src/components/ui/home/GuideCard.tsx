@@ -12,7 +12,6 @@ interface GuideCardProps {
 export default function GuideCard({ guide }: GuideCardProps) {
   const dict = useTranslations();
 
-
   const categories = guide.categories || [
     "Site touristique",
     "Restaurant",
@@ -22,7 +21,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
   ];
 
   return (
-    <div className="bg-light rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 max-w-sm">
+    <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
       {/* Image de fond avec infos du guide */}
       <div className="relative h-48 w-full">
         <Image
@@ -57,21 +56,21 @@ export default function GuideCard({ guide }: GuideCardProps) {
       </div>
 
       {/* Contenu de la carte */}
-      <div className="p-6">
+      <div className="p-8 flex-1 flex flex-col">
         {/* Note */}
-        <div className="flex items-center gap-2 mb-4 justify-center">
+        <div className="flex items-center gap-2 mb-8 justify-center">
           <div className="flex">
             {[...Array(5)].map((_, i) => (
-              <AiFillStar key={i} className="text-secondary text-lg" />
+              <AiFillStar key={i} className="text-secondary text-xl" />
             ))}
           </div>
-          <span className="text-dark text-sm">{guide.reviewCount} avis</span>
+          <span className="text-dark text-base">{guide.reviewCount} avis</span>
         </div>
 
         {/* Langues */}
         {guide.languages && (
-          <div className="mb-4 flex justify-center">
-            <p className="text-sm">
+          <div className="mb-8 flex justify-center">
+            <p className="text-base">
               <span className="font-bold text-dark">Langue :</span>{" "}
               <span className="text-dark">{guide.languages}</span>
             </p>
@@ -80,17 +79,20 @@ export default function GuideCard({ guide }: GuideCardProps) {
 
         {/* Bio */}
         {guide.bio && (
-          <p className="text-center text-sm text-dark italic mb-4 line-clamp-3">
+          <p className="text-center text-base text-dark italic mb-8 line-clamp-3">
             "{guide.bio}"
           </p>
         )}
 
+        {/* Spacer pour pousser les catégories vers le bas */}
+        <div className="flex-1"></div>
+
         {/* Catégories */}
-        <div className="flex flex-wrap gap-2 mb-6 justify-center">
+        <div className="flex flex-wrap gap-2 mb-8 justify-center max-w-70 mx-auto">
           {categories.slice(0, 5).map((category, index) => (
             <span
               key={index}
-              className="px-3 py-1 bg-light rounded-full text-xs text-dark border border-gray-light"
+              className="px-3 py-1 bg-light rounded-full text-sm text-dark border border-gray-light"
             >
               {category}
             </span>
@@ -98,7 +100,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
         </div>
 
         {/* Bouton */}
-        <button className="w-full bg-primary hover:bg-accent text-light font-semibold py-3 rounded-full transition-colors duration-300">
+        <button className="w-full bg-primary hover:bg-accent text-light font-semibold py-3 rounded-full transition-colors duration-300 cursor-pointer text-base">
           {dict.home.sendMessage || "Envoyer un message"}
         </button>
       </div>

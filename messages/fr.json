@@ -45,7 +45,14 @@
     "avaibleGuides": "+2 Guides Disponibles",
     "guidesTitleStart": "Découvrez vos ",
     "guidesTitleHighlight": "guides ",
-    "guidesTitleEnd": "locaux"
+    "guidesTitleEnd": "locaux",
+    "seeMoreGuides": "Voir plus de guides",
+    "discoverAllGuides": "Découvrez tous nos guides disponibles",
+    "statsTitleStart": "Optimisez l'",
+    "statsTitleHighlight": "expérience ",
+    "statsTitleNext": "de vos voyages avec nos ",
+    "statusTitleHighlight2": "guides ",
+    "statsTitleEnd": "répartis en France et Espagne"
   },
   "auth": {
     "login": "Se connecter",

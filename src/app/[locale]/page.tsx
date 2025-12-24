@@ -7,9 +7,10 @@ import { BsCalendar2 } from "react-icons/bs";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import Image from "next/image";
 import ButtonAvaibleGuide from "@/components/ui/home/ButtonAvaibleGuide";
-import GuideCard from "@/components/ui/home/GuideCard";
+import GuidesCarousel from "@/components/ui/home/GuidesCarousel";
 import { useTopRatedGuides } from "@/services/guides/getGuides";
-import { GuideSchema } from "@/schemas/guide";
+import { bubbles } from "@/utils/config/bubbles.config";
+import { FloatingBubble } from "@/components/ui/home/FloatingBubble";
 
 export default function Page() {
   const dict = useTranslations();
@@ -17,7 +18,6 @@ export default function Page() {
     "guide"
   );
   const { data: guides, isLoading, error } = useTopRatedGuides();
-  console.log(guides);
   return (
     <div className="min-h-screen">
       <section
@@ -169,12 +169,31 @@ export default function Page() {
           )}
 
           {guides && guides.length > 0 && (
-            <div className="mt-12 grid grid-cols-3 gap-8">
-              {guides.map((guide: GuideSchema) => (
-                <GuideCard key={guide.id} guide={guide} />
-              ))}
+            <div className="mt-12">
+              <GuidesCarousel guides={guides} />
             </div>
           )}
+        </div>
+      </section>
+
+      <section id="stats" className="bg-light py-16">
+        <div className="max-w-full mx-auto px-24 grid grid-cols-2 items-center justify-evenly">
+          <h2 className="text-left">
+            {dict.home.statsTitleStart}
+            <span className="text-accent">
+              {dict.home.statsTitleHighlight}
+            </span>
+            {dict.home.statsTitleNext}
+            <span className="text-accent">
+              {dict.home.statusTitleHighlight2}
+            </span>
+            {dict.home.statsTitleEnd}
+          </h2>
+          <div className="relative h-150 overflow-hidden">
+            {bubbles.map(bubble => (
+              <FloatingBubble key={bubble.id} {...bubble} />
+            ))}
+          </div>
         </div>
       </section>
     </div>
