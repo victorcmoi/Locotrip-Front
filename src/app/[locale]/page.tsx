@@ -9,15 +9,19 @@ import Image from "next/image";
 import ButtonAvaibleGuide from "@/components/ui/home/ButtonAvaibleGuide";
 import GuidesCarousel from "@/components/ui/home/GuidesCarousel";
 import { useTopRatedGuides } from "@/services/guides/getGuides";
+import { useTopRatedReviews } from "@/services/reviews/getReviews";
 import { bubbles } from "@/utils/config/bubbles.config";
 import { FloatingBubble } from "@/components/ui/home/FloatingBubble";
+import ReviewCard from "@/components/ui/home/ReviewCard";
 
 export default function Page() {
   const dict = useTranslations();
   const [selectedMode, setSelectedMode] = useState<"guide" | "activity">(
     "guide"
   );
-  const { data: guides, isLoading, error } = useTopRatedGuides();
+  const { data: guides, isLoading: guidesLoading, error: guidesError } = useTopRatedGuides();
+  const { data: reviews, isLoading: reviewsLoading, error: reviewsError } = useTopRatedReviews();
+  
   return (
     <div className="min-h-screen">
       <section
@@ -156,15 +160,15 @@ export default function Page() {
             {dict.home.guidesTitleEnd}
           </h2>
 
-          {isLoading && (
+          {guidesLoading && (
             <div className="mt-12 text-center text-gray">
-              Chargement des guides...
+              {dict.home.guidesLoading}
             </div>
           )}
 
-          {error && (
+          {guidesError && (
             <div className="mt-12 text-center text-error">
-              Une erreur est survenue lors du chargement des guides
+              {dict.home.errorLoadingGuides}
             </div>
           )}
 
@@ -177,8 +181,8 @@ export default function Page() {
       </section>
 
       <section id="stats" className="bg-light py-16">
-        <div className="max-w-full mx-auto px-24 grid grid-cols-2 items-center justify-evenly">
-          <h2 className="text-left">
+        <div className="max-w-full mx-auto px-24 grid grid-cols-3 items-center justify-evenly">
+          <h2 className="text-left cols-span-1">
             {dict.home.statsTitleStart}
             <span className="text-accent">
               {dict.home.statsTitleHighlight}
@@ -189,11 +193,87 @@ export default function Page() {
             </span>
             {dict.home.statsTitleEnd}
           </h2>
-          <div className="relative h-150 overflow-hidden">
+          <div className="relative h-150 overflow-hidden col-span-2">
             {bubbles.map(bubble => (
               <FloatingBubble key={bubble.id} {...bubble} />
             ))}
           </div>
+        </div>
+      </section>
+
+      <section id="reviews" className="py-16" style={{ background: "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)" }}>
+        <div className="max-w-full mx-auto px-24">
+            <h2>{dict.home.reviewsTitle}</h2>
+            {reviewsLoading && (
+              <div className="mt-16 text-center text-gray">
+                {dict.home.reviewsLoading}
+              </div>
+            )}
+            {reviewsError && (
+              <div className="mt-16 text-center text-error">
+                {dict.home.errorLoadingReviews}
+              </div>
+            )}
+            {reviews && reviews.length > 0 && (
+              <div className="mt-16 grid grid-cols-3 gap-8">
+                {reviews.map((review) => (
+                  <div key={review.id}>
+                    <ReviewCard review={review} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+      </section>
+
+      <section id="becomeGuide" className="py-16 bg-light">
+        <div className="max-w-full mx-auto px-24 flex flex-col items-center text-center">
+          <h2>{dict.home.becomeGuideTitle}</h2>
+          <div className="mt-6 mb-12 grid grid-cols-4 gap-8">
+            <div className="flex flex-col items-center">
+              <Image
+                src="/assets/become-guide-1.png"
+                alt="Step 1"
+                width={80}
+                height={80}
+              />
+              <h4 className="my-8">{dict.home.guideTitle1}</h4>
+              <span className="text-black">{dict.home.guideSub1}</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <Image
+                src="/assets/become-guide-2.png"
+                alt="Step 2"
+                width={80}
+                height={80}
+              />
+              <h4 className="my-8">{dict.home.guideTitle2}</h4>
+              <span className="text-black">{dict.home.guideSub2}</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <Image
+                src="/assets/become-guide-3.png"
+                alt="Step 3"
+                width={80}
+                height={80}
+              />
+              <h4 className="my-8">{dict.home.guideTitle3}</h4>
+              <span className="text-black">{dict.home.guideSub3}</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <Image
+                src="/assets/become-guide-4.png"
+                alt="Step 4"
+                width={80}
+                height={80}
+              />
+              <h4 className="my-8">{dict.home.guideTitle4}</h4>
+              <span className="text-black">{dict.home.guideSub4}</span>
+            </div>
+          </div>
+          <button className="bg-primary text-light px-8 py-3 rounded-full hover:bg-accent-dark transition-colors duration-300 font-bold">
+            {dict.home.becomeGuideButton}
+          </button>
         </div>
       </section>
     </div>
