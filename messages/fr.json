@@ -7,7 +7,13 @@
     "cancel": "Annuler",
     "delete": "Supprimer",
     "edit": "Modifier",
-    "search": "Rechercher"
+    "search": "Rechercher",
+    "support": "Support",
+    "about": "À propos de LocoTrip",
+    "followUs": "Nous suivre",
+    "emailAddress": "Adresse mail",
+    "language": "Choisissez une langue",
+    "currency": "Choisissez une devise"
   },
   "navigation": {
     "home": "Accueil",
@@ -22,7 +28,16 @@
     "french": "Français",
     "english": "English",
     "spanish": "Español",
-    "german": "Deutsch"
+    "german": "Deutsch",
+    "privacyPolicy": "Politique et Paramètre de Cookies",
+    "RGPD": "RGPD",
+    "termsOfUse": "Conditions Générales d'Utilisation",
+    "becomeGuide": "Devenir Guide",
+    "helpCenter": "Centre d'aide",
+    "presentation": "Qui sommes-nous ?",
+    "contactUs": "Nous contacter",
+    "language": "Langue",
+    "currency": "Devise"
   },
   "home": {
     "title": "Voyagez autrement avec des guides locaux passionnés",
@@ -80,5 +95,9 @@
     "loginTitle": "Connectez-vous à votre compte",
     "contactUs": "Contactez-nous",
     "haveProblem": "Un problème ?"
+  },
+  "footer": {
+    "bestExperiences": "Ne manquez pas les meilleur expériences locales !",
+    "newsletter": "Inscrivez-vous à notre newsletter et profitez d'offres spéciales et de recommandations personnalisées."
   }
 }

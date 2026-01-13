@@ -12,15 +12,19 @@ import { LuMessageCircleMore, LuTicket } from "react-icons/lu";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { AUTH_ROUTES, HOME_ROUTES, BOOKINGS_ROUTES, USER_ROUTES, SUPPORT_ROUTES } from '@/utils/routes';
 import { useTranslations, useLocalizedPath } from '@/providers/i18n.provider';
+import { useCurrencies } from '@/services/currencies/getCurrencies';
 
 export default function Header() {
     const { data: session, status } = useSession();
     const isAuthenticated = status === "authenticated";
     const dict = useTranslations();
     const localizedPath = useLocalizedPath();
+    const { data: currencies, isLoading: currenciesLoading } = useCurrencies();
+    console.log('Currencies in Header:', currencies);
     
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+    const [langCurrencyTab, setLangCurrencyTab] = useState<'language' | 'currency'>('language');
 
     const userMenuRef = useRef<HTMLDivElement>(null);
     const langMenuRef = useRef<HTMLDivElement>(null);
@@ -55,7 +59,7 @@ export default function Header() {
                 />
             </Link>
             <nav className="flex items-center gap-2">
-                {/* Menu Langue */}
+                {/* Menu Langue & Devise */}
                 <div className="relative" ref={langMenuRef}>
                     <div 
                         className="nav-item cursor-pointer"
@@ -64,21 +68,108 @@ export default function Header() {
                         <MdLanguage size={24} />
                     </div>
                     
-                    {/* Dropdown Langue */}
+                    {/* Dropdown Langue & Devise */}
                     {isLangMenuOpen && (
-                        <div className="absolute top-full right-0 mt-2 bg-light border border-gray-light rounded-xl shadow-xl p-2 min-w-37.5 z-50">
-                            <button className="w-full text-left p-2 hover:bg-gray-light rounded-lg">
-                                {dict.navigation.french}
-                            </button>
-                            <button className="w-full text-left p-2 hover:bg-gray-light rounded-lg">
-                                {dict.navigation.english}
-                            </button>
-                            <button className="w-full text-left p-2 hover:bg-gray-light rounded-lg">
-                                {dict.navigation.spanish}
-                            </button>
-                            <button className="w-full text-left p-2 hover:bg-gray-light rounded-lg">
-                                {dict.navigation.german}
-                            </button>
+                        <div className="absolute top-full right-0 mt-2 bg-white border border-gray-light rounded-xl shadow-xl min-w-105 z-50">
+                            {/* Onglets */}
+                            <div className="flex border-b border-gray-light">
+                                <button
+                                    onClick={() => setLangCurrencyTab('language')}
+                                    className={`flex-1 px-6 py-3 transition border-b-2 bg-white rounded-none rounded-tl-xl ${
+                                        langCurrencyTab === 'language' 
+                                            ? 'border-accent font-semibold' 
+                                            : 'border-transparent hover:bg-gray-light/50'
+                                    }`}
+                                >
+                                    
+                                    {dict.navigation.language}
+                                </button>
+                                <button
+                                    onClick={() => setLangCurrencyTab('currency')}
+                                    className={`flex-1 px-6 py-3 transition border-b-2 bg-white rounded-none rounded-tr-xl ${
+                                        langCurrencyTab === 'currency' 
+                                            ? 'border-accent font-semibold' 
+                                            : 'border-transparent hover:bg-gray-light/50'
+                                    }`}
+                                >
+                                    {dict.navigation.currency}
+                                </button>
+                            </div>
+
+                            {/* Contenu selon l'onglet */}
+                            <div className="p-6">
+                                {langCurrencyTab === 'language' ? (
+                                    <>
+                                        <h3 className="mb-6 font-bold text-2xl">
+                                            {dict.common.language}
+                                        </h3>
+                                        <button className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer">
+                                            <Image 
+                                                src="/assets/flags/france.png"
+                                                alt="Français"
+                                                width={24}
+                                                height={16}
+                                                className="inline-block mr-3"
+                                            />
+                                            {dict.navigation.french}
+                                        </button>
+                                        <button className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer">
+                                            <Image 
+                                                src="/assets/flags/royaume-uni.png"
+                                                alt="English"
+                                                width={24}
+                                                height={16}
+                                                className="inline-block mr-3"
+                                            />
+                                            {dict.navigation.english}
+                                        </button>
+                                        <button className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer">
+                                            <Image 
+                                                src="/assets/flags/espagne.png"
+                                                alt="Spanish"
+                                                width={24}
+                                                height={16}
+                                                className="inline-block mr-3"
+                                            />
+                                            {dict.navigation.spanish}
+                                        </button>
+                                        <button className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer">
+                                            <Image 
+                                                src="/assets/flags/allemagne.png"
+                                                alt="German"
+                                                width={24}
+                                                height={16}
+                                                className="inline-block mr-3"
+                                            />
+                                            {dict.navigation.german}
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <h3 className="mb-6 font-bold text-2xl">
+                                            {dict.common.currency}
+                                        </h3>
+                                        {currenciesLoading ? (
+                                            <div className="p-4 text-center text-gray">
+                                                {dict.common.loading}
+                                            </div>
+                                        ) : currencies && currencies.length > 0 ? (
+                                            currencies.map((currency) => (
+                                                <button 
+                                                    key={currency.code}
+                                                    className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer"
+                                                >
+                                                    <span className="font-semibold">{currency.code}</span> - {currency.name}
+                                                </button>
+                                            ))
+                                        ) : (
+                                            <div className="p-4 text-center text-gray">
+                                                Aucune devise disponible
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
                         </div>
                     )}
                 </div>
