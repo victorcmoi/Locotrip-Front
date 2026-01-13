@@ -8,6 +8,7 @@ import { I18nProvider } from "@/providers/i18n.provider";
 import { getDictionary, hasLocale } from "./dictionnaries";
 import { notFound } from "next/navigation";
 import { Toaster } from "sonner";
+import Footer from "@/components/common/Footer";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -41,6 +42,7 @@ export default async function RootLayout({
                 <Header />
                 {children}
                 <Toaster richColors />
+                <Footer />
               </I18nProvider>
             </NextAuthProvider>
           </QueryClientProvider>

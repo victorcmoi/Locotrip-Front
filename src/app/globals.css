@@ -99,9 +99,7 @@ html {
     @apply font-semibold;
   }
 
-  input, textarea {
-    @apply border border-light rounded-xl p-4.5 focus:outline-accent transition;
-  } 
+  
 }
 
 @layer components {
@@ -116,5 +114,9 @@ html {
   span {
     @apply text-primary;
   }
-
+  
+  input,
+  textarea {
+    @apply border border-light rounded-xl p-4.5 focus:outline-accent transition;
+  }
 }
