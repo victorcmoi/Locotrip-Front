@@ -1,17 +1,19 @@
 'use client';
 
-import { useTranslations } from "@/providers/i18n.provider";
+import { useLocalizedPath, useTranslations } from "@/providers/i18n.provider";
 import Image from "next/image";
 import Link from "next/link";
 import { FaFacebook, FaSquareInstagram, FaYoutube } from "react-icons/fa6";
 import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
+import { HOME_ROUTES, GUIDES_ROUTES, SUPPORT_ROUTES } from "@/utils/routes";
 
 export default function Footer() {
     const dict = useTranslations();
-    
+    const localizedPath = useLocalizedPath();
+
     return (
         <footer className="w-full pt-4 text-center">
-            <Link href="/">
+            <Link href={localizedPath(HOME_ROUTES.HOME)}>
                 <Image
                     src="/assets/logo_locotrip.png"
                     alt="Locotrip Logo Footer"
@@ -39,19 +41,19 @@ export default function Footer() {
                 </div>
                 <div className="flex flex-col gap-5">
                     <h5>{dict.common.support}</h5>
-                    <Link href="/become-guide" className="hover:underline font-light">
+                    <Link href={localizedPath(GUIDES_ROUTES.BECOME_GUIDE)} className="hover:underline font-light">
                         {dict.navigation.becomeGuide}
                     </Link>
-                    <Link href="/help-center" className="hover:underline font-light ">
+                    <Link href={localizedPath(SUPPORT_ROUTES.FAQ)} className="hover:underline font-light ">
                         {dict.navigation.helpCenter}
                     </Link>
                 </div>
                 <div className="flex flex-col gap-5">
                     <h5>{dict.common.about}</h5>
-                    <Link href="/about-us" className="hover:underline font-light">
+                    <Link href={localizedPath(HOME_ROUTES.ABOUT)} className="hover:underline font-light">
                         {dict.navigation.presentation}
                     </Link>
-                    <Link href="/contact-us" className="hover:underline font-light">
+                    <Link href={localizedPath(SUPPORT_ROUTES.CONTACT)} className="hover:underline font-light">
                         {dict.navigation.contactUs}
                     </Link>
                 </div>
@@ -82,21 +84,21 @@ export default function Footer() {
             </div>
             <div className="w-full bg-accent text-white py-8 mt-12 text-center flex justify-center gap-12 text-base">
                 <Link
-                    href="/privacy-policy"
+                    href={localizedPath('/privacy-policy')}
                     className="mx-2 hover:underline"
                 >
                     {dict.navigation.privacyPolicy}
                 </Link>
 
                 <Link
-                    href="/rgpd"
+                    href={localizedPath('/rgpd')}
                     className="mx-2 hover:underline"
                 >
                     {dict.navigation.RGPD}
                 </Link>
 
                 <Link
-                    href="/terms-of-use"
+                    href={localizedPath('/terms-of-use')}
                     className="mx-2 hover:underline"
                 >
                     {dict.navigation.termsOfUse}

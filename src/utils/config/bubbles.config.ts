@@ -100,7 +100,7 @@ export const bubbles: Bubble[] = [
   {
     id: 8,
     type: 'image',
-    src: '/assets/guide-pp-default.avif',
+    src: '/assets/guide-home-5.avif',
     size: 100,
     top: '55%',
     left: '20%',
@@ -109,7 +109,7 @@ export const bubbles: Bubble[] = [
   {
     id: 9,
     type: 'image',
-    src: '/assets/guide-pp-default.avif',
+    src: '/assets/guide-home-3.avif',
     size: 140,
     top: '25%',
     left: '70%',
@@ -117,9 +117,12 @@ export const bubbles: Bubble[] = [
   },
   {
     id: 10,
-    type: 'image',
-    src: '/assets/guide-pp-default.avif',
-    size: 90,
+    type: 'text',
+    label: '',
+    value: '',
+    bgColor: '#E28020',
+    textColor: '#ffffff',
+    size: 60,
     top: '80%',
     left: '30%',
     float: 8,
@@ -127,7 +130,7 @@ export const bubbles: Bubble[] = [
   {
     id: 11,
     type: 'image',
-    src: '/assets/guide-pp-default.avif',
+    src: '/assets/guide-home-4.avif',
     size: 110,
     top: '50%',
     left: '85%',

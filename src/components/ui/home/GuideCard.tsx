@@ -20,6 +20,8 @@ export default function GuideCard({ guide }: GuideCardProps) {
     "Boite de nuit",
   ];
 
+  console.log(guide);
+
   return (
     <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
       {/* Image de fond avec infos du guide */}
@@ -41,8 +43,8 @@ export default function GuideCard({ guide }: GuideCardProps) {
         {/* Nom et localisation */}
         <div className="absolute bottom-4 left-4 text-light">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-2xl font-bold">
-              {guide.user?.firstName} {guide.user?.lastName}
+            <h3 className="text-xl font-bold">
+              {guide.user?.first_name}
             </h3>
             {guide.pro_card && (
               <IoCheckmarkCircle className="text-[#7BCECC] text-3xl" />

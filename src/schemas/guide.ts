@@ -6,6 +6,8 @@ export const guideSchema = z.object({
     .object({
       id: z.string(),
       email: z.string().email().optional(),
+      first_name: z.string().optional(),
+      last_name: z.string().optional(),
       firstName: z.string().optional(),
       lastName: z.string().optional(),
       role: z.string().optional(),

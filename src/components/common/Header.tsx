@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSession, signOut } from 'next-auth/react';
+import { useRouter, usePathname } from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
 import { MdLanguage } from "react-icons/md";
@@ -20,7 +21,8 @@ export default function Header() {
     const dict = useTranslations();
     const localizedPath = useLocalizedPath();
     const { data: currencies, isLoading: currenciesLoading } = useCurrencies();
-    console.log('Currencies in Header:', currencies);
+    const router = useRouter();
+    const pathname = usePathname();
     
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
@@ -45,6 +47,16 @@ export default function Header() {
 
     const handleLogout = async () => {
         await signOut({ callbackUrl: localizedPath('/') });
+    };
+
+    const changeLanguage = (newLocale: string) => {
+        const segments = pathname.split('/');
+        const currentLocale = segments[1];
+        
+        const newPathname = pathname.replace(`/${currentLocale}`, `/${newLocale}`);
+        
+        router.push(newPathname);
+        setIsLangMenuOpen(false);
     };
 
     return (
@@ -103,7 +115,10 @@ export default function Header() {
                                         <h3 className="mb-6 font-bold text-2xl">
                                             {dict.common.language}
                                         </h3>
-                                        <button className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer">
+                                        <button 
+                                            onClick={() => changeLanguage('fr')}
+                                            className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer"
+                                        >
                                             <Image 
                                                 src="/assets/flags/france.png"
                                                 alt="Français"
@@ -113,7 +128,10 @@ export default function Header() {
                                             />
                                             {dict.navigation.french}
                                         </button>
-                                        <button className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer">
+                                        <button 
+                                            onClick={() => changeLanguage('en')}
+                                            className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer"
+                                        >
                                             <Image 
                                                 src="/assets/flags/royaume-uni.png"
                                                 alt="English"
@@ -123,7 +141,10 @@ export default function Header() {
                                             />
                                             {dict.navigation.english}
                                         </button>
-                                        <button className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer">
+                                        <button 
+                                            onClick={() => changeLanguage('sp')}
+                                            className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer"
+                                        >
                                             <Image 
                                                 src="/assets/flags/espagne.png"
                                                 alt="Spanish"
@@ -133,7 +154,10 @@ export default function Header() {
                                             />
                                             {dict.navigation.spanish}
                                         </button>
-                                        <button className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer">
+                                        <button 
+                                            onClick={() => changeLanguage('de')}
+                                            className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer"
+                                        >
                                             <Image 
                                                 src="/assets/flags/allemagne.png"
                                                 alt="German"
@@ -159,7 +183,7 @@ export default function Header() {
                                                     key={currency.code}
                                                     className="w-full text-left p-3 hover:bg-gray-light rounded-lg bg-white cursor-pointer"
                                                 >
-                                                    <span className="font-semibold">{currency.code}</span> - {currency.name}
+                                                    <span className="font-semibold text-accent">{currency.code}</span> - {currency.name}
                                                 </button>
                                             ))
                                         ) : (

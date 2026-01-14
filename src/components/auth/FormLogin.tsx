@@ -4,11 +4,16 @@ import React, {useState} from "react";
 import {signIn} from "next-auth/react";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
-import { HOME_ROUTES } from "@/utils/routes";
+import { HOME_ROUTES, AUTH_ROUTES } from "@/utils/routes";
+import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
+import Link from "next/link";
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
+  const dict = useTranslations();
+  const localizedPath = useLocalizedPath();
 
   return (
     <form
@@ -24,96 +29,88 @@ export default function LoginForm() {
             setLoading(false);
             toast.error(error);
           } else {
-            router.replace(HOME_ROUTES.HOME);
+            router.replace(localizedPath(HOME_ROUTES.HOME));
           }
         });
       }}
       className="space-y-6"
     >
+      {/* Email */}
       <div>
-        <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-          Adresse e-mail
+        <label htmlFor="email" className="block text-base font-semibold text-dark mb-2">
+          {dict.auth.email}
         </label>
-        <div className="mt-2">
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-600 sm:text-sm/6"
-          />
-        </div>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          autoComplete="email"
+          className="w-full px-4 py-3 rounded-xl border border-gray-light bg-white text-dark focus:outline-none focus:ring-2 focus:ring-accent transition-all"
+          placeholder="exemple@email.com"
+        />
       </div>
 
+      {/* Password */}
       <div>
-        <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">
-          Mot de passe
+        <label htmlFor="password" className="block text-base font-semibold text-dark mb-2">
+          {dict.auth.password}
         </label>
-        <div className="mt-2">
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            autoComplete="current-password"
-            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-600 sm:text-sm/6"
-          />
-        </div>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          autoComplete="current-password"
+          className="w-full px-4 py-3 rounded-xl border border-gray-light bg-white text-dark focus:outline-none focus:ring-2 focus:ring-accent transition-all"
+          placeholder="••••••••"
+        />
       </div>
 
+      {/* Remember me & Forgot password */}
       <div className="flex items-center justify-between">
-        <div className="flex gap-3">
-          <div className="flex h-6 shrink-0 items-center">
-            <div className="group grid size-4 grid-cols-1">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-green-600 checked:bg-green-600 indeterminate:border-green-600 indeterminate:bg-green-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-              />
-              <svg
-                fill="none"
-                viewBox="0 0 14 14"
-                className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
-              >
-                <path
-                  d="M3 8L6 11L11 3.5"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="opacity-0 group-has-checked:opacity-100"
-                />
-                <path
-                  d="M3 7H11"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="opacity-0 group-has-indeterminate:opacity-100"
-                />
-              </svg>
-            </div>
-          </div>
-          <label htmlFor="remember-me" className="block text-sm/6 text-gray-900">
-            Rester connecté
-          </label>
-        </div>
+        <label className="flex items-center cursor-pointer">
+          <input
+            id="remember-me"
+            name="remember-me"
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+            className="w-4 h-4 rounded border-gray-light text-accent focus:ring-accent cursor-pointer"
+          />
+          <span className="ml-2 text-sm text-dark">Rester connecté</span>
+        </label>
 
-        <div className="text-sm/6">
-          <a href="#" className="font-semibold text-green-600 hover:text-green-500">
-            Mot de passe oublié ?
-          </a>
-        </div>
+        <Link 
+          href={localizedPath(HOME_ROUTES.HOME)} 
+          className="text-sm font-semibold text-accent hover:text-primary transition-colors"
+        >
+          {dict.auth.forgotPassword}
+        </Link>
       </div>
 
+      {/* Submit button */}
       <div>
         <button
           type="submit"
           disabled={loading}
-          className="flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+          className="w-full bg-primary hover:bg-accent text-white font-bold py-3 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-button cursor-pointer"
         >
-          Se connecter
+          {loading ? "Connexion en cours..." : dict.auth.login}
         </button>
+      </div>
+
+      {/* Lien vers register */}
+      <div className="text-center">
+        <p className="text-sm text-dark">
+          {dict.auth.noAccountYet}{' '}
+          <Link 
+            href={localizedPath(AUTH_ROUTES.REGISTER)} 
+            className="font-semibold text-accent hover:text-primary transition-colors"
+          >
+            {dict.auth.register}
+          </Link>
+        </p>
       </div>
     </form>
   );

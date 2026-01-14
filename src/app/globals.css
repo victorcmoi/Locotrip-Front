@@ -1,4 +1,3 @@
-
 @import "tailwindcss";
 
 :root {
@@ -46,13 +45,13 @@ html {
   /* Shadows */
   --shadow-xl: 0px 4px 4px 0px #00000040;
   --shadow-button: 0px 4px 4px 0px #E2802012;
-  
+
 
   /* Gradients */
   --gradient-primary: linear-gradient(360deg, var(--color-accent) 0%, rgba(255, 255, 255, 0) 100%);
   --gradient-secondary: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, #205352 100%);
   --gradient-accent: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(32, 83, 82, 0.82) 50%);
-  --gradient-accent-2: linear-gradient(180deg,  var(--color-secondary) 0%, rgba(226, 128, 32, 0.07) 100%);
+  --gradient-accent-2: linear-gradient(180deg, var(--color-secondary) 0%, rgba(226, 128, 32, 0.07) 100%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -72,39 +71,39 @@ html {
   }
 
   h1 {
-    @apply text-6xl font-extrabold text-center;
+    @apply text-4xl md:text-5xl font-extrabold text-center;
   }
 
   h2 {
-    @apply text-5xl font-bold;
+    @apply text-3xl md:text-4xl font-bold;
   }
 
   h3 {
-    @apply text-4xl font-semibold;
+    @apply text-2xl md:text-3xl font-semibold;
   }
 
   h4 {
-    @apply text-3xl font-semibold;
+    @apply text-xl md:text-2xl font-semibold;
   }
 
   h5 {
-    @apply text-2xl font-medium;
+    @apply text-lg md:text-xl font-medium;
   }
 
   h6 {
-    @apply text-xl font-medium;
+    @apply text-base md:text-lg font-medium;
   }
 
   a {
     @apply font-semibold;
   }
 
-  
+
 }
 
 @layer components {
   button {
-    @apply bg-primary font-semibold rounded-full p-4.5  transition;
+    @apply bg-primary font-semibold rounded-full p-4.5 transition;
   }
 
   header .nav-item {
@@ -114,7 +113,7 @@ html {
   span {
     @apply text-primary;
   }
-  
+
   input,
   textarea {
     @apply border border-light rounded-xl p-4.5 focus:outline-accent transition;

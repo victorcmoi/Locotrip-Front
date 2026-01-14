@@ -1,8 +1,8 @@
 'use client';
 
-import { redirect } from "next/navigation";
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { checkLogin } from "@/lib/auth";
 import LoginForm from "@/components/auth/FormLogin";
 import { HOME_ROUTES, SUPPORT_ROUTES } from "@/utils/routes";
@@ -13,27 +13,28 @@ export default function Page() {
   const localizedPath = useLocalizedPath();
 
   return (
-    <div className="flex min-h-screen flex-1">
-      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div>
-            <h2 className="mt-8 text-2xl/9 font-bold tracking-tight text-gray-900">
-              {dict.auth.login}
-            </h2>
-            <p className="mt-2 text-sm/6 text-gray-500">
-              Un problème ?{' '}
-              <Link 
-                href={localizedPath(SUPPORT_ROUTES.CONTACT)} 
-                className="font-semibold text-green-600 hover:text-green-500"
-              >
-                {dict.navigation.contact}
-              </Link>
-            </p>
-          </div>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{background: "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)"}}>
+      <div className="max-w-xl w-full space-y-8 bg-white rounded-2xl shadow-xl p-10">
+  
+        {/* Titre */}
+        <div className="text-left">
+          <h2 className="text-3xl font-bold text-dark mb-2">
+            {dict.auth.loginTitle}
+          </h2>
+          <p className="text-base text-gray">
+            {dict.auth.haveProblem}{' '}
+            <Link 
+              href={localizedPath(SUPPORT_ROUTES.CONTACT)} 
+              className="font-semibold text-accent hover:text-primary transition-colors"
+            >
+              {dict.auth.contactUs}
+            </Link>
+          </p>
+        </div>
 
-          <div className="mt-10">
-            <LoginForm />
-          </div>
+        {/* Formulaire */}
+        <div className="mt-8">
+          <LoginForm />
         </div>
       </div>
     </div>
