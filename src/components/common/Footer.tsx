@@ -44,7 +44,7 @@ export default function Footer() {
                     <Link href={localizedPath(GUIDES_ROUTES.BECOME_GUIDE)} className="hover:underline font-light">
                         {dict.navigation.becomeGuide}
                     </Link>
-                    <Link href={localizedPath(SUPPORT_ROUTES.FAQ)} className="hover:underline font-light ">
+                    <Link href={localizedPath(HOME_ROUTES.HELP)} className="hover:underline font-light ">
                         {dict.navigation.helpCenter}
                     </Link>
                 </div>
@@ -84,21 +84,21 @@ export default function Footer() {
             </div>
             <div className="w-full bg-accent text-white py-8 mt-12 text-center flex justify-center gap-12 text-base">
                 <Link
-                    href={localizedPath('/privacy-policy')}
+                    href={localizedPath(HOME_ROUTES.POLITIQUE_CONFIDENTIALITE)}
                     className="mx-2 hover:underline"
                 >
                     {dict.navigation.privacyPolicy}
                 </Link>
 
                 <Link
-                    href={localizedPath('/rgpd')}
+                    href={localizedPath(HOME_ROUTES.COOKIES)}
                     className="mx-2 hover:underline"
                 >
-                    {dict.navigation.RGPD}
+                    {dict.navigation.cookies}
                 </Link>
 
                 <Link
-                    href={localizedPath('/terms-of-use')}
+                    href={localizedPath(HOME_ROUTES.TERMS)}
                     className="mx-2 hover:underline"
                 >
                     {dict.navigation.termsOfUse}

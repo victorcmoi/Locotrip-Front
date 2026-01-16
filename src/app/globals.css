@@ -52,6 +52,7 @@ html {
   --gradient-secondary: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, #205352 100%);
   --gradient-accent: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(32, 83, 82, 0.82) 50%);
   --gradient-accent-2: linear-gradient(180deg, var(--color-secondary) 0%, rgba(226, 128, 32, 0.07) 100%);
+  --gradient-circle-border: linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -117,5 +118,16 @@ html {
   input,
   textarea {
     @apply border border-light rounded-xl p-4.5 focus:outline-accent transition;
+  }
+
+  .step-circle {
+    border: 4px solid transparent;
+    background-image: linear-gradient(white, white), var(--gradient-circle-border);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
+
+  .step-line {
+    background: var(--gradient-circle-border);
   }
 }

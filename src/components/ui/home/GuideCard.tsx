@@ -23,7 +23,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
   console.log(guide);
 
   return (
-    <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+    <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col border border-gray-light ">
       {/* Image de fond avec infos du guide */}
       <div className="relative h-48 w-full">
         <Image

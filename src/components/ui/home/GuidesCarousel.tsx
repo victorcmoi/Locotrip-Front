@@ -50,9 +50,9 @@ export default function GuidesCarousel({ guides }: GuidesCarouselProps) {
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="relative pb-4">
+    <div className="relative">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-12">
+        <div className="flex gap-12 pb-4">
           {guides.map((guide: GuideSchema) => (
             <div key={guide.id} className="flex-[0_0_calc(32%-34px)] min-w-0">
               <GuideCard guide={guide} />
