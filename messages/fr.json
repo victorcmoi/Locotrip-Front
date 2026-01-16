@@ -238,5 +238,28 @@
     "issueStep1": "Rendez-vous dans Mes réservations > Signaler un problème",
     "issueStep2": "Renseignez les détails",
     "issueStep3": "Notre équipe traitera votre demande sous 72h maximum"
+  },
+  "about": {
+    "title": "Qui sommes-nous ?",
+    "intro1": "Locotrip",
+    "intro2": " : Voyagez au coeur des territoires, rencontrez ceux qui les animent.",
+    "subIntro": "Chez Locotrip, nous croyons qu'un voyage réussi se mesure en émotions, en rencontres et en souvenirs impérissables, bien plus qu'en kilomètres parcourus ou en monuments cochés sur une liste. Fatigués du tourisme impersonnel et des sentiers battus ? Nous aussi. C'est pourquoi nous avons créé une plateforme où la curiosité rencontre la passion locale.",
+    "missionsTitle": "Notre Mission",
+    "missionsTitle2": " : Rendre chaque voyage authentiquement humain.",
+    "missionsSub": "Notre ambition est simple : transformer votre manière de voyager. Nous voulons vous offrir les clés pour découvrir la véritable âme d'une destination, main dans la main avec celles et ceux qui la chérissent et la connaissent intimement : les guides locaux. Qu'ils soient conteurs d'histoires, artisans passionnés, amoureux de nature ou fins gourmets, nos guides sont la promesse d'une immersion véritable.",
+    "valuesTitle": "Nos Valeurs fondatrices",
+    "value1Title": "Authenticité avant tout",
+    "value1Text": "Nous privilégions les expériences vraies, loin des artifices. Chaque guide, chaque activité est choisi pour son caractère unique et son ancrage local.",
+    "value2Title": "Tourisme responsable et respectueux",
+    "value2Text": "Nous encourageons un tourisme qui valorise les communautés locales, respecte l'environnement et favorise une économie de partage équitable.",
+    "value3Title": "La richesse des rencontres",
+    "value3Text": "Nous sommes convaincus que la connexion humaine est au cœur d'un voyage mémorable. Locotrip est un pont entre votre curiosité et la générosité des savoirs locaux.",
+    "value4Title": "Passion locale",
+    "value4Text": "Nos guides ne sont pas de simples accompagnateurs. Ce sont des ambassadeurs de leur territoire, animés par l'envie de partager leur amour pour leur coin de pays, leur culture, leur histoire.",
+    "howItWorksTitle": "Comment ça marche ? C'est simple !",
+    "forTravelersTitle": "Pour les voyageurs ?",
+    "forTravelersText": "Explorez une multitude d'expériences uniques proposées par des guides locaux passionnés. Recherchez par destination, par centre d'intérêt, consultez les profils des guides, lisez les avis, et réservez en quelques clics l'aventure qui vous ressemble.",
+    "forGuidesTitle": "Pour les guides ?",
+    "forGuidesText": "Chez Locotrip, nous croyons qu'un voyage réussi se mesure en émotions, en rencontres et en souvenirs impérissables, bien plus qu'en kilomètres parcourus ou en monuments cochés sur une liste. Fatigués du tourisme impersonnel et des sentiers battus ? Nous aussi. C'est pourquoi nous avons créé une plateforme où la curiosité rencontre la passion locale."
   }
 }
