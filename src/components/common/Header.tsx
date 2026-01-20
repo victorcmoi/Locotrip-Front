@@ -201,7 +201,7 @@ export default function Header() {
                 {/* Menu Aide */}
                 {!isAuthenticated && (
                     <div className="nav-item">
-                        <Link href={localizedPath(SUPPORT_ROUTES.FAQ)}>
+                        <Link href={localizedPath(HOME_ROUTES.HELP)}>
                             <TfiHelpAlt size={24} />
                         </Link>
                     </div>

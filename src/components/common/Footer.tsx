@@ -23,18 +23,20 @@ export default function Footer() {
                 />
             </Link>
             <div className="grid grid-cols-4 justify-center mt-2 px-16 text-left gap-12">
-                <div className="flex flex-wrap items-center bg-light rounded-xl shadow-lg pl-6 text-black p-6">
-                    <input
-                        type="text"
-                        placeholder={dict.common.emailAddress}
-                        className="grow py-3 shadow-xl rounded-full focus:outline-none"
-                    />
-                    <button
-                        type="submit"
-                        className="bg-accent -ml-10 text-light p-3 rounded-full hover:bg-accent-dark transition-colors duration-300 cursor-pointer"
-                    >
-                        <SlArrowRight  size={30} />
-                    </button>
+                <div className="bg-light rounded-xl shadow-lg pl-6 pr-2 text-black p-6">
+                    <div className="flex items-center">
+                        <input
+                            type="text"
+                            placeholder={dict.common.emailAddress}
+                            className="grow py-3 shadow-xl rounded-full focus:outline-none"
+                        />
+                        <button
+                            type="submit"
+                            className="bg-accent -ml-12 text-light p-3 rounded-full hover:bg-accent-dark transition-colors duration-300 cursor-pointer shrink-0"
+                        >
+                            <SlArrowRight  size={30} />
+                        </button>
+                    </div>
 
                     <p className="mt-4 font-bold text-base">{dict.footer.bestExperiences}</p>
                     <p className="mt-4 text-base">{dict.footer.newsletter}</p>

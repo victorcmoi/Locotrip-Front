@@ -120,6 +120,25 @@ html {
     @apply border border-light rounded-xl p-4.5 focus:outline-accent transition;
   }
 
+  /* Stylisation de l'input date */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  
+  input[type="date"] {
+    position: relative;
+  }
+
+  /* Placeholder gris pour les inputs */
+  input::placeholder {
+    color: #B3B3B3;
+    opacity: 1;
+  }
+
   .step-circle {
     border: 4px solid transparent;
     background-image: linear-gradient(white, white), var(--gradient-circle-border);
