@@ -22,7 +22,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
   const dict = useTranslations(); 
   
   return (
-    <div className="bg-light rounded-2xl shadow-lg px-8 py-16 hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+    <div className="bg-light rounded-2xl shadow-lg px-8 py-16 lg:py-10 hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
       {/* Header avec utilisateur */}
       <div className="flex items-center gap-4 mb-6">
         <div className="w-16 h-auto aspect-square rounded-full border-2 border-accent flex items-center justify-center bg-white">

@@ -3,6 +3,7 @@
  */
 class HomeRoutes {
   static readonly HOME = '/';
+  static readonly SEARCH = '/search';
   static readonly HELP = '/help';
   static readonly MESSAGES = '/messages';
   static readonly NOTIFICATIONS = '/notifications';
