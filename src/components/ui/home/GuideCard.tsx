@@ -4,6 +4,7 @@ import { GuideSchema } from "@/schemas/guide";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { LuMapPin } from "react-icons/lu";
 import { AiFillStar } from "react-icons/ai";
+import { MinioHelpers } from "@/utils/minio";
 
 interface GuideCardProps {
   guide: GuideSchema;
@@ -20,15 +21,13 @@ export default function GuideCard({ guide }: GuideCardProps) {
     "Boite de nuit",
   ];
 
-  console.log(guide);
-
   return (
     <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col border border-gray-light ">
       {/* Image de fond avec infos du guide */}
       <div className="relative h-48 w-full">
         <Image
-          src={(guide.photoUrl as string) || "/assets/guide-pp-default.avif"}
-          alt={`${guide.user?.firstName} ${guide.user?.lastName}`}
+          src={MinioHelpers.guideProfile()}
+          alt={`${guide.user?.firstName || guide.user?.first_name} ${guide.user?.lastName || guide.user?.last_name}`}
           fill
           className="object-cover"
         />

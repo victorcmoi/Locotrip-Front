@@ -16,6 +16,7 @@ import { bubbles } from "@/utils/config/bubbles.config";
 import { FloatingBubble } from "@/components/ui/home/FloatingBubble";
 import ReviewCard from "@/components/ui/home/ReviewCard";
 import { GUIDES_ROUTES, HOME_ROUTES } from "@/utils/routes";
+import Datepicker, { DateValueType } from "react-tailwindcss-datepicker"; 
 
 export default function Page() {
   const dict = useTranslations();
@@ -26,7 +27,10 @@ export default function Page() {
   );
   const [searchDate, setSearchDate] = useState<string>("");
   const [location, setLocation] = useState<string>("");
-  
+   const [value, setValue] = useState<DateValueType>({ 
+        startDate: null, 
+        endDate: null
+    });
   const { data: guides, isLoading: guidesLoading, error: guidesError } = useTopRatedGuides();
   const { data: reviews, isLoading: reviewsLoading, error: reviewsError } = useTopRatedReviews();
   
@@ -107,16 +111,19 @@ export default function Page() {
                 className="grow px-4 py-2 bg-transparent border-none rounded-full focus:outline-none placeholder:text-dark"
               />
 
-              <div className="relative flex items-center grow">
-                <BsCalendar2 size={24} className="text-gray shrink-0 pointer-events-none" />
-                <input
-                  type="date"
-                  value={searchDate}
-                  onChange={(e) => setSearchDate(e.target.value)}
+              <BsCalendar2 size={24} className="text-gray shrink-0" />
+              <Datepicker 
+                  readOnly={true}
+                  value={value} 
+                  onChange={newValue => setValue(newValue)}
+                  useRange={true}
+                  showShortcuts={false}
                   placeholder={dict.home.searchDate}
-                  className="w-full px-4 py-2 bg-transparent border-none rounded-full focus:outline-none cursor-pointer placeholder:text-gray"
-                />
-              </div>
+                  containerClassName="relative grow"
+                  inputClassName="bg-light placeholder:text-dark text-black px-4 py-2 rounded-full focus:outline-none border-none w-full"
+                  toggleClassName="hidden"
+                  displayFormat="DD/MM/YYYY"
+              /> 
 
               <button
                 type="submit"

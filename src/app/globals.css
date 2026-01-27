@@ -133,12 +133,6 @@ html {
     position: relative;
   }
 
-  /* Placeholder gris pour les inputs */
-  input::placeholder {
-    color: #B3B3B3;
-    opacity: 1;
-  }
-
   .step-circle {
     border: 4px solid transparent;
     background-image: linear-gradient(white, white), var(--gradient-circle-border);

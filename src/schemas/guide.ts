@@ -24,8 +24,6 @@ export const guideSchema = z.object({
   updated_at: z.any().optional(),
   reviewCount: z.number().optional(),
   categories: z.array(z.string()).optional(),
-  photoUrl: z.string().optional().nullish(),
-  photo_url: z.string().optional().nullish(),
 });
 
 export const guidesSchema = z.array(guideSchema);
