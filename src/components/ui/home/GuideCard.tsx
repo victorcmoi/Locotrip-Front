@@ -4,6 +4,8 @@ import { GuideSchema } from "@/schemas/guide";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { LuMapPin } from "react-icons/lu";
 import { AiFillStar } from "react-icons/ai";
+import Link from "next/link";
+import GuidesRoutes from "@/utils/routes/guides.routes";
 
 interface GuideCardProps {
   guide: GuideSchema;
@@ -25,12 +27,12 @@ export default function GuideCard({ guide }: GuideCardProps) {
   return (
     <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col border border-gray-light ">
       {/* Image de fond avec infos du guide */}
-      <div className="relative h-48 w-full">
+      <Link href={GuidesRoutes.PROFILE(guide.id)} className="relative h-48 w-full block cursor-pointer overflow-hidden group">
         <Image
           src={(guide.photoUrl as string) || "/assets/guide-pp-default.avif"}
           alt={`${guide.user?.firstName} ${guide.user?.lastName}`}
           fill
-          className="object-cover"
+          className="object-cover transition-transform duration-300 group-hover:scale-110"
         />
         <div
           className="absolute inset-0"
@@ -55,7 +57,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
             <span className="text-light">{guide.country}</span>
           </div>
         </div>
-      </div>
+      </Link>
 
       {/* Contenu de la carte */}
       <div className="p-8 flex-1 flex flex-col">
@@ -102,7 +104,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
         </div>
 
         {/* Bouton */}
-        <button className="w-full bg-primary hover:bg-accent text-light font-semibold py-3 rounded-full transition-colors duration-300 cursor-pointer text-base">
+        <button className="w-1/2 mx-auto bg-primary hover:bg-accent text-light font-semibold py-3 rounded-full transition-colors duration-300 cursor-pointer text-base">
           {dict.home.sendMessage || "Envoyer un message"}
         </button>
       </div>
