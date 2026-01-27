@@ -3,7 +3,6 @@
  */
 class GuidesRoutes {
   private static readonly BASE = '/guides';
-
   static readonly LIST = this.BASE;
   static readonly BECOME_GUIDE = `${this.BASE}/become-guide`;
   static readonly DASHBOARD = `${this.BASE}/dashboard`;

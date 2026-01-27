@@ -21,12 +21,6 @@ export default function SearchPage() {
       "guide"
   );
 
-  // Debug logs
-  console.log("Search Date:", searchDate);
-  console.log("Guides Data:", guides);
-  console.log("Is Loading:", guidesLoading);
-  console.log("Error:", guidesError);
-
   useEffect(() => {
     const dateParam = searchParams.get("date");
     const locationParam = searchParams.get("location");
