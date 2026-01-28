@@ -21,8 +21,11 @@ export type DocumentType = z.infer<typeof DocumentTypeEnum>;
 export const MediaTypeEnum = z.enum(['photo', 'video', 'document', 'audio']);
 export type MediaType = z.infer<typeof MediaTypeEnum>;
 
-export const PaymentStatusEnum = z.enum(['pending', 'completed', 'refunded']);
+export const PaymentStatusEnum = z.enum(['pending', 'processing', 'completed', 'failed', 'refunded', 'partially_refunded', 'cancelled']);
 export type PaymentStatus = z.infer<typeof PaymentStatusEnum>;
+
+export const BookingStatusEnum = z.enum(['pending', 'confirmed', 'cancelled', 'completed']);
+export type BookingStatus = z.infer<typeof BookingStatusEnum>;
 
 export const DisputeStatusEnum = z.enum(['open', 'pending', 'resolved', 'rejected']);
 export type DisputeStatus = z.infer<typeof DisputeStatusEnum>;

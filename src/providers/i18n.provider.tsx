@@ -7,7 +7,17 @@ type Dictionary = {
   navigation: Record<string, string>;
   home: Record<string, string>;
   auth: Record<string, string>;
-  [key: string]: Record<string, string>;
+  guides: {
+    profile: Record<string, string>;
+    becomeGuide: Record<string, string>;
+  };
+  footer: Record<string, string>;
+  privacy: Record<string, string>;
+  cookies: Record<string, string>;
+  terms: Record<string, string>;
+  help: Record<string, string>;
+  about: Record<string, string>;
+  [key: string]: any;
 };
 
 interface I18nContextType {

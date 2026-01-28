@@ -1,6 +1,6 @@
 import { useTranslations } from "@/providers/i18n.provider";
 import Image from "next/image";
-import { GuideSchema } from "@/schemas/guide";
+import { Guide } from "@/schemas/guide";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { LuMapPin } from "react-icons/lu";
 import { AiFillStar } from "react-icons/ai";
@@ -9,19 +9,13 @@ import GuidesRoutes from "@/utils/routes/guides.routes";
 import { MinioHelpers } from "@/utils/minio";
 
 interface GuideCardProps {
-  guide: GuideSchema;
+  guide: Guide;
 }
 
 export default function GuideCard({ guide }: GuideCardProps) {
   const dict = useTranslations();
 
-  const categories = guide.categories || [
-    "Site touristique",
-    "Restaurant",
-    "Shopping",
-    "Bar",
-    "Boite de nuit",
-  ];
+  const hobbies = guide.hobbies?.map((h) => h.category?.name).filter((name): name is string => Boolean(name)) || [];
 
   return (
     <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col border border-gray-light ">
@@ -29,7 +23,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
       <Link href={GuidesRoutes.PROFILE(guide.id)} className="relative h-48 w-full block cursor-pointer overflow-hidden group">
         <Image
           src={MinioHelpers.guideProfile()}
-          alt={`${guide.user?.firstName || guide.user?.first_name} ${guide.user?.lastName || guide.user?.last_name}`}
+          alt={`${guide.user?.first_name || guide.user?.first_name} ${guide.user?.last_name || guide.user?.last_name}`}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-110"
         />
@@ -67,14 +61,14 @@ export default function GuideCard({ guide }: GuideCardProps) {
               <AiFillStar key={i} className="text-secondary text-xl" />
             ))}
           </div>
-          <span className="text-dark text-base">{guide.reviewCount} avis</span>
+          <span className="text-dark text-base">{guide.reviewCount} {dict.common.review}</span>
         </div>
 
         {/* Langues */}
         {guide.languages && (
           <div className="mb-8 flex justify-center">
             <p className="text-base">
-              <span className="font-bold text-dark">Langue :</span>{" "}
+              <span className="font-bold text-dark">{dict.common.languages}</span>{" "}
               <span className="text-dark">{guide.languages}</span>
             </p>
           </div>
@@ -90,17 +84,19 @@ export default function GuideCard({ guide }: GuideCardProps) {
         {/* Spacer pour pousser les catégories vers le bas */}
         <div className="flex-1"></div>
 
-        {/* Catégories */}
-        <div className="flex flex-wrap gap-2 mb-8 justify-center max-w-70 mx-auto">
-          {categories.slice(0, 5).map((category, index) => (
-            <span
-              key={index}
-              className="px-3 py-1 bg-light rounded-full text-sm text-dark border border-gray-light"
-            >
-              {category}
-            </span>
-          ))}
-        </div>
+        {/* Hobbies */}
+        {hobbies.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-8 justify-center max-w-70 mx-auto">
+            {hobbies.slice(0, 6).map((hobby: string, index: number) => (
+              <span
+                key={index}
+                className="px-3 py-1 bg-light rounded-full text-sm text-dark border border-gray-light"
+              >
+                {hobby}
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* Bouton */}
         <button className="w-1/2 mx-auto bg-primary hover:bg-accent text-light font-semibold py-3 rounded-full transition-colors duration-300 cursor-pointer text-base">

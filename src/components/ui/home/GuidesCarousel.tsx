@@ -1,6 +1,6 @@
 "use client";
 
-import { GuideSchema } from "@/schemas/guide";
+import { Guide } from "@/schemas/guide";
 import GuideCard from "./GuideCard";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import { HiChevronRight, HiChevronLeft } from "react-icons/hi2";
 import { useTranslations } from "@/providers/i18n.provider";
 
 interface GuidesCarouselProps {
-  guides: GuideSchema[];
+  guides: Guide[];
 }
 
 export default function GuidesCarousel({ guides }: GuidesCarouselProps) {
@@ -53,7 +53,7 @@ export default function GuidesCarousel({ guides }: GuidesCarouselProps) {
     <div className="relative">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-12 pb-4">
-          {guides.map((guide: GuideSchema) => (
+          {guides.map((guide: Guide) => (
             <div key={guide.id} className="flex-[0_0_calc(32%-34px)] min-w-0">
               <GuideCard guide={guide} />
             </div>

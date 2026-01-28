@@ -9,6 +9,7 @@ import { getDictionary, hasLocale } from "./dictionnaries";
 import { notFound } from "next/navigation";
 import { Toaster } from "sonner";
 import Footer from "@/components/common/Footer";
+import PrelineScriptWrapper from "@/components/common/PrelineScriptWrapper";
 
 const raleway = Raleway({
   variable: "--font-raleway",

@@ -13,7 +13,9 @@
     "followUs": "Nous suivre",
     "emailAddress": "Adresse mail",
     "language": "Choisissez une langue",
-    "currency": "Choisissez une devise"
+    "currency": "Choisissez une devise",
+    "review": "avis",
+    "languages": "Langue :"
   },
   "navigation": {
     "home": "Accueil",
@@ -108,16 +110,23 @@
     "profile": {
       "loading": "Chargement du profil...",
       "error": "Erreur lors du chargement du profil",
-      "about": "À propos",
       "experiences": "Expériences proposées",
       "reviews": "Avis",
+      "years": "ans",
       "languages": "Langues parlées",
-      "experience": "Années d'expérience",
-      "contactGuide": "Contacter le guide",
+      "experience": "Guide local depuis",
+      "contactGuide": "Contactez-moi",
       "bookExperience": "Réserver une expérience",
       "noExperiences": "Aucune expérience disponible pour le moment",
       "guidePro": "Certifié guide professionnel",
-      "proCard": "Carte professionnelle"
+      "proCard": "Carte professionnelle",
+      "reservations": "Réservations",
+      "delayResponse": "Délai réponse",
+      "hobies": "Centres d'intérêts",
+      "availability": "Disponibilités du guide",
+      "offers": "Offres",
+      "pictures": "Photos",
+      "about": "À propos"
     },
     "becomeGuide": {
       "title": "Devenir guide local avec Locotrip",
