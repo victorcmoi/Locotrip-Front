@@ -13,6 +13,7 @@ import { BsCalendar2 } from "react-icons/bs";
 import { PiHandbagLight } from "react-icons/pi";
 import { SlClock } from "react-icons/sl";
 import DatePickerItem from "@/components/common/DatePickerItem";
+import { Calendar } from "@/components/ui/Calendar";
 
 export default function GuideProfile({params}: {params: Promise<{ guide_id: string}>}) {
     const dict = useTranslations();
@@ -93,8 +94,18 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
                 </div>
                 <div className="col-span-8 flex flex-col items-start justify-start gap-6">
                     <h3 className="text-2xl font-bold mb-6">{dict.guides.profile.availability}</h3>
-                    <div className="w-full max-w-2xl">
-                        
+                    <div className="w-full">
+                        <Calendar
+                            mode="single"
+                            unavailableDates={[
+                                new Date(2026, 1, 15),
+                                new Date(2026, 1, 16),
+                                new Date(2026, 1, 20),
+                            ]}
+                            minDate={new Date()}
+                            locale="fr"
+                            className="w-full"
+                        />
                     </div>
                 </div>
             </div>
