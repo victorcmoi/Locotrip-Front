@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { LuMapPin } from "react-icons/lu";
 import { BsCalendar2 } from "react-icons/bs";
 import { HiMagnifyingGlass } from "react-icons/hi2";
-import GuideCard from "@/components/ui/home/GuideCard";
+import GuideCard from "@/components/ui/guides/GuideCard";
 import { useSearchGuides } from "@/services/guides/getGuides";
 
 export default function SearchPage() {

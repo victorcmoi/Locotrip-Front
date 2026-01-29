@@ -16,13 +16,15 @@ export default function GuideCard({ guide }: GuideCardProps) {
   const dict = useTranslations();
 
   const hobbies = guide.hobbies?.map((h) => h.category?.name).filter((name): name is string => Boolean(name)) || [];
+  
+  const profilePicture = guide.medias?.[0]?.url;
 
   return (
     <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col border border-gray-light ">
       {/* Image de fond avec infos du guide */}
       <Link href={GuidesRoutes.PROFILE(guide.id)} className="relative h-48 w-full block cursor-pointer overflow-hidden group">
         <Image
-          src={MinioHelpers.guideProfile()}
+          src={MinioHelpers.guideProfile(guide.id, profilePicture)}
           alt={`${guide.user?.first_name || guide.user?.first_name} ${guide.user?.last_name || guide.user?.last_name}`}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-110"

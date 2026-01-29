@@ -15,10 +15,10 @@ export type BoostStatus = z.infer<typeof BoostStatusEnum>;
 export const AvailabilityStatusEnum = z.enum(['available', 'unavailable', 'blocked']);
 export type AvailabilityStatus = z.infer<typeof AvailabilityStatusEnum>;
 
-export const DocumentTypeEnum = z.enum(['CV', 'diploma', 'proof_of_residence']);
+export const DocumentTypeEnum = z.enum(['CV', 'diploma', 'proof_of_residence', 'guide_card', 'other']);
 export type DocumentType = z.infer<typeof DocumentTypeEnum>;
 
-export const MediaTypeEnum = z.enum(['photo', 'video', 'document', 'audio']);
+export const MediaTypeEnum = z.enum(['pictures', 'profile_picture']);
 export type MediaType = z.infer<typeof MediaTypeEnum>;
 
 export const PaymentStatusEnum = z.enum(['pending', 'processing', 'completed', 'failed', 'refunded', 'partially_refunded', 'cancelled']);

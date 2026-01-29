@@ -8,14 +8,15 @@ import { BsCalendar2 } from "react-icons/bs";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import Image from "next/image";
 import Link from "next/link";
-import ButtonAvaibleGuide from "@/components/ui/home/ButtonAvaibleGuide";
-import GuidesCarousel from "@/components/ui/home/GuidesCarousel";
+import ButtonAvaibleGuide from "@/components/ui/guides/ButtonAvaibleGuide";
+import GuidesCarousel from "@/components/ui/guides/GuidesCarousel";
 import { useTopRatedGuides } from "@/services/guides/getGuides";
 import { useTopRatedReviews } from "@/services/reviews/getReviews";
 import { bubbles } from "@/utils/config/bubbles.config";
 import { FloatingBubble } from "@/components/ui/home/FloatingBubble";
-import ReviewCard from "@/components/ui/home/ReviewCard";
+import ReviewCard from "@/components/ui/reviews/ReviewCard";
 import { GUIDES_ROUTES, HOME_ROUTES } from "@/utils/routes";
+import Calendar from "@/components/ui/calendar/Calendar";
 
 export default function Page() {
   const dict = useTranslations();
@@ -26,10 +27,11 @@ export default function Page() {
   );
   const [searchDate, setSearchDate] = useState<string>("");
   const [location, setLocation] = useState<string>("");
-  // const [value, setValue] = useState<DateValueType>({ 
-  //     startDate: null, 
-  //     endDate: null
-  // });
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const [selectedDateRange, setSelectedDateRange] = useState<{ start: Date | null; end: Date | null }>({ 
+    start: null, 
+    end: null 
+  });
   const { data: guides, isLoading: guidesLoading, error: guidesError } = useTopRatedGuides();
   const { data: reviews, isLoading: reviewsLoading, error: reviewsError } = useTopRatedReviews();
   
@@ -38,7 +40,20 @@ export default function Page() {
     const params = new URLSearchParams();
     if (searchDate) params.append("date", searchDate);
     if (location) params.append("location", location);
+    if (selectedDateRange.start) {
+      params.append("startDate", selectedDateRange.start.toISOString());
+    }
+    if (selectedDateRange.end) {
+      params.append("endDate", selectedDateRange.end.toISOString());
+    }
     router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${params.toString()}`));
+  };
+
+  const handleDateRangeChange = (range: { start: Date | null; end: Date | null }) => {
+    setSelectedDateRange(range);
+    if (range.start && range.end) {
+      setSearchDate(`${range.start.toLocaleDateString()} - ${range.end.toLocaleDateString()}`);
+    }
   };
   
   return (
@@ -111,18 +126,14 @@ export default function Page() {
               />
 
               <BsCalendar2 size={24} className="text-gray shrink-0" />
-              {/* <Datepicker 
-                  readOnly={true}
-                  value={value} 
-                  onChange={newValue => setValue(newValue)}
-                  useRange={true}
-                  showShortcuts={false}
-                  placeholder={dict.home.searchDate}
-                  containerClassName="relative grow"
-                  inputClassName="bg-light placeholder:text-dark text-black px-4 py-2 rounded-full focus:outline-none border-none w-full"
-                  toggleClassName="hidden"
-                  displayFormat="DD/MM/YYYY"
-              />  */}
+              <input
+                type="text"
+                value={searchDate}
+                onClick={() => setShowCalendar(!showCalendar)}
+                readOnly
+                placeholder={dict.home.searchDate}
+                className="grow px-4 py-2 bg-transparent border-none rounded-full focus:outline-none placeholder:text-dark cursor-pointer"
+              />
 
               <button
                 type="submit"
@@ -131,6 +142,18 @@ export default function Page() {
                 <HiMagnifyingGlass size={24} />
               </button>
             </form>
+
+            {showCalendar && (
+              <div className="mt-8 max-w-4xl mx-auto">
+                <Calendar
+                  mode="range"
+                  selectedRange={selectedDateRange}
+                  onChange={(range) => handleDateRangeChange(range as { start: Date | null; end: Date | null })}
+                  locale="fr"
+                  className="shadow-xl"
+                />
+              </div>
+            )}
           </main>
         </div>
       </section>

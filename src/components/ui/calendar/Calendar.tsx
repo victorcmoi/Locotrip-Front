@@ -3,7 +3,11 @@
 import React, { useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/fr';
+import 'dayjs/locale/en';
+import 'dayjs/locale/es';
+import 'dayjs/locale/de';
 import { SlArrowLeft, SlArrowRight } from 'react-icons/sl';
+import { useTranslations } from '@/providers/i18n.provider';
 
 export interface CalendarProps {
   mode?: 'single' | 'range';
@@ -32,6 +36,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   showTitle = false,
   title = 'Disponibilité du guide',
 }) => {
+  const dict = useTranslations();
   const [currentMonth, setCurrentMonth] = useState(dayjs().locale(locale));
 
   const monthsToDisplay = [currentMonth, currentMonth.add(1, 'month')];
@@ -73,7 +78,8 @@ export const Calendar: React.FC<CalendarProps> = ({
       if (!end) {
         return date.format('YYYY-MM-DD') === dayjs(start).format('YYYY-MM-DD');
       }
-      return date.isSameOrAfter(dayjs(start), 'day') && date.isSameOrBefore(dayjs(end), 'day');
+      return (date.isAfter(dayjs(start), 'day') || date.isSame(dayjs(start), 'day')) && 
+             (date.isBefore(dayjs(end), 'day') || date.isSame(dayjs(end), 'day'));
     }
     return false;
   };
@@ -111,14 +117,31 @@ export const Calendar: React.FC<CalendarProps> = ({
     }
   };
 
-  const renderMonth = (month: Dayjs) => {
+  const renderMonthTitle = (month: Dayjs, align: 'left' | 'right' = 'left') => {
+    return (
+      <div className="flex-1">
+        <h3 className={`font-semibold capitalize ${align === 'right' ? 'text-right' : 'text-left'}`}>
+          {month.format('MMMM YYYY')}
+        </h3>
+      </div>
+    );
+  };
+
+  const renderMonthCalendar = (month: Dayjs) => {
     const startOfMonth = month.startOf('month');
-    const endOfMonth = month.endOf('month');
-    const startDay = startOfMonth.day() === 0 ? 6 : startOfMonth.day() - 1; // Lundi = 0
+    const startDay = startOfMonth.day() === 0 ? 6 : startOfMonth.day() - 1;
     const daysInMonth = month.daysInMonth();
 
     const days = [];
-    const weekDays = ['Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.', 'Dim.'];
+    const weekDays = [
+      dict.calendar.monday,
+      dict.calendar.tuesday,
+      dict.calendar.wednesday,
+      dict.calendar.thursday,
+      dict.calendar.friday,
+      dict.calendar.saturday,
+      dict.calendar.sunday
+    ];
 
     const dayHeaders = weekDays.map((day, index) => (
       <div key={`header-${index}`} className="text-center text-xs font-medium text-gray-700">
@@ -126,9 +149,8 @@ export const Calendar: React.FC<CalendarProps> = ({
       </div>
     ));
 
-    // Cases vides avant le premier jour du mois
     for (let i = 0; i < startDay; i++) {
-      days.push(<div key={`empty-${i}`} className="aspect-square" />);
+      days.push(<div key={`empty-${i}`} className="h-10" />);
     }
 
     // Jours du mois
@@ -138,7 +160,6 @@ export const Calendar: React.FC<CalendarProps> = ({
       const selected = isDateSelected(date);
       const rangeStart = isDateRangeStart(date);
       const rangeEnd = isDateRangeEnd(date);
-      const inRange = selected && mode === 'range' && !rangeStart && !rangeEnd;
 
       days.push(
         <button
@@ -146,8 +167,8 @@ export const Calendar: React.FC<CalendarProps> = ({
           onClick={() => handleDateClick(date)}
           disabled={disabled}
           className={`
-            aspect-square rounded-full flex items-center justify-center text-sm font-medium
-            transition-all duration-200 border bg-light
+            h-10 rounded-3xl flex items-center justify-center text-sm font-medium
+            transition-all duration-200 border bg-light px-2
             ${disabled 
               ? 'text-gray-300 cursor-not-allowed line-through border-gray-200' 
               : 'text-gray-800 hover:bg-gray-100 cursor-pointer border-accent'
@@ -165,19 +186,22 @@ export const Calendar: React.FC<CalendarProps> = ({
       );
     }
 
+    const totalCells = startDay + daysInMonth;
+    const remainingCells = 42 - totalCells;
+    for (let i = 0; i < remainingCells; i++) {
+      days.push(<div key={`empty-end-${i}`} className="h-10" />);
+    }
+
     return (
       <div className="flex-1">
-        <h3 className="text-center text-xs font-semibold text-gray-800 mb-3 capitalize">
-          {month.format('MMMM YYYY')}
-        </h3>
-        <div className="rounded-2xl border border-gray-200 overflow-hidden">
-          <div className="bg-white/50 border-b border-gray-200 px-4 py-3">
+        <div className="overflow-hidden">
+          <div className="bg-gray-100 border border-gray-200 rounded-lg px-3 py-2">
             <div className="grid grid-cols-7 gap-2">
               {dayHeaders}
             </div>
           </div>
           <div className="p-4">
-            <div className="grid grid-cols-7 gap-2 min-h-[240px]">
+            <div className="grid grid-cols-7 gap-2">
               {days}
             </div>
           </div>
@@ -192,29 +216,38 @@ export const Calendar: React.FC<CalendarProps> = ({
         <h2 className="text-xl font-bold text-gray-800 mb-6">{title}</h2>
       )}
       
-      <div className="relative">
+      {/* En-tête avec flèches et titres */}
+      <div className="flex items-center gap-4 mb-6">
         <button
           onClick={handlePrevious}
-          className="absolute left-0 top-0 p-4  rounded-full bg-light flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm z-10 border border-gray-500 cursor-pointer"
-          aria-label="Mois précédent"
+          className="p-4 rounded-full bg-light flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm border border-gray-500 cursor-pointer"
+          aria-label={dict.calendar.previousMonth}
         >
           <SlArrowLeft className="text-gray-700" size={12} />
         </button>
 
+        <div className="flex gap-8 flex-1">
+          {monthsToDisplay.map((month, index) => (
+            <React.Fragment key={`title-${index}`}>
+              {renderMonthTitle(month, index === 1 ? 'right' : 'left')}
+            </React.Fragment>
+          ))}
+        </div>
+
         <button
           onClick={handleNext}
-          className="absolute right-0 top-0 p-4 rounded-full bg-light flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm z-10 border border-gray-500 cursor-pointer"
-          aria-label="Mois suivant"
+          className="p-4 rounded-full bg-light flex items-center justify-center hover:bg-gray-100 transition-colors shadow-sm border border-gray-500 cursor-pointer"
+          aria-label={dict.calendar.nextMonth}
         >
           <SlArrowRight className="text-gray-700" size={12} />
         </button>
+      </div>
 
-        {/* Deux mois */}
-        <div className="flex gap-8 px-16">
-          {monthsToDisplay.map((month, index) => (
-            <React.Fragment key={index}>{renderMonth(month)}</React.Fragment>
-          ))}
-        </div>
+      {/* Calendriers */}
+      <div className="flex gap-8">
+        {monthsToDisplay.map((month, index) => (
+          <React.Fragment key={`calendar-${index}`}>{renderMonthCalendar(month)}</React.Fragment>
+        ))}
       </div>
     </div>
   );

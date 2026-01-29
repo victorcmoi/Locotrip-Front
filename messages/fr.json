@@ -126,7 +126,11 @@
       "availability": "Disponibilités du guide",
       "offers": "Offres",
       "pictures": "Photos",
-      "about": "À propos"
+      "about": "À propos",
+      "offersTitle": "Réservez une de mes offres",
+      "picturesTitle": "Découvrez en plus en photos",
+      "aboutTitle": "En savoir plus sur moi",
+      "reviewsTitle": "Ce que disent mes voyageurs"
     },
     "becomeGuide": {
       "title": "Devenir guide local avec Locotrip",
@@ -263,6 +267,17 @@
     "issueStep1": "Rendez-vous dans Mes réservations > Signaler un problème",
     "issueStep2": "Renseignez les détails",
     "issueStep3": "Notre équipe traitera votre demande sous 72h maximum"
+  },
+  "calendar": {
+    "monday": "Lun.",
+    "tuesday": "Mar.",
+    "wednesday": "Mer.",
+    "thursday": "Jeu.",
+    "friday": "Ven.",
+    "saturday": "Sam.",
+    "sunday": "Dim.",
+    "previousMonth": "Mois précédent",
+    "nextMonth": "Mois suivant"
   },
   "about": {
     "title": "Qui sommes-nous ?",

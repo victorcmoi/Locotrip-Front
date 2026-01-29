@@ -11,7 +11,8 @@ export const MINIO_CONFIG = {
  * Routes des dossiers Minio par type de ressource
  */
 export const MINIO_ROUTES = {
-  GUIDE_IMAGES: "profiles/guides/images",
+  GUIDE_PROFILE_PICTURES: "profiles/guides/profile-picture",
+  GUIDE_PICTURES: "profiles/guides/pictures",
   GUIDE_DOCUMENTS: "profiles/guides/documents",
   USER_PROFILES: "profiles/users",
   EXPERIENCES: "experiences",

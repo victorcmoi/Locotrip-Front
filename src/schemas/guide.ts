@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { GuideStatusEnum } from './enums';
 import { userSchema } from './user';
+import { mediaSchema } from './media';
 
 export const guideSchema = z.object({
   id: z.string().uuid(),
@@ -30,7 +31,7 @@ export const guideSchema = z.object({
   reviewCount: z.number().optional(),
   experiencesCount: z.number().optional(),
   categories: z.array(z.string()).optional(),
-  profile_picture: z.string().nullish(),
+  medias: z.array(mediaSchema).optional(),
   hobbies: z.array(z.object({
     category_id: z.string().uuid(),
     category: z.object({

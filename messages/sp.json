@@ -255,6 +255,17 @@
     "issueStep2": "Rellene los detalles",
     "issueStep3": "Nuestro equipo tratará su solicitud en un máximo de 72h"
   },
+  "calendar": {
+    "monday": "Lun.",
+    "tuesday": "Mar.",
+    "wednesday": "Mié.",
+    "thursday": "Jue.",
+    "friday": "Vie.",
+    "saturday": "Sáb.",
+    "sunday": "Dom.",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Próximo mes"
+  },
   "about": {
     "title": "¿Quiénes somos?",
     "intro1": "Locotrip",
