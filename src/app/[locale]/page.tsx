@@ -38,7 +38,6 @@ export default function Page() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (searchDate) params.append("date", searchDate);
     if (location) params.append("location", location);
     if (selectedDateRange.start) {
       params.append("startDate", selectedDateRange.start.toISOString());
@@ -60,7 +59,7 @@ export default function Page() {
     <div className="min-h-screen">
       <section
         id="research"
-        className="relative min-h-screen pt-20 md:pt-10 overflow-hidden after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-24 after:bg-light after:rounded-t-[50%]"
+        className="relative min-h-screen pt-20 md:pt-10 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-24 after:bg-light after:rounded-t-[50%]"
       >
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-[0.5]"
@@ -111,10 +110,11 @@ export default function Page() {
                 {dict.home.activity}
               </button>
             </nav>
+            <div className="relative w-full md:max-w-xl lg:max-w-2xl mx-auto">
             <form
               id="search"
               onSubmit={handleSearch}
-              className="w-full md:max-w-xl lg:max-w-2xl mx-auto flex items-center bg-light rounded-full shadow-lg pl-6 text-black"
+              className="w-full flex items-center bg-light rounded-full shadow-lg pl-6 text-black"
             >
               <LuMapPin size={24} className="text-gray shrink-0" />
               <input
@@ -144,16 +144,15 @@ export default function Page() {
             </form>
 
             {showCalendar && (
-              <div className="mt-8 max-w-4xl mx-auto">
                 <Calendar
                   mode="range"
                   selectedRange={selectedDateRange}
                   onChange={(range) => handleDateRangeChange(range as { start: Date | null; end: Date | null })}
+                  onClose={() => setShowCalendar(false)}
                   locale="fr"
-                  className="shadow-xl"
                 />
-              </div>
             )}
+            </div>
           </main>
         </div>
       </section>

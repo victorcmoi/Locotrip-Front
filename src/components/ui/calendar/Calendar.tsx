@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/fr';
 import 'dayjs/locale/en';
@@ -14,6 +14,7 @@ export interface CalendarProps {
   selectedDate?: Date | null;
   selectedRange?: { start: Date | null; end: Date | null };
   onChange?: (date: Date | { start: Date | null; end: Date | null }) => void;
+  onClose?: () => void;
   unavailableDates?: Date[];
   minDate?: Date;
   maxDate?: Date;
@@ -28,6 +29,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   selectedDate,
   selectedRange,
   onChange,
+  onClose,
   unavailableDates = [],
   minDate,
   maxDate,
@@ -38,6 +40,20 @@ export const Calendar: React.FC<CalendarProps> = ({
 }) => {
   const dict = useTranslations();
   const [currentMonth, setCurrentMonth] = useState(dayjs().locale(locale));
+  const calendarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+        onClose?.();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   const monthsToDisplay = [currentMonth, currentMonth.add(1, 'month')];
 
@@ -120,7 +136,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   const renderMonthTitle = (month: Dayjs, align: 'left' | 'right' = 'left') => {
     return (
       <div className="flex-1">
-        <h3 className={`font-semibold capitalize ${align === 'right' ? 'text-right' : 'text-left'}`}>
+        <h3 className={`font-semibold capitalize text-dark ${align === 'right' ? 'text-right' : 'text-left'}`}>
           {month.format('MMMM YYYY')}
         </h3>
       </div>
@@ -158,8 +174,6 @@ export const Calendar: React.FC<CalendarProps> = ({
       const date = month.date(day);
       const disabled = isDateDisabled(date);
       const selected = isDateSelected(date);
-      const rangeStart = isDateRangeStart(date);
-      const rangeEnd = isDateRangeEnd(date);
 
       days.push(
         <button
@@ -174,9 +188,7 @@ export const Calendar: React.FC<CalendarProps> = ({
               : 'text-gray-800 hover:bg-gray-100 cursor-pointer border-accent'
             }
             ${selected && !disabled 
-              ? rangeStart || rangeEnd || mode === 'single'
-                ? 'bg-accent text-white hover:bg-accent/90 border-accent'
-                : 'bg-accent/20 border-accent'
+              ? 'bg-accent! text-white hover:bg-accent/90 border-accent'
               : ''
             }
           `}
@@ -211,7 +223,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   };
 
   return (
-    <div className={`bg-light rounded-3xl p-6 ${className}`}>
+    <div ref={calendarRef} className={`absolute top-full left-1/2 transform -translate-x-1/2 mt-4 z-50 bg-light rounded-3xl p-6 shadow-2xl border border-gray-200 w-[95vw] max-w-4xl ${className}`}>
       {showTitle && (
         <h2 className="text-xl font-bold text-gray-800 mb-6">{title}</h2>
       )}

@@ -31,13 +31,13 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
     }
 
     const hobbies = guide?.hobbies?.map((h: { category?: { id: string; name: string } }) => h.category?.name).filter((name: string | undefined): name is string => !!name) || [];
-    const profilePicture = guide.medias?.[0]?.url;
+    const profilePicture = guide?.medias?.[0]?.url;
     return (
         <section id="guide-profile" className="flex flex-col w-full items-center justify-center pt-20 pb-16">
             <div className="w-full min-h-[85vh] grid grid-cols-12 items-start bg-light p-12 py-16 gap-16">
                 <div className="flex col-span-5 text-center flex-col items-center gap-4">
                     <Image
-                        src={MinioHelpers.guideProfile(guide.id, profilePicture)}
+                        src={MinioHelpers.guideProfile(guide?.id, profilePicture)}
                         alt={`${guide?.user?.first_name} ${guide?.user?.last_name}`}
                         width={320}
                         height={320}
@@ -79,7 +79,7 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
             </div>
             <div className="w-full grid grid-cols-12 p-24 gap-32" style={{ background: "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)" }}>
                 <div className="col-span-4 flex flex-col items-start justify-start gap-6">
-                    <h3 className="text-2xl font-bold mb-6">{dict.guides.profile.hobies}</h3>
+                    <h3 className="mb-6">{dict.guides.profile.hobbies}</h3>
                     <div className="flex flex-wrap gap-3">
                         {hobbies.length > 0 ? (
                             hobbies.map((hobby: string, index: number) => (
@@ -95,75 +95,12 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
                         )}
                     </div>
                 </div>
-                <div className="col-span-8 flex flex-col items-start justify-start gap-6">
-                    <h3 className="text-2xl font-bold mb-6">{dict.guides.profile.availability}</h3>
-                    <div className="w-full">
-                        <Calendar
-                            mode="single"
-                            unavailableDates={[
-                                new Date(2026, 1, 15),
-                                new Date(2026, 1, 16),
-                                new Date(2026, 1, 20),
-                            ]}
-                            minDate={new Date()}
-                            locale="fr"
-                            className="w-full"
-                        />
-                    </div>
+                <div className="col-span-4 flex flex-col items-start justify-start gap-6">
+                    <h3 className="mb-6">{dict.guides.profile.about}</h3>
                 </div>
-            </div>
-            <div className="w-full py-6 bg-accent text-center flex items-center justify-center gap-12">
-                <button
-                    onClick={() => setSelectedButton("offers")}
-                    className={`text-white bg-accent py-3.5 px-12 rounded-xl transition-colors duration-300 cursor-pointer
-                        ${selectedButton === "offers" ? "text-black! bg-secondary" : ""}
-                    `}>
-                    {dict.guides.profile.offers}
-                </button>
-                <button
-                    onClick={() => setSelectedButton("pictures")}
-                    className={`text-white bg-accent py-3.5 px-12 rounded-xl transition-colors duration-300 cursor-pointer
-                        ${selectedButton === "pictures" ? "text-black! bg-secondary" : ""}
-                    `}>
-                    {dict.guides.profile.pictures}
-                </button>
-                <button
-                    onClick={() => setSelectedButton("about")}
-                    className={`text-white bg-accent py-3.5 px-12 rounded-xl transition-colors duration-300 cursor-pointer
-                        ${selectedButton === "about" ? "text-black! bg-secondary" : ""}
-                    `}>
-                    {dict.guides.profile.about}
-                </button>
-                <button
-                    onClick={() => setSelectedButton("reviews")}
-                    className={`text-white bg-accent py-3.5 px-12 rounded-xl transition-colors duration-300 cursor-pointer
-                        ${selectedButton === "reviews" ? "text-black! bg-secondary" : ""}
-                    `}>
-                    {dict.guides.profile.reviews}
-                </button>
-            </div>
-            <div
-                className={`w-full py-16 max-w-xl flex items-center justify-center gap-12 
-                    ${selectedButton === "about" || selectedButton === "reviews" ? "flex-col" : ""
-                    }`}>
-                
-                {selectedButton === "offers" && (
-                    <h2>{dict.guides.profile.offersTitle}</h2>
-                    
-                )}
-                {selectedButton === "pictures" && (
-                    <div>
-                        <h2>{dict.guides.profile.picturesTitle}</h2>
-                        <div className="grid grid-cols-4 gap-8 mt-8">
-                        </div>
-                    </div>
-                )}
-                {selectedButton === "about" && (
-                    <h2>{dict.guides.profile.aboutTitle}</h2>
-                )}
-                {selectedButton === "reviews" && (
-                    <h2>{dict.guides.profile.reviewsTitle}</h2>
-                )}
+                <div className="col-span-4 flex flex-col items-start justify-start gap-6">
+                    <h3 className="mb-6">{dict.guides.profile.pictures}</h3>
+                </div>
             </div>
         </section>
     );

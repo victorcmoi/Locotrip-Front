@@ -2,38 +2,82 @@
 
 import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { LuMapPin } from "react-icons/lu";
 import { BsCalendar2 } from "react-icons/bs";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import GuideCard from "@/components/ui/guides/GuideCard";
 import { useSearchGuides } from "@/services/guides/getGuides";
+import Calendar from "@/components/ui/calendar/Calendar";
+import { HOME_ROUTES } from "@/utils/routes";
+import { MdLanguage } from "react-icons/md";
+import { SlArrowDown } from "react-icons/sl";
+import { LuEarth } from "react-icons/lu";
+import { AiOutlineEuro } from "react-icons/ai";
 
 export default function SearchPage() {
   const dict = useTranslations();
   const searchParams = useSearchParams();
-  const [searchDate, setSearchDate] = useState<string>(searchParams.get("date") || "");
+  const router = useRouter();
+  const localizedPath = useLocalizedPath();
+  const [searchDate, setSearchDate] = useState<string>("");
   const [location, setLocation] = useState<string>(searchParams.get("location") || "");
-  
-  const { data: guides, isLoading: guidesLoading, error: guidesError, refetch } = useSearchGuides(searchDate, !!searchDate);
+  const [showCalendar, setShowCalendar] = useState<boolean>(false);
+  const [selectedDateRange, setSelectedDateRange] = useState<{ start: Date | null; end: Date | null }>({ 
+    start: null, 
+    end: null 
+  });
   
   const [selectedMode, setSelectedMode] = useState<"guide" | "activity">(
       "guide"
   );
 
   useEffect(() => {
-    const dateParam = searchParams.get("date");
+    const startDateParam = searchParams.get("startDate");
+    const endDateParam = searchParams.get("endDate");
     const locationParam = searchParams.get("location");
-    if (dateParam) setSearchDate(dateParam);
+    
+    if (startDateParam) {
+      const startDate = new Date(startDateParam);
+      const endDate = endDateParam ? new Date(endDateParam) : null;
+      setSelectedDateRange({ start: startDate, end: endDate });
+      if (endDate) {
+        setSearchDate(`${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`);
+      }
+    }
     if (locationParam) setLocation(locationParam);
   }, [searchParams]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchDate) {
-      refetch();
+  const startDateParam = searchParams.get("startDate") || undefined;
+  const endDateParam = searchParams.get("endDate") || undefined;
+  
+  const { data: guides, isLoading: guidesLoading, error: guidesError } = useSearchGuides(
+    undefined,
+    startDateParam,
+    endDateParam,
+    !!(startDateParam || endDateParam)
+  );
+
+  const handleDateRangeChange = (range: { start: Date | null; end: Date | null }) => {
+    setSelectedDateRange(range);
+    if (range.start && range.end) {
+      setSearchDate(`${range.start.toLocaleDateString()} - ${range.end.toLocaleDateString()}`);
     }
   };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (location) params.append("location", location);
+    if (selectedDateRange.start) {
+      params.append("startDate", selectedDateRange.start.toISOString());
+    }
+    if (selectedDateRange.end) {
+      params.append("endDate", selectedDateRange.end.toISOString());
+    }
+    router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${params.toString()}`));
+  };
+
 
   return (
     <div className="min-h-screen bg-light pt-24 pb-12">
@@ -62,11 +106,12 @@ export default function SearchPage() {
         </nav>
 
         {/* Formulaire de recherche */}
+        <div className="relative max-w-2xl mx-auto mb-12">
         <form
           onSubmit={handleSearch}
-          className="max-w-2xl mx-auto mb-12 flex items-center bg-white rounded-full shadow-xl pl-6"
+          className="flex items-center bg-white rounded-full shadow-xl pl-6"
         >
-          <LuMapPin size={24} className="text-gray" />
+          <LuMapPin size={24} className="text-gray shrink-0" />
           <input
             type="text"
             value={location}
@@ -75,13 +120,14 @@ export default function SearchPage() {
             className="grow px-4 py-3 rounded-full focus:outline-none placeholder:text-dark"
           />
 
-          <BsCalendar2 size={24} className="text-gray" />
+          <BsCalendar2 size={24} className="text-gray shrink-0" />
           <input
-            type="date"
+            type="text"
             value={searchDate}
-            onChange={(e) => setSearchDate(e.target.value)}
+            onClick={() => setShowCalendar(!showCalendar)}
+            readOnly
             placeholder={dict.home.searchDate}
-            className="grow px-4 py-3 rounded-full focus:outline-none"
+            className="grow px-4 py-3 rounded-full focus:outline-none placeholder:text-dark cursor-pointer"
           />
 
           <button
@@ -92,37 +138,64 @@ export default function SearchPage() {
           </button>
         </form>
 
+        {showCalendar && (
+          <Calendar
+            mode="range"
+            selectedRange={selectedDateRange}
+            onChange={(range) => handleDateRangeChange(range as { start: Date | null; end: Date | null })}
+            onClose={() => setShowCalendar(false)}
+            locale="fr"
+          />
+        )}
+        </div>
+      </div>
+
+        {/* Filters */}
+        <div className="w-full flex gap-4 items-center justify-center py-4 bg-accent mb-10">
+          <button className="bg-light text-gray-800 font-normal flex justify-center items-center gap-3 px-6 py-3">
+            <MdLanguage />
+            {dict.search.language}
+            <SlArrowDown />
+          </button>
+          <button className="bg-light text-gray-800 flex font-normal justify-center items-center gap-3 px-6 py-3">
+            <LuEarth />
+            {dict.search.interest}
+            <SlArrowDown />
+          </button>
+          <button className="bg-light text-gray-800 flex font-normal justify-center items-center gap-3 px-6 py-3">
+            <AiOutlineEuro />
+            {dict.search.price}
+            <SlArrowDown />
+          </button>
+        </div>
+
+      <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12">
         {/* Résultats */}
         <div className="mt-12">
-          {!searchDate && (
+          {guidesLoading && (
             <div className="text-center text-gray py-12">
-              <p className="text-xl">{dict.home.selectDateToSearch || "Sélectionnez une date pour rechercher des guides disponibles"}</p>
+              <p className="text-xl">{dict.search.loading}</p>
             </div>
           )}
 
-          {searchDate && guidesLoading && (
-            <div className="text-center text-gray py-12">
-              <p className="text-xl">{dict.home.guidesLoading || "Chargement..."}</p>
-            </div>
-          )}
-
-          {searchDate && guidesError && (
+          {guidesError && (
             <div className="text-center text-error py-12">
-              <p className="text-xl">{dict.home.errorLoadingGuides || "Erreur lors du chargement des guides"}</p>
+              <p className="text-xl">{dict.search.error}</p>
             </div>
           )}
 
-          {searchDate && guides && guides.length === 0 && !guidesLoading && (
+          {guides && guides.length === 0 && !guidesLoading && (
             <div className="text-center text-gray py-12">
-              <p className="text-xl">{dict.home.noGuidesFound || "Aucun guide disponible pour cette date"}</p>
+              <p className="text-xl">{dict.search.noResult}</p>
             </div>
           )}
 
-          {searchDate && guides && guides.length > 0 && (
+          {guides && guides.length > 0 && (
             <div>
-              <h2 className="mb-8">
-                {guides.length} {guides.length === 1 ? "guide trouvé" : "guides trouvés"}
+              <h2 className="mb-4">
+                {dict.search.titleGuide}
               </h2>
+              <p className="mb-12">{guides.length} {guides.length === 1 ? dict.search.resultTitle : dict.search.resultsTitle}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {guides.map((guide) => (
                   <GuideCard key={guide.id} guide={guide} />

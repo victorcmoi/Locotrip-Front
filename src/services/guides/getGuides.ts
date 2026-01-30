@@ -1,27 +1,30 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { ApiRequest } from '@/services/instance';
-import { guideSchema, guidesSchema, guidesResponseSchema, GuideSchema, GuidesSchema } from '@/schemas/guide';
+import { guideSchema, guidesSchema, guidesResponseSchema, type Guides, type Guide } from '@/schemas/guide';
 
 export const getGuides = async () => {
-  return new ApiRequest<GuidesSchema>(guidesSchema).get('guides');
+  return new ApiRequest<Guides>(guidesSchema).get('guides');
 };
 
 export const getGuidesById = async (id: string) => {
-  return new ApiRequest<GuideSchema>(guideSchema).get(`guides/${id}`);
+  return new ApiRequest<Guide>(guideSchema).get(`guides/${id}`);
 }
 
 export const getTopRatedGuides = async () => {
-  return new ApiRequest<GuidesSchema>(guidesSchema).get('guides/top-rated?limit=5&minReviews=1');
+  return new ApiRequest<Guides>(guidesSchema).get('guides/top-rated?limit=5&minReviews=1');
 };
 
-export const searchGuidesByDate = async (date?: string) => {
+export const searchGuidesByDate = async (date?: string, startDate?: string, endDate?: string) => {
   const params = new URLSearchParams();
-  if (date) {
-    params.append('date', date);
+  if (startDate) {
+    params.append('startDate', startDate);
+  }
+  if (endDate) {
+    params.append('endDate', endDate);
   }
   const queryString = params.toString();
-  return new ApiRequest<GuidesSchema>(guidesResponseSchema).get(`guides${queryString ? `?${queryString}` : ''}`);
+  return new ApiRequest<Guides>(guidesResponseSchema).get(`guides${queryString ? `?${queryString}` : ''}`);
 };
 
 export const useGuides = () => {
@@ -38,10 +41,10 @@ export const useTopRatedGuides = () => {
   });
 };
 
-export const useSearchGuides = (date?: string, enabled: boolean = true) => {
+export const useSearchGuides = (date?: string, startDate?: string, endDate?: string, enabled: boolean = true) => {
   return useQuery({
-    queryKey: ['searchGuides', date],
-    queryFn: () => searchGuidesByDate(date),
+    queryKey: ['searchGuides', date, startDate, endDate],
+    queryFn: () => searchGuidesByDate(date, startDate, endDate),
     enabled,
   });
 };

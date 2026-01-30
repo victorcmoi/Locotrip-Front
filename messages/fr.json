@@ -122,7 +122,7 @@
       "proCard": "Carte professionnelle",
       "reservations": "Réservations",
       "delayResponse": "Délai réponse",
-      "hobies": "Centres d'intérêts",
+      "hobbies": "Centres d'intérêts",
       "availability": "Disponibilités du guide",
       "offers": "Offres",
       "pictures": "Photos",
@@ -301,5 +301,17 @@
     "forTravelersText": "Explorez une multitude d'expériences uniques proposées par des guides locaux passionnés. Recherchez par destination, par centre d'intérêt, consultez les profils des guides, lisez les avis, et réservez en quelques clics l'aventure qui vous ressemble.",
     "forGuidesTitle": "Pour les guides ?",
     "forGuidesText": "Chez Locotrip, nous croyons qu'un voyage réussi se mesure en émotions, en rencontres et en souvenirs impérissables, bien plus qu'en kilomètres parcourus ou en monuments cochés sur une liste. Fatigués du tourisme impersonnel et des sentiers battus ? Nous aussi. C'est pourquoi nous avons créé une plateforme où la curiosité rencontre la passion locale."
+  },
+  "search": {
+    "loading": "Chargement des résultats...",
+    "error": "Erreur lors du chargement des résultats.",
+    "noResults": "Aucun résultat trouvé pour votre recherche.",
+    "resultsTitle": "résultats de recherche",
+    "resultTitle": "résultat de recherche",
+    "language": "Langue",
+    "interest": "Intérêt",
+    "price": "Prix",
+    "title": "Toutes nos activités disponibles",
+    "titleGuide": "Tous nos guides disponibles"
   }
 }

@@ -23,6 +23,7 @@ export const guideSchema = z.object({
   card_verification_date: z.string().or(z.date()).nullish(),
   internal_comment: z.string().nullish(),
   response_time_hours: z.number().nullish(),
+  response_time_range: z.string().nullish(),
   is_active: z.boolean().default(true),
   suspended_at: z.string().or(z.date()).nullish(),
   suspension_reason: z.string().nullish(),
@@ -30,6 +31,8 @@ export const guideSchema = z.object({
   updated_at: z.string().or(z.date()),
   reviewCount: z.number().optional(),
   experiencesCount: z.number().optional(),
+  avgRating: z.number().optional(),
+  weightedScore: z.number().optional(),
   categories: z.array(z.string()).optional(),
   medias: z.array(mediaSchema).optional(),
   hobbies: z.array(z.object({
