@@ -19,8 +19,6 @@ export const guideSchema = z.object({
   guide_status: GuideStatusEnum,
   pro_card: z.boolean().default(false),
   country: z.string().nullish(),
-  card_request_date: z.string().or(z.date()).nullish(),
-  card_verification_date: z.string().or(z.date()).nullish(),
   internal_comment: z.string().nullish(),
   response_time_hours: z.number().nullish(),
   response_time_range: z.string().nullish(),

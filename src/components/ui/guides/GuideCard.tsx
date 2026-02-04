@@ -55,7 +55,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
       </Link>
 
       {/* Contenu de la carte */}
-      <div className="p-8 flex-1 flex flex-col">
+      <div className="p-6 flex-1 flex flex-col">
         {/* Note */}
         <div className="flex items-center gap-2 mb-8 justify-center">
           <div className="flex">
@@ -68,7 +68,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
 
         {/* Langues */}
         {guide.languages && (
-          <div className="mb-8 flex justify-center">
+          <div className="mb-8 flex justify-center text-center">
             <p className="text-base">
               <span className="font-bold text-dark">{dict.common.languages}</span>{" "}
               <span className="text-dark">{guide.languages}</span>
@@ -101,7 +101,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
         )}
 
         {/* Bouton */}
-        <button className="w-1/2 mx-auto bg-primary hover:bg-accent text-light font-semibold py-3 rounded-full transition-colors duration-300 cursor-pointer text-base">
+        <button className="mx-auto hover:bg-accent text-light transition-colors duration-300 cursor-pointer text-base py-2.5">
           {dict.home.sendMessage || "Envoyer un message"}
         </button>
       </div>

@@ -31,11 +31,18 @@ export default function SearchPage() {
   const [selectedMode, setSelectedMode] = useState<"guide" | "activity">(
       "guide"
   );
+  const [minPrice, setMinPrice] = useState<number | undefined>(undefined);
+  const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
+  const [showPriceFilter, setShowPriceFilter] = useState<boolean>(false);
+  const [showLanguageFilter, setShowLanguageFilter] = useState<boolean>(false);
+  const [showInterestFilter, setShowInterestFilter] = useState<boolean>(false);
 
   useEffect(() => {
     const startDateParam = searchParams.get("startDate");
     const endDateParam = searchParams.get("endDate");
     const locationParam = searchParams.get("location");
+    const minPriceParam = searchParams.get("minPrice");
+    const maxPriceParam = searchParams.get("maxPrice");
     
     if (startDateParam) {
       const startDate = new Date(startDateParam);
@@ -46,6 +53,8 @@ export default function SearchPage() {
       }
     }
     if (locationParam) setLocation(locationParam);
+    if (minPriceParam) setMinPrice(Number(minPriceParam));
+    if (maxPriceParam) setMaxPrice(Number(maxPriceParam));
   }, [searchParams]);
 
   const startDateParam = searchParams.get("startDate") || undefined;
@@ -57,6 +66,11 @@ export default function SearchPage() {
     endDateParam,
     !!(startDateParam || endDateParam)
   );
+  const languages = guides?.flatMap((guide) => guide.languages ? guide.languages.split(", ").map((lang) => lang.trim()) : []);
+  const uniqueLanguages = Array.from(new Set(languages));
+
+  const hobbies = guides?.flatMap((guide) => guide.hobbies?.map((hobby) => hobby.category?.name).filter((name): name is string => Boolean(name)) || []);
+  const uniqueHobbies = Array.from(new Set(hobbies));
 
   const handleDateRangeChange = (range: { start: Date | null; end: Date | null }) => {
     setSelectedDateRange(range);
@@ -75,6 +89,8 @@ export default function SearchPage() {
     if (selectedDateRange.end) {
       params.append("endDate", selectedDateRange.end.toISOString());
     }
+    if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
+    if (maxPrice !== undefined) params.append("maxPrice", maxPrice.toString());
     router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${params.toString()}`));
   };
 
@@ -106,7 +122,7 @@ export default function SearchPage() {
         </nav>
 
         {/* Formulaire de recherche */}
-        <div className="relative max-w-2xl mx-auto mb-12">
+        <div className="relative max-w-3xl mx-auto mb-12">
         <form
           onSubmit={handleSearch}
           className="flex items-center bg-white rounded-full shadow-xl pl-6"
@@ -152,21 +168,87 @@ export default function SearchPage() {
 
         {/* Filters */}
         <div className="w-full flex gap-4 items-center justify-center py-4 bg-accent mb-10">
-          <button className="bg-light text-gray-800 font-normal flex justify-center items-center gap-3 px-6 py-3">
-            <MdLanguage />
-            {dict.search.language}
-            <SlArrowDown />
-          </button>
-          <button className="bg-light text-gray-800 flex font-normal justify-center items-center gap-3 px-6 py-3">
-            <LuEarth />
-            {dict.search.interest}
-            <SlArrowDown />
-          </button>
-          <button className="bg-light text-gray-800 flex font-normal justify-center items-center gap-3 px-6 py-3">
-            <AiOutlineEuro />
-            {dict.search.price}
-            <SlArrowDown />
-          </button>
+          <div className="relative">
+            <button 
+              onClick={() => {
+                setShowLanguageFilter(!showLanguageFilter);
+                setShowInterestFilter(false);
+                setShowPriceFilter(false);
+              }}
+              className="bg-light text-gray-800 font-normal flex justify-center items-center gap-3 px-6 py-3"
+            >
+              <MdLanguage />
+              {dict.search.language}
+              <SlArrowDown />
+            </button>
+          </div>
+
+          <div className="relative">
+            <button 
+              onClick={() => {
+                setShowInterestFilter(!showInterestFilter);
+                setShowLanguageFilter(false);
+                setShowPriceFilter(false);
+              }}
+              className="bg-light text-gray-800 flex font-normal justify-center items-center gap-3 px-6 py-3"
+            >
+              <LuEarth />
+              {dict.search.interest}
+              <SlArrowDown />
+            </button>
+          </div>
+
+          <div className="relative">
+            <button 
+              onClick={() => {
+                setShowPriceFilter(!showPriceFilter);
+                setShowLanguageFilter(false);
+                setShowInterestFilter(false);
+              }}
+              className="bg-light text-gray-800 flex font-normal justify-center items-center gap-3 px-6 py-3"
+            >
+              <AiOutlineEuro />
+              {dict.search.price}
+              <SlArrowDown />
+            </button>
+            
+            {showPriceFilter && (
+              <div className="absolute top-full mt-2 left-0 bg-light shadow-xl rounded-lg p-6 z-50 min-w-75">
+                <h3 className="mb-4">{dict.search.priceRange}</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm mb-2">{dict.search.minPrice}</label>
+                    <input
+                      type="number"
+                      value={minPrice || ''}
+                      onChange={(e) => setMinPrice(e.target.value ? Number(e.target.value) : undefined)}
+                      placeholder="0"
+                      className="w-full px-3 py-2 border border-gray-light rounded focus:outline-none focus:border-accent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-2">{dict.search.maxPrice}</label>
+                    <input
+                      type="number"
+                      value={maxPrice || ''}
+                      onChange={(e) => setMaxPrice(e.target.value ? Number(e.target.value) : undefined)}
+                      placeholder="1000"
+                      className="w-full px-3 py-2 border border-gray-light rounded focus:outline-none focus:border-accent"
+                    />
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleSearch(new Event('submit') as any);
+                      setShowPriceFilter(false);
+                    }}
+                    className="w-full bg-primary text-white py-2 rounded hover:bg-accent-dark transition-colors"
+                  >
+                    {dict.search.apply}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
       <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12">

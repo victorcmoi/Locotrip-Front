@@ -312,6 +312,10 @@
     "interest": "Intérêt",
     "price": "Prix",
     "title": "Toutes nos activités disponibles",
-    "titleGuide": "Tous nos guides disponibles"
+    "titleGuide": "Tous nos guides disponibles",
+    "priceRange": "Prix par voyageur",
+    "minPrice": "Prix minimum",
+    "maxPrice": "Prix maximum",
+    "apply": "Appliquer"
   }
 }

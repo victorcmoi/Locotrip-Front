@@ -1,6 +1,20 @@
 import { z } from 'zod';
 import { citySchema } from './city';
 import { mediaSchema } from './media';
+import { reviewSchema } from './reviews';
+import { bookingSchema } from './booking';
+
+export const currencyPriceSchema = z.object({
+  id: z.string().uuid(),
+  experience_id: z.string().uuid(),
+  currency_code: z.string().length(3),
+  price: z.number(),
+  currency: z.object({
+    code: z.string().length(3),
+    name: z.string(),
+    exchange_rate: z.number(),
+  }).optional(),
+});
 
 export const experienceSchema = z.object({
   id: z.string().uuid(),
@@ -32,6 +46,10 @@ export const experienceSchema = z.object({
       first_name: z.string(),
       last_name: z.string(),
     }),
+    bio: z.string().nullish(),
+    languages: z.string().nullish(),
+    country: z.string().nullish(),
+    pro_card: z.boolean().optional(),
   }).optional(),
   medias: z.array(mediaSchema).optional(),
   categories: z.array(z.object({
@@ -41,6 +59,11 @@ export const experienceSchema = z.object({
       name: z.string(),
     }).optional(),
   })).optional(),
+  reviews: z.array(reviewSchema).optional(),
+  bookings: z.array(bookingSchema).optional(),
+  currency_prices: z.array(currencyPriceSchema).optional(),
+  avgRating: z.number().optional(),
+  reviewCount: z.number().optional(),
 });
 
 export const experiencesSchema = z.array(experienceSchema);
