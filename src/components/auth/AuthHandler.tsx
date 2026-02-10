@@ -1,13 +1,23 @@
 'use client';
 
 import { signOut, useSession } from 'next-auth/react';
-import { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { jwtDecode } from "jwt-decode";
 import dayjs from "@/lib/dayjs";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 const EXPIRATION_MODAL_MINUTES = 5;
+
+type AuthContextType = {
+  showSessionExpired: () => void;
+};
+
+export const AuthContext = React.createContext<AuthContextType>({
+  showSessionExpired: () => {},
+});
+
+export const useAuth = () => React.useContext(AuthContext);
 
 export default function AuthHandler({ children }: { children: ReactNode }) {
   const session = useSession();
@@ -63,8 +73,13 @@ export default function AuthHandler({ children }: { children: ReactNode }) {
     };
   }, [sessionExpirationDuration, sessionExpires]);
 
+  const showSessionExpired = () => {
+    setOpen(true);
+    setSessionExpires(0);
+  };
+
   return (
-    <>
+    <AuthContext.Provider value={{ showSessionExpired }}>
       {children}
       <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">
         <DialogBackdrop
@@ -115,6 +130,7 @@ export default function AuthHandler({ children }: { children: ReactNode }) {
           </div>
         </div>
       </Dialog>
-    </>
+    </AuthContext.Provider>
   );
 }
+

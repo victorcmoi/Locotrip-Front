@@ -269,24 +269,22 @@ export default function Header() {
                                     </Link>
                                 </>
                             ) : (
-                                // Menu connecté
+                                 // Menu connecté
                                 <>
                                     <p className="font-semibold px-3 py-2">{dict.navigation.myAccount || 'Mon compte'}</p>
-                                    <div className="flex items-center gap-2 p-2">
-                                        <div className="bg-accent text-light rounded-full p-3 flex items-center font-semibold">
+                                    <Link href={localizedPath(USER_ROUTES.PROFILE)} onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 p-3 duration-300 hover:bg-gray-light rounded-lg">
+                                        <div className="bg-accent text-light rounded-full w-10 h-10 flex items-center justify-center font-semibold shrink-0 ">
                                             <p>
                                                 {session?.user?.first_name?.charAt(0).toUpperCase()}
                                                 {session?.user?.last_name?.charAt(0).toUpperCase()}
                                             </p>
                                         </div>
-                                        <Link 
-                                            href={localizedPath(USER_ROUTES.PROFILE)} 
-                                            className="block w-full text-left p-3 hover:bg-gray-light rounded-lg"
-                                            onClick={() => setIsUserMenuOpen(false)}
-                                        >
-                                            {session?.user?.first_name?.charAt(0).toUpperCase() + session?.user?.first_name?.slice(1)} {session?.user?.last_name?.charAt(0).toUpperCase()}.
-                                        </Link>
-                                    </div>
+                                        
+                                        <div>
+                                            <p>{session?.user?.first_name?.charAt(0).toUpperCase() + session?.user?.first_name?.slice(1)} {session?.user?.last_name?.charAt(0).toUpperCase()}.</p>
+                                            <p className="text-sm text-gray">{session?.user?.email}</p>
+                                        </div>
+                                    </Link>
                                     <hr className="my-2 border-gray-light" />
                                     <Link 
                                         href={localizedPath(BOOKINGS_ROUTES.MY_BOOKINGS)} 

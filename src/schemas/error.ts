@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const apiErrorResponseSchema = z.object({
-  message: z.string().nullish(),
+  message: z.union([z.string(), z.array(z.string())]).nullish(),
   error: z.string().nullish(),
   statusCode: z.number(),
 });

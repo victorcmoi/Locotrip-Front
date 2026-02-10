@@ -9,6 +9,7 @@ import { getDictionary, hasLocale } from "./dictionnaries";
 import { notFound } from "next/navigation";
 import { Toaster } from "sonner";
 import Footer from "@/components/common/Footer";
+import AuthHandler from "@/components/auth/AuthHandler";
 
 const raleway = Raleway({
   variable: "--font-raleway",
@@ -38,15 +39,18 @@ export default async function RootLayout({
       <body className={`${raleway.variable} antialiased`}>
           <QueryClientProvider>
             <NextAuthProvider>
-              <I18nProvider locale={locale} dict={dict}>
-                <Header />
-                {children}
-                <Toaster richColors />
-                <Footer />
-              </I18nProvider>
+              <AuthHandler>
+                <I18nProvider locale={locale} dict={dict}>
+                  <Header />
+                  {children}
+                  <Toaster richColors />
+                  <Footer />
+                </I18nProvider>
+              </AuthHandler>
             </NextAuthProvider>
           </QueryClientProvider>
       </body>
     </html>
   );
 }
+
