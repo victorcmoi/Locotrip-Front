@@ -86,7 +86,7 @@ export default function GuidesCarousel({ guides }: GuidesCarouselProps) {
       {canScrollPrev && (
         <button
           onClick={scrollPrev}
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-accent text-light rounded-full p-4 shadow-lg hover:bg-accent-dark transition-colors duration-300 z-10 -ml-6"
+          className="absolute left-0 top-1/2 -translate-y-1/2 bg-accent text-light rounded-full p-4 shadow-lg hover:bg-accent-dark duration-300 z-10 -ml-6 cursor-pointer hover:scale-110"
           aria-label="Précédent"
         >
           <HiChevronLeft size={32} />
@@ -97,7 +97,7 @@ export default function GuidesCarousel({ guides }: GuidesCarouselProps) {
       {canScrollNext && (
         <button
           onClick={scrollNext}
-          className="absolute right-0 top-1/2 -translate-y-1/2 bg-accent text-light rounded-full p-4 shadow-lg hover:bg-accent-dark transition-colors duration-300 z-10 -mr-6"
+          className="absolute right-0 top-1/2 -translate-y-1/2 bg-accent text-light rounded-full p-4 shadow-lg hover:bg-accent-dark duration-300 z-10 -mr-6 cursor-pointer hover:scale-110"
           aria-label="Suivant"
         >
           <HiChevronRight size={32} />

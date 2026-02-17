@@ -78,7 +78,7 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
                 </div>
             </div>
             <div className="w-full grid grid-cols-12 p-24 gap-32" style={{ background: "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)" }}>
-                <div className="col-span-4 flex flex-col items-start justify-start gap-6">
+                <div className="col-span-5 flex flex-col items-start justify-start gap-6">
                     <h3 className="mb-6">{dict.guides.profile.hobbies}</h3>
                     <div className="flex flex-wrap gap-3">
                         {hobbies.length > 0 ? (
@@ -91,15 +91,12 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
                                 </span>
                             ))
                         ) : (
-                            <p className="text-dark text-lg">Aucun centre d'intérêt renseigné.</p>
+                            <p className="text-lg">{dict.guides.profile.noHobbies}</p>
                         )}
                     </div>
                 </div>
-                <div className="col-span-4 flex flex-col items-start justify-start gap-6">
+                <div className="col-span-7 flex flex-col items-start justify-start gap-6">
                     <h3 className="mb-6">{dict.guides.profile.about}</h3>
-                </div>
-                <div className="col-span-4 flex flex-col items-start justify-start gap-6">
-                    <h3 className="mb-6">{dict.guides.profile.pictures}</h3>
                 </div>
             </div>
         </section>

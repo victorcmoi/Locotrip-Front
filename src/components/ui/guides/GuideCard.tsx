@@ -102,7 +102,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
 
         {/* Bouton */}
         <button className="mx-auto hover:bg-accent text-light transition-colors duration-300 cursor-pointer text-base py-2.5">
-          {dict.home.sendMessage || "Envoyer un message"}
+          {dict.home.sendMessage}
         </button>
       </div>
     </div>

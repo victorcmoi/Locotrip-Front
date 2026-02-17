@@ -85,7 +85,8 @@
     "guideSub3": "Transformez votre savoir local en revenu, tout en organisant des visites à votre rythme.",
     "guideTitle4": "Contribuer à un tourisme authentique",
     "guideSub4": "Proposez des expériences immersives loin des circuits touristiques classiques, en valorisant le patrimoine local.",
-    "becomeGuideButton": "Devenir guide"
+    "becomeGuideButton": "Devenir guide",
+    "sendMessage": "Envoyer un message"
   },
   "auth": {
     "login": "Se connecter",
@@ -118,6 +119,7 @@
       "contactGuide": "Contactez-moi",
       "bookExperience": "Réserver une expérience",
       "noExperiences": "Aucune expérience disponible pour le moment",
+      "noHobbies": "Aucun centre d'intérêt renseigné",
       "guidePro": "Certifié guide professionnel",
       "proCard": "Carte professionnelle",
       "reservations": "Réservations",
