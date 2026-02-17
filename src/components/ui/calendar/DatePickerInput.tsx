@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import dayjs from 'dayjs';
-import { Calendar } from './Calendar';
+import React, { useState, useRef, useEffect } from "react";
+import dayjs from "dayjs";
+import { Calendar } from "./Calendar";
 
 export interface DatePickerInputProps {
-  mode?: 'single' | 'range';
+  mode?: "single" | "range";
   value?: Date | null;
   rangeValue?: { start: Date | null; end: Date | null };
   onChange?: (date: Date | { start: Date | null; end: Date | null }) => void;
@@ -19,59 +19,70 @@ export interface DatePickerInputProps {
 }
 
 export const DatePickerInput: React.FC<DatePickerInputProps> = ({
-  mode = 'single',
+  mode = "single",
   value,
   rangeValue,
   onChange,
   unavailableDates = [],
   minDate,
   maxDate,
-  locale = 'fr',
-  placeholder = 'Sélectionner une date',
+  locale = "fr",
+  placeholder = "Sélectionner une date",
   label,
-  className = '',
+  className = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
 
   const getDisplayValue = () => {
-    if (mode === 'single' && value) {
-      return dayjs(value).locale(locale).format('DD MMMM YYYY');
+    if (mode === "single" && value) {
+      return dayjs(value).locale(locale).format("DD MMMM YYYY");
     }
-    if (mode === 'range' && rangeValue) {
+    if (mode === "range" && rangeValue) {
       const { start, end } = rangeValue;
       if (start && end) {
-        return `${dayjs(start).locale(locale).format('DD MMM')} - ${dayjs(end).locale(locale).format('DD MMM YYYY')}`;
+        return `${dayjs(start).locale(locale).format("DD MMM")} - ${dayjs(end).locale(locale).format("DD MMM YYYY")}`;
       }
       if (start) {
-        return dayjs(start).locale(locale).format('DD MMMM YYYY');
+        return dayjs(start).locale(locale).format("DD MMMM YYYY");
       }
     }
     return placeholder;
   };
 
-  const handleChange = (date: Date | { start: Date | null; end: Date | null }) => {
+  const handleChange = (
+    date: Date | { start: Date | null; end: Date | null },
+  ) => {
     onChange?.(date);
-    if (mode === 'single') {
+    if (mode === "single") {
       setIsOpen(false);
     }
-    if (mode === 'range' && typeof date === 'object' && 'start' in date && date.start && date.end) {
+    if (
+      mode === "range" &&
+      typeof date === "object" &&
+      "start" in date &&
+      date.start &&
+      date.end
+    ) {
       setIsOpen(false);
     }
   };
@@ -83,14 +94,18 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
           {label}
         </label>
       )}
-      
+
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm text-left hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all"
       >
         <div className="flex items-center justify-between">
-          <span className={value || (rangeValue?.start) ? 'text-gray-900' : 'text-gray-400'}>
+          <span
+            className={
+              value || rangeValue?.start ? "text-gray-900" : "text-gray-400"
+            }
+          >
             {getDisplayValue()}
           </span>
           <svg

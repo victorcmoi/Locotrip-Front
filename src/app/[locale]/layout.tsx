@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
-import "../globals.css"
+import "../globals.css";
 import Header from "@/components/common/Header";
 import NextAuthProvider from "@/providers/auth.provider";
 import QueryClientProvider from "@/providers/query-client.provider";
@@ -22,35 +22,34 @@ export const metadata: Metadata = {
 };
 
 export async function generateStaticParams() {
-  return [{ lang: 'en-US' }, { lang: 'de' }]
+  return [{ lang: "en-US" }, { lang: "de" }];
 }
 
 export default async function RootLayout({
   children,
-  params
-}: LayoutProps<'/[locale]'>) {
+  params,
+}: LayoutProps<"/[locale]">) {
   const { locale } = await params;
-  
+
   if (!hasLocale(locale)) notFound();
   const dict = await getDictionary(locale);
 
   return (
     <html lang={locale}>
       <body className={`${raleway.variable} antialiased`}>
-          <QueryClientProvider>
-            <NextAuthProvider>
-              <AuthHandler>
-                <I18nProvider locale={locale} dict={dict}>
-                  <Header />
-                  {children}
-                  <Toaster richColors />
-                  <Footer />
-                </I18nProvider>
-              </AuthHandler>
-            </NextAuthProvider>
-          </QueryClientProvider>
+        <QueryClientProvider>
+          <NextAuthProvider>
+            <AuthHandler>
+              <I18nProvider locale={locale} dict={dict}>
+                <Header />
+                {children}
+                <Toaster richColors />
+                <Footer />
+              </I18nProvider>
+            </AuthHandler>
+          </NextAuthProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
 }
-

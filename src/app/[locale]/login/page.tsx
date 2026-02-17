@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import Link from "next/link";
@@ -11,18 +11,23 @@ export default function Page() {
   const localizedPath = useLocalizedPath();
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{background: "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)"}}>
+    <div
+      className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+      style={{
+        background:
+          "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)",
+      }}
+    >
       <div className="max-w-xl w-full space-y-8 bg-white rounded-2xl shadow-xl p-10">
-  
         {/* Titre */}
         <div className="text-left">
           <h2 className="text-3xl font-bold text-dark mb-2">
             {dict.auth.loginTitle}
           </h2>
           <p className="text-base text-gray">
-            {dict.auth.haveProblem}{' '}
-            <Link 
-              href={localizedPath(SUPPORT_ROUTES.CONTACT)} 
+            {dict.auth.haveProblem}{" "}
+            <Link
+              href={localizedPath(SUPPORT_ROUTES.CONTACT)}
               className="font-semibold text-accent hover:text-primary transition-colors"
             >
               {dict.auth.contactUs}
