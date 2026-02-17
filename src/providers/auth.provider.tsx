@@ -5,10 +5,7 @@ import { ReactNode } from "react";
 
 export default function NextAuthProvider({ children }: { children: ReactNode }) {
   return (
-    <SessionProvider 
-      refetchInterval={0}
-      refetchOnWindowFocus={false}
-    >
+    <SessionProvider>
       {children}
     </SessionProvider>
   );

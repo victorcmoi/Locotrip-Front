@@ -58,9 +58,21 @@ export const sessionUserSchema = z.object({
   role: UserRoleEnum,
 });
 
+export const loginApiResponseSchema = z.object({
+  token: z.string(),
+  user: z.object({
+    id: z.string().uuid(),
+    email: z.string().email(),
+    firstName: z.string(),
+    lastName: z.string(),
+    role: UserRoleEnum,
+  }),
+});
+
 export type User = z.infer<typeof userSchema>;
 export type UserApiResponse = z.infer<typeof userApiResponseSchema>;
 export type UsersApiResponse = z.infer<typeof usersApiResponseSchema>;
 export type CreateUser = z.infer<typeof createUserSchema>;
 export type UpdateUser = z.infer<typeof updateUserSchema>;
 export type SessionUser = z.infer<typeof sessionUserSchema>;
+export type LoginApiResponse = z.infer<typeof loginApiResponseSchema>;

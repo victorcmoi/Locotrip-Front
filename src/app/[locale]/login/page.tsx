@@ -2,8 +2,6 @@
 
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { checkLogin } from "@/lib/auth";
 import LoginForm from "@/components/auth/FormLogin";
 import { HOME_ROUTES, SUPPORT_ROUTES } from "@/utils/routes";
 import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
