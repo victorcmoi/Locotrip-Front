@@ -144,4 +144,24 @@ html {
   .step-line {
     background: var(--gradient-circle-border);
   }
+
+  /* Custom scrollbar pour les listes déroulantes */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    padding: 8px 0;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: --var(--color-light);
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-black-accent);
+  }
 }

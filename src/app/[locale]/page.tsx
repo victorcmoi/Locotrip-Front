@@ -3,9 +3,6 @@
 import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LuMapPin } from "react-icons/lu";
-import { BsCalendar2 } from "react-icons/bs";
-import { HiMagnifyingGlass } from "react-icons/hi2";
 import Image from "next/image";
 import Link from "next/link";
 import ButtonAvaibleGuide from "@/components/ui/guides/ButtonAvaibleGuide";
@@ -16,7 +13,8 @@ import { bubbles } from "@/utils/config/bubbles.config";
 import { FloatingBubble } from "@/components/ui/home/FloatingBubble";
 import ReviewCard from "@/components/ui/reviews/ReviewCard";
 import { GUIDES_ROUTES, HOME_ROUTES } from "@/utils/routes";
-import Calendar from "@/components/ui/calendar/Calendar";
+import { SearchBar } from "@/components/common/SearchBar";
+import { City } from "@/schemas/city";
 
 export default function Page() {
   const dict = useTranslations();
@@ -25,34 +23,23 @@ export default function Page() {
   const [selectedMode, setSelectedMode] = useState<"guide" | "activity">(
     "guide"
   );
-  const [searchDate, setSearchDate] = useState<string>("");
-  const [location, setLocation] = useState<string>("");
-  const [showCalendar, setShowCalendar] = useState<boolean>(false);
-  const [selectedDateRange, setSelectedDateRange] = useState<{ start: Date | null; end: Date | null }>({ 
-    start: null, 
-    end: null 
-  });
   const { data: guides, isLoading: guidesLoading, error: guidesError } = useTopRatedGuides();
   const { data: reviews, isLoading: reviewsLoading, error: reviewsError } = useTopRatedReviews();
   
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (location) params.append("location", location);
-    if (selectedDateRange.start) {
-      params.append("startDate", selectedDateRange.start.toISOString());
+  const handleSearch = (params: {
+    location: string;
+    selectedCity: City | null;
+    dateRange: { start: Date | null; end: Date | null };
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params.selectedCity) searchParams.append("location", params.selectedCity.name);
+    if (params.dateRange.start) {
+      searchParams.append("startDate", params.dateRange.start.toISOString());
     }
-    if (selectedDateRange.end) {
-      params.append("endDate", selectedDateRange.end.toISOString());
+    if (params.dateRange.end) {
+      searchParams.append("endDate", params.dateRange.end.toISOString());
     }
-    router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${params.toString()}`));
-  };
-
-  const handleDateRangeChange = (range: { start: Date | null; end: Date | null }) => {
-    setSelectedDateRange(range);
-    if (range.start && range.end) {
-      setSearchDate(`${range.start.toLocaleDateString()} - ${range.end.toLocaleDateString()}`);
-    }
+    router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${searchParams.toString()}`));
   };
   
   return (
@@ -110,49 +97,10 @@ export default function Page() {
                 {dict.home.activity}
               </button>
             </nav>
-            <div className="relative w-full md:max-w-xl lg:max-w-2xl mx-auto">
-            <form
-              id="search"
-              onSubmit={handleSearch}
-              className="w-full flex items-center bg-light rounded-full shadow-lg pl-6 text-black"
-            >
-              <LuMapPin size={24} className="text-gray shrink-0" />
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder={dict.home.searchPlace}
-                className="grow px-4 py-2 bg-transparent border-none rounded-full focus:outline-none placeholder:text-dark"
-              />
-
-              <BsCalendar2 size={24} className="text-gray shrink-0" />
-              <input
-                type="text"
-                value={searchDate}
-                onClick={() => setShowCalendar(!showCalendar)}
-                readOnly
-                placeholder={dict.home.searchDate}
-                className="grow px-4 py-2 bg-transparent border-none rounded-full focus:outline-none placeholder:text-dark cursor-pointer"
-              />
-
-              <button
-                type="submit"
-                className="bg-accent text-light p-4 rounded-full hover:bg-accent-dark transition-colors duration-300 cursor-pointer flex items-center justify-center shrink-0"
-              >
-                <HiMagnifyingGlass size={24} />
-              </button>
-            </form>
-
-            {showCalendar && (
-                <Calendar
-                  mode="range"
-                  selectedRange={selectedDateRange}
-                  onChange={(range) => handleDateRangeChange(range as { start: Date | null; end: Date | null })}
-                  onClose={() => setShowCalendar(false)}
-                  locale="fr"
-                />
-            )}
-            </div>
+            <SearchBar
+              onSearch={handleSearch}
+              className="w-full md:max-w-xl lg:max-w-2xl mx-auto"
+            />
           </main>
         </div>
       </section>

@@ -16,6 +16,7 @@ export const MINIO_ROUTES = {
   GUIDE_DOCUMENTS: "profiles/guides/documents",
   USER_PROFILES: "profiles/users",
   EXPERIENCES: "experiences",
+  CITIES: "cities",
 
 } as const;
 
@@ -26,4 +27,5 @@ export const DEFAULT_IMAGES = {
   GUIDE_PROFILE: "/assets/guide-pp-default.avif",
   USER_PROFILE: "/assets/user-pp-default.avif",
   EXPERIENCE: "/assets/experience-default.avif",
+  CITY: "/assets/city-default.png",
 } as const;

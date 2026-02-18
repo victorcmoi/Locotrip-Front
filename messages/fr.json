@@ -318,6 +318,12 @@
     "priceRange": "Prix par voyageur",
     "minPrice": "Prix minimum",
     "maxPrice": "Prix maximum",
-    "apply": "Appliquer"
+    "apply": "Appliquer",
+    "citiesSuggestions": "Suggestions de destinations :",
+    "selectLocation": "Sélectionnez une destination",
+    "searchCity": "Rechercher une ville...",
+    "searchResults": "Résultats de recherche :",
+    "noCitiesFound": "Aucune ville trouvée",
+    "noSuggestedCities": "Aucune suggestion disponible"
   }
 }

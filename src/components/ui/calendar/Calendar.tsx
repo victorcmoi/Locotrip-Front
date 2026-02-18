@@ -100,20 +100,6 @@ export const Calendar: React.FC<CalendarProps> = ({
     return false;
   };
 
-  const isDateRangeStart = (date: Dayjs) => {
-    if (mode === 'range' && selectedRange?.start) {
-      return date.format('YYYY-MM-DD') === dayjs(selectedRange.start).format('YYYY-MM-DD');
-    }
-    return false;
-  };
-
-  const isDateRangeEnd = (date: Dayjs) => {
-    if (mode === 'range' && selectedRange?.end) {
-      return date.format('YYYY-MM-DD') === dayjs(selectedRange.end).format('YYYY-MM-DD');
-    }
-    return false;
-  };
-
   const handleDateClick = (date: Dayjs) => {
     if (isDateDisabled(date)) return;
 

@@ -81,5 +81,11 @@ export const MinioHelpers = {
    */
   experience: (photoPath?: string | null) =>
     getMinioUrl(photoPath, MINIO_ROUTES.EXPERIENCES, DEFAULT_IMAGES.EXPERIENCE),
+
+  /**
+   * URL pour une photo de ville
+   */
+  city: (photoPath?: string | null) =>
+    getMinioUrl(photoPath, MINIO_ROUTES.CITIES, DEFAULT_IMAGES.CITY),
 };
 

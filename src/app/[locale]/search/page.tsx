@@ -3,34 +3,29 @@
 import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { LuMapPin } from "react-icons/lu";
-import { BsCalendar2 } from "react-icons/bs";
-import { HiMagnifyingGlass } from "react-icons/hi2";
 import GuideCard from "@/components/ui/guides/GuideCard";
 import { useSearchGuides } from "@/services/guides/getGuides";
-import Calendar from "@/components/ui/calendar/Calendar";
 import { HOME_ROUTES } from "@/utils/routes";
 import { MdLanguage } from "react-icons/md";
 import { SlArrowDown } from "react-icons/sl";
 import { LuEarth } from "react-icons/lu";
 import { AiOutlineEuro } from "react-icons/ai";
+import { SearchBar } from "@/components/common/SearchBar";
+import { City } from "@/schemas/city";
+import type { Guide } from "@/schemas/guide";
 
 export default function SearchPage() {
   const dict = useTranslations();
   const searchParams = useSearchParams();
   const router = useRouter();
   const localizedPath = useLocalizedPath();
-  const [searchDate, setSearchDate] = useState<string>("");
-  const [location, setLocation] = useState<string>(searchParams.get("location") || "");
-  const [showCalendar, setShowCalendar] = useState<boolean>(false);
-  const [selectedDateRange, setSelectedDateRange] = useState<{ start: Date | null; end: Date | null }>({ 
-    start: null, 
-    end: null 
+  const [initialDateRange, setInitialDateRange] = useState<{ start: Date | null; end: Date | null }>({
+    start: null,
+    end: null,
   });
-  
-  const [selectedMode, setSelectedMode] = useState<"guide" | "activity">(
-      "guide"
-  );
+  const [initialLocation, setInitialLocation] = useState<string>("");
+
+  const [selectedMode, setSelectedMode] = useState<"guide" | "activity">("guide");
   const [minPrice, setMinPrice] = useState<number | undefined>(undefined);
   const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
   const [showPriceFilter, setShowPriceFilter] = useState<boolean>(false);
@@ -43,55 +38,65 @@ export default function SearchPage() {
     const locationParam = searchParams.get("location");
     const minPriceParam = searchParams.get("minPrice");
     const maxPriceParam = searchParams.get("maxPrice");
-    
+
     if (startDateParam) {
       const startDate = new Date(startDateParam);
       const endDate = endDateParam ? new Date(endDateParam) : null;
-      setSelectedDateRange({ start: startDate, end: endDate });
-      if (endDate) {
-        setSearchDate(`${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`);
-      }
+      setInitialDateRange({ start: startDate, end: endDate });
     }
-    if (locationParam) setLocation(locationParam);
+    if (locationParam) setInitialLocation(locationParam);
     if (minPriceParam) setMinPrice(Number(minPriceParam));
     if (maxPriceParam) setMaxPrice(Number(maxPriceParam));
   }, [searchParams]);
 
   const startDateParam = searchParams.get("startDate") || undefined;
   const endDateParam = searchParams.get("endDate") || undefined;
+  const locationParam = searchParams.get("location") || undefined;
   
   const { data: guides, isLoading: guidesLoading, error: guidesError } = useSearchGuides(
-    undefined,
+    locationParam,
     startDateParam,
     endDateParam,
-    !!(startDateParam || endDateParam)
+    !!(startDateParam || endDateParam || locationParam)
   );
-  const languages = guides?.flatMap((guide) => guide.languages ? guide.languages.split(", ").map((lang) => lang.trim()) : []);
+  const languages = guides?.flatMap((guide: Guide) => guide.languages ? guide.languages.split(", ").map((lang: string) => lang.trim()) : []);
   const uniqueLanguages = Array.from(new Set(languages));
 
-  const hobbies = guides?.flatMap((guide) => guide.hobbies?.map((hobby) => hobby.category?.name).filter((name): name is string => Boolean(name)) || []);
+  const hobbies = guides?.flatMap((guide: Guide) => guide.hobbies?.map((hobby: { category_id: string; category?: { id: string; name: string } }) => hobby.category?.name).filter((name): name is string => Boolean(name)) || []);
   const uniqueHobbies = Array.from(new Set(hobbies));
 
-  const handleDateRangeChange = (range: { start: Date | null; end: Date | null }) => {
-    setSelectedDateRange(range);
-    if (range.start && range.end) {
-      setSearchDate(`${range.start.toLocaleDateString()} - ${range.end.toLocaleDateString()}`);
+  const handleSearch = (params: {
+    location: string;
+    selectedCity: City | null;
+    dateRange: { start: Date | null; end: Date | null };
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params.selectedCity) searchParams.append("location", params.selectedCity.name);
+    if (params.dateRange.start) {
+      searchParams.append("startDate", params.dateRange.start.toISOString());
     }
+    if (params.dateRange.end) {
+      searchParams.append("endDate", params.dateRange.end.toISOString());
+    }
+    if (minPrice !== undefined) searchParams.append("minPrice", minPrice.toString());
+    if (maxPrice !== undefined) searchParams.append("maxPrice", maxPrice.toString());
+    router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${searchParams.toString()}`));
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (location) params.append("location", location);
-    if (selectedDateRange.start) {
-      params.append("startDate", selectedDateRange.start.toISOString());
+  const handlePriceFilterApply = () => {
+    const current = new URLSearchParams(window.location.search);
+    if (minPrice !== undefined) {
+      current.set("minPrice", minPrice.toString());
+    } else {
+      current.delete("minPrice");
     }
-    if (selectedDateRange.end) {
-      params.append("endDate", selectedDateRange.end.toISOString());
+    if (maxPrice !== undefined) {
+      current.set("maxPrice", maxPrice.toString());
+    } else {
+      current.delete("maxPrice");
     }
-    if (minPrice !== undefined) params.append("minPrice", minPrice.toString());
-    if (maxPrice !== undefined) params.append("maxPrice", maxPrice.toString());
-    router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${params.toString()}`));
+    router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${current.toString()}`));
+    setShowPriceFilter(false);
   };
 
 
@@ -100,7 +105,7 @@ export default function SearchPage() {
       <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12">
         <nav className="mt-8 md:mt-10 flex justify-center mb-8 md:mb-12">
           <button
-            onClick={() =>   setSelectedMode("guide")}
+            onClick={() => setSelectedMode("guide")}
             className={`px-15 py-3 rounded-full cursor-pointer transition-all duration-300 ${
               selectedMode === "guide"
                 ? "bg-accent text-light border-2 border-accent"
@@ -122,49 +127,12 @@ export default function SearchPage() {
         </nav>
 
         {/* Formulaire de recherche */}
-        <div className="relative max-w-3xl mx-auto mb-12">
-        <form
-          onSubmit={handleSearch}
-          className="flex items-center bg-white rounded-full shadow-xl pl-6"
-        >
-          <LuMapPin size={24} className="text-gray shrink-0" />
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder={dict.home.searchPlace}
-            className="grow px-4 py-3 rounded-full focus:outline-none placeholder:text-dark"
-          />
-
-          <BsCalendar2 size={24} className="text-gray shrink-0" />
-          <input
-            type="text"
-            value={searchDate}
-            onClick={() => setShowCalendar(!showCalendar)}
-            readOnly
-            placeholder={dict.home.searchDate}
-            className="grow px-4 py-3 rounded-full focus:outline-none placeholder:text-dark cursor-pointer"
-          />
-
-          <button
-            type="submit"
-            className="bg-accent text-light p-4 rounded-full hover:bg-accent-dark transition-colors duration-300 cursor-pointer flex items-center justify-center shrink-0"
-          >
-            <HiMagnifyingGlass size={24} />
-          </button>
-        </form>
-
-        {showCalendar && (
-          <Calendar
-            mode="range"
-            selectedRange={selectedDateRange}
-            onChange={(range) => handleDateRangeChange(range as { start: Date | null; end: Date | null })}
-            onClose={() => setShowCalendar(false)}
-            locale="fr"
-          />
-        )}
-        </div>
-      </div>
+        <SearchBar
+          onSearch={handleSearch}
+          initialLocation={initialLocation}
+          initialDateRange={initialDateRange}
+          className="max-w-3xl mx-auto mb-12"
+        />
 
         {/* Filters */}
         <div className="w-full flex gap-4 items-center justify-center py-4 bg-accent mb-10">
@@ -237,10 +205,7 @@ export default function SearchPage() {
                     />
                   </div>
                   <button
-                    onClick={() => {
-                      handleSearch(new Event('submit') as any);
-                      setShowPriceFilter(false);
-                    }}
+                    onClick={handlePriceFilterApply}
                     className="w-full bg-primary text-white py-2 rounded hover:bg-accent-dark transition-colors"
                   >
                     {dict.search.apply}
@@ -250,6 +215,7 @@ export default function SearchPage() {
             )}
           </div>
         </div>
+      </div>
 
       <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12">
         {/* Résultats */}
@@ -279,7 +245,7 @@ export default function SearchPage() {
               </h2>
               <p className="mb-12">{guides.length} {guides.length === 1 ? dict.search.resultTitle : dict.search.resultsTitle}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {guides.map((guide) => (
+                {guides.map((guide: Guide) => (
                   <GuideCard key={guide.id} guide={guide} />
                 ))}
               </div>

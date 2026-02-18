@@ -288,5 +288,27 @@
     "forTravelersText": "Erkunden Sie eine Vielzahl einzigartiger Erlebnisse, die von leidenschaftlichen lokalen Guides angeboten werden. Suchen Sie nach Ziel, nach Interesse, konsultieren Sie Guide-Profile, lesen Sie Bewertungen und buchen Sie mit wenigen Klicks das Abenteuer, das zu Ihnen passt.",
     "forGuidesTitle": "Für Guides?",
     "forGuidesText": "Bei Locotrip glauben wir, dass eine erfolgreiche Reise in Emotionen, Begegnungen und unvergesslichen Erinnerungen gemessen wird, viel mehr als in zurückgelegten Kilometern oder auf einer Liste abgehakten Denkmälern. Müde von unpersönlichem Tourismus und ausgetretenen Pfaden? Wir auch. Deshalb haben wir eine Plattform geschaffen, auf der Neugier auf lokale Leidenschaft trifft."
+  },
+  "search": {
+    "loading": "Ergebnisse werden geladen...",
+    "error": "Fehler beim Laden der Ergebnisse.",
+    "noResults": "Keine Ergebnisse für Ihre Suche gefunden.",
+    "resultsTitle": "Suchergebnisse",
+    "resultTitle": "Suchergebnis",
+    "language": "Sprache",
+    "interest": "Interesse",
+    "price": "Preis",
+    "title": "Alle unsere verfügbaren Aktivitäten",
+    "titleGuide": "Alle unsere verfügbaren Guides",
+    "priceRange": "Preis pro Reisender",
+    "minPrice": "Mindestpreis",
+    "maxPrice": "Höchstpreis",
+    "apply": "Anwenden",
+    "citiesSuggestions": "Zielvorschläge:",
+    "selectLocation": "Wählen Sie ein Ziel",
+    "searchCity": "Nach einer Stadt suchen...",
+    "searchResults": "Suchergebnisse",
+    "noSuggestedCities": "Keine vorgeschlagenen Ziele verfügbar.",
+    "noCitiesFound": "Keine Städte gefunden."
   }
 }

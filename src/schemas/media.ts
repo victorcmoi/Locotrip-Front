@@ -12,6 +12,7 @@ export const mediaSchema = z.object({
     guide_id: z.string().uuid().nullish(),
     experience_id: z.string().uuid().nullish(),
     review_id: z.string().uuid().nullish(),
+    city_id: z.string().uuid().nullish(),
 });
 
 export const mediasSchema = z.array(mediaSchema);

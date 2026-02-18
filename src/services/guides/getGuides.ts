@@ -15,8 +15,11 @@ export const getTopRatedGuides = async () => {
   return new ApiRequest<Guides>(guidesSchema).get('guides/top-rated?limit=5&minReviews=1');
 };
 
-export const searchGuidesByDate = async (date?: string, startDate?: string, endDate?: string) => {
+export const searchGuides = async (location?: string, startDate?: string, endDate?: string) => {
   const params = new URLSearchParams();
+  if (location) {
+    params.append('location', location);
+  }
   if (startDate) {
     params.append('startDate', startDate);
   }
@@ -41,10 +44,10 @@ export const useTopRatedGuides = () => {
   });
 };
 
-export const useSearchGuides = (date?: string, startDate?: string, endDate?: string, enabled: boolean = true) => {
+export const useSearchGuides = (location?: string, startDate?: string, endDate?: string, enabled: boolean = true) => {
   return useQuery({
-    queryKey: ['searchGuides', date, startDate, endDate],
-    queryFn: () => searchGuidesByDate(date, startDate, endDate),
+    queryKey: ['searchGuides', location, startDate, endDate],
+    queryFn: () => searchGuides(location, startDate, endDate),
     enabled,
   });
 };

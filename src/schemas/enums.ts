@@ -18,7 +18,7 @@ export type AvailabilityStatus = z.infer<typeof AvailabilityStatusEnum>;
 export const DocumentTypeEnum = z.enum(['CV', 'diploma', 'proof_of_residence', 'guide_card', 'other']);
 export type DocumentType = z.infer<typeof DocumentTypeEnum>;
 
-export const MediaTypeEnum = z.enum(['pictures', 'profile_picture']);
+export const MediaTypeEnum = z.enum(['pictures', 'profile_picture', 'city_image']);
 export type MediaType = z.infer<typeof MediaTypeEnum>;
 
 export const PaymentStatusEnum = z.enum(['pending', 'processing', 'completed', 'failed', 'refunded', 'partially_refunded', 'cancelled']);
