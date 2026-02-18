@@ -5,14 +5,14 @@ import { reviewSchema } from './reviews';
 import { bookingSchema } from './booking';
 
 export const currencyPriceSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().uuid().optional(),
   experience_id: z.string().uuid(),
   currency_code: z.string().length(3),
-  price: z.number(),
+  price: z.coerce.number(),
   currency: z.object({
     code: z.string().length(3),
     name: z.string(),
-    exchange_rate: z.number(),
+    exchange_rate: z.coerce.number(),
   }).optional(),
 });
 
@@ -20,7 +20,7 @@ export const experienceSchema = z.object({
   id: z.string().uuid(),
   title: z.string(),
   description: z.string().nullish(),
-  price: z.number(),
+  price: z.coerce.number(),
   duration: z.number().int(),
   city_id: z.string().uuid(),
   guide_id: z.string().uuid(),

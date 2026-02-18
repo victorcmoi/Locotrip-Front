@@ -11,7 +11,30 @@ import { CiUser } from "react-icons/ci";
 import { TfiHelpAlt } from "react-icons/tfi";
 import { SlArrowLeft } from "react-icons/sl";
 
-const menuItems = [
+const userMenuItems = [
+  {
+    label: "Réservations",
+    href: "/me/bookings",
+    icon: LuTicket,
+  },
+  {
+    label: "Messagerie",
+    href: "/me/messages",
+    icon: LuMessageCircleMore,
+  },
+  {
+    label: "Gestion du profil",
+    href: "/me/profile",
+    icon: CiUser,
+  },
+  {
+    label: "Support / aide",
+    href: "/me/support",
+    icon: TfiHelpAlt,
+  },
+];
+
+const guideMenuItems = [
   {
     label: "Réservations",
     href: "/me/bookings",
@@ -19,7 +42,7 @@ const menuItems = [
   },
   {
     label: "Expériences",
-    href: "/me/bookings",
+    href: "/me/experiences",
     icon: LuTicket,
   },
   {
@@ -44,6 +67,8 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const localizedPath = useLocalizedPath();
+  const isGuide = session?.user?.role === "guide";
+  const menuItems = isGuide ? guideMenuItems : userMenuItems;
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -79,7 +104,7 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex bg-light min-h-[80vh]">
       {/* Sidebar */}
-      <aside className="w-[340px] shrink-0 py-12">
+      <aside className="w-[340px] shrink-0 py-12 h-[85vh] sticky top-16">
         <nav className="bg-black-accent rounded-r-2xl p-6 flex flex-col h-full shadow-sm">
           {/* Retour au site */}
           <Link

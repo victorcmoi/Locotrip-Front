@@ -11,6 +11,7 @@ declare module 'next-auth' {
       first_name: string;
       last_name: string;
       role: string;
+      guide_id?: string;
     };
   }
   interface User {
@@ -20,6 +21,7 @@ declare module 'next-auth' {
     first_name: string;
     last_name: string;
     role: string;
+    guide_id?: string;
   }
 }
 
@@ -31,6 +33,7 @@ declare module 'next-auth/jwt' {
     first_name: string;
     last_name: string;
     role: string;
+    guide_id?: string;
   }
 }
 
@@ -45,6 +48,9 @@ export const authOptions: NextAuthOptions = {
         token.first_name = user.first_name;
         token.last_name = user.last_name;
         token.role = user.role;
+        if (user.guide_id) {
+          token.guide_id = user.guide_id;
+        }
       }
       return token;
     },
@@ -56,6 +62,7 @@ export const authOptions: NextAuthOptions = {
         first_name: token.first_name as string,
         last_name: token.last_name as string,
         role: token.role as string,
+        ...(token.guide_id ? { guide_id: token.guide_id as string } : {}),
       };
       return session;
     },
@@ -94,7 +101,8 @@ export const authOptions: NextAuthOptions = {
             first_name: data.user.firstName || '',
             last_name: data.user.lastName || '',
             role: data.user.role || 'client',
-            accessToken: data.token
+            accessToken: data.token,
+            ...(data.user.guideId ? { guide_id: data.user.guideId } : {}),
           }
         }
 

@@ -1,11 +1,16 @@
-'use client';
+"use client";
 
-import { signOut, useSession } from 'next-auth/react';
-import React, { ReactNode, useEffect, useState } from 'react';
+import { signOut, useSession } from "next-auth/react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import dayjs from "@/lib/dayjs";
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/react";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 const EXPIRATION_MODAL_MINUTES = 5;
 
@@ -26,7 +31,8 @@ export default function AuthHandler({ children }: { children: ReactNode }) {
   const [sessionExpirationDuration, setSessionExpirationDuration] = useState(0);
   const [sessionExpires, setSessionExpires] = useState(-1);
 
-  const remainingTime = (expiration: Date) => dayjs(expiration).diff(dayjs(), 'seconds');
+  const remainingTime = (expiration: Date) =>
+    dayjs(expiration).diff(dayjs(), "seconds");
 
   useEffect(() => {
     const jwt = session.data?.accessToken;
@@ -38,11 +44,14 @@ export default function AuthHandler({ children }: { children: ReactNode }) {
       const expiration = new Date(0);
       expiration.setUTCSeconds(decoded.exp ?? 0);
 
-      timeout = setTimeout(() => {
-        setSessionExpirationDuration(remainingTime(expiration));
-        setSessionExpires(remainingTime(expiration));
-        setOpen(true);
-      }, (remainingTime(expiration) - (EXPIRATION_MODAL_MINUTES * 60)) * 1000);
+      timeout = setTimeout(
+        () => {
+          setSessionExpirationDuration(remainingTime(expiration));
+          setSessionExpires(remainingTime(expiration));
+          setOpen(true);
+        },
+        (remainingTime(expiration) - EXPIRATION_MODAL_MINUTES * 60) * 1000,
+      );
     }
 
     return () => {
@@ -81,7 +90,11 @@ export default function AuthHandler({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider value={{ showSessionExpired }}>
       {children}
-      <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        className="relative z-50"
+      >
         <DialogBackdrop
           transition
           className="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"
@@ -95,15 +108,23 @@ export default function AuthHandler({ children }: { children: ReactNode }) {
             >
               <div>
                 <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-yellow-100">
-                  <ExclamationTriangleIcon aria-hidden="true" className="size-6 text-yellow-600" />
+                  <ExclamationTriangleIcon
+                    aria-hidden="true"
+                    className="size-6 text-yellow-600"
+                  />
                 </div>
                 <div className="mt-3 text-center sm:mt-5">
-                  <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
+                  <DialogTitle
+                    as="h3"
+                    className="text-base font-semibold text-gray-900"
+                  >
                     Expiration de votre session
                   </DialogTitle>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">
-                      {sessionExpires <= 0 ? 'Votre session a expiré, veuillez vous reconnecter.' : `Attention ! Votre session expire dans ${new Date(sessionExpires * 1000).toISOString().slice(11, 19)}`}
+                      {sessionExpires <= 0
+                        ? "Votre session a expiré, veuillez vous reconnecter."
+                        : `Attention ! Votre session expire dans ${new Date(sessionExpires * 1000).toISOString().slice(11, 19)}`}
                     </p>
                   </div>
                 </div>
@@ -112,7 +133,7 @@ export default function AuthHandler({ children }: { children: ReactNode }) {
                 <button
                   type="button"
                   onClick={() => signOut()}
-                  className="inline-flex w-full justify-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
+                  className="inline-flex w-full justify-center rounded-md bg-accent px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-dark-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
                 >
                   Se connecter
                 </button>
@@ -133,4 +154,3 @@ export default function AuthHandler({ children }: { children: ReactNode }) {
     </AuthContext.Provider>
   );
 }
-

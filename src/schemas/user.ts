@@ -66,6 +66,7 @@ export const loginApiResponseSchema = z.object({
     firstName: z.string(),
     lastName: z.string(),
     role: UserRoleEnum,
+    guideId: z.string().uuid().optional(),
   }),
 });
 

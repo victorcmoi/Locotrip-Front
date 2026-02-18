@@ -1,14 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import {
-  useGuideProfile,
   useGuideBookings,
+  useMyBookings,
 } from "@/services/bookings/getBookings";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { FiRefreshCw, FiHelpCircle } from "react-icons/fi";
+import DropdownMenu from "@/components/ui/DropdownMenu";
 
 dayjs.locale("fr");
 
@@ -19,24 +20,44 @@ const BookingStatusLabel: Record<string, { label: string; color: string }> = {
   cancelled: { label: "Annulé", color: "text-red-600" },
 };
 
+const statusFilters = [
+  { value: "all", label: "Tous" },
+  { value: "pending", label: "En attente" },
+  { value: "confirmed", label: "Confirmé" },
+  { value: "completed", label: "Terminé" },
+  { value: "cancelled", label: "Annulé" },
+];
+
 export default function BookingsPage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
+  const guideId = session?.user?.guide_id;
+  const isGuide = session?.user?.role === "guide";
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const {
-    data: guide,
-    isLoading: isLoadingGuide,
-    error: errorGuide,
-  } = useGuideProfile(userId);
+    data: guideBookings,
+    isLoading: isLoadingGuideBookings,
+    error: errorGuideBookings,
+  } = useGuideBookings(isGuide ? guideId : undefined);
 
   const {
-    data: bookings,
-    isLoading: isLoadingBookings,
-    error: errorBookings,
-  } = useGuideBookings(guide?.id);
+    data: userBookings,
+    isLoading: isLoadingUserBookings,
+    error: errorUserBookings,
+  } = useMyBookings(!isGuide ? userId : undefined);
 
-  const isLoading = isLoadingGuide || isLoadingBookings;
-  const error = errorGuide || errorBookings;
+  const bookings = isGuide ? guideBookings : userBookings;
+  const isLoading = isGuide ? isLoadingGuideBookings : isLoadingUserBookings;
+  const error = isGuide ? errorGuideBookings : errorUserBookings;
+
+  const filteredBookings = useMemo(
+    () =>
+      bookings?.filter(
+        (b) => statusFilter === "all" || b.status === statusFilter,
+      ),
+    [bookings, statusFilter],
+  );
 
   const apiBase = process.env.NEXT_PUBLIC_API_BASE?.replace("/api/", "") || "";
 
@@ -52,8 +73,25 @@ export default function BookingsPage() {
           Bienvenu {session?.user?.first_name} {session?.user?.last_name}
         </h1>
         <p className="text-lg text-dark/80 font-normal">
-          Gérer vos réservations
+          {isGuide ? "Gérer vos réservations reçues" : "Gérer vos réservations"}
         </p>
+      </div>
+
+      {/* Status filter */}
+      <div className="flex gap-2 mb-6 flex-wrap">
+        {statusFilters.map((filter) => (
+          <button
+            key={filter.value}
+            onClick={() => setStatusFilter(filter.value)}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition cursor-pointer border ${
+              statusFilter === filter.value
+                ? "bg-accent text-white border-accent"
+                : "bg-transparent text-dark/70 border-dark/15 hover:border-accent hover:text-accent"
+            }`}
+          >
+            {filter.label}
+          </button>
+        ))}
       </div>
 
       {/* Loading */}
@@ -69,87 +107,115 @@ export default function BookingsPage() {
       )}
 
       {/* Empty state */}
-      {!isLoading && !error && bookings && bookings.length === 0 && (
-        <p className="text-dark/60">Aucune réservation reçue pour le moment.</p>
-      )}
+      {!isLoading &&
+        !error &&
+        filteredBookings &&
+        filteredBookings.length === 0 && (
+          <p className="text-dark/60">Aucune réservation pour ce filtre.</p>
+        )}
 
       {/* Bookings list */}
-      {!isLoading && !error && bookings && bookings.length > 0 && (
-        <div className="flex flex-col gap-4">
-          {bookings.map((booking) => {
-            const experience = booking.experience;
-            const client = booking.user;
-            const city = experience?.city;
-            const status =
-              BookingStatusLabel[booking.status] || BookingStatusLabel.pending;
+      {!isLoading &&
+        !error &&
+        filteredBookings &&
+        filteredBookings.length > 0 && (
+          <div className="flex flex-col gap-4">
+            {filteredBookings.map((booking) => {
+              const experience = booking.experience;
+              const client = booking.user;
+              const city = experience?.city;
+              const guideUser = experience?.guide?.user;
+              const status =
+                BookingStatusLabel[booking.status] ||
+                BookingStatusLabel.pending;
 
-            // Get first media image
-            const imageUrl = experience?.medias?.[0]?.url;
+              // Get first media image
+              const imageUrl = experience?.medias?.[0]?.url;
 
-            return (
-              <div
-                key={booking.id}
-                className="flex items-center rounded-2xl p-4 gap-5 shadow-sm hover:shadow-md transition"
-              >
-                {/* Experience image */}
-                <div className="w-[130px] h-[100px] rounded-xl overflow-hidden shrink-0 bg-gray-light/30">
-                  {imageUrl ? (
-                    <img
-                      src={`${apiBase}${imageUrl}`}
-                      alt={experience?.title || "Expérience"}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray text-xs">
-                      Pas d&apos;image
-                    </div>
-                  )}
-                </div>
+              // "Avec" line: guide sees client name, client sees guide name
+              const withName = isGuide
+                ? client
+                  ? `${client.first_name} ${client.last_name}`
+                  : null
+                : guideUser
+                  ? `${guideUser.first_name} ${guideUser.last_name}`
+                  : null;
 
-                {/* Booking info */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-primary font-semibold text-lg truncate leading-tight mb-1 w-fit">
-                    {experience?.title || "Expérience inconnue"}
-                  </h3>
-                  <p className="text-sm text-dark/80 font-normal">
-                    {formatDate(booking.booking_date)}
-                    {city && (
-                      <span className="text-dark/80 ml-3 font-normal">
-                        {city.name}
-                      </span>
+              return (
+                <div
+                  key={booking.id}
+                  className="flex items-center rounded-2xl p-4 gap-5 shadow-sm hover:shadow-md transition"
+                >
+                  {/* Experience image */}
+                  <div className="w-[130px] h-[100px] rounded-xl overflow-hidden shrink-0 bg-gray-light/30">
+                    {imageUrl ? (
+                      <img
+                        src={`${apiBase}${imageUrl}`}
+                        alt={experience?.title || "Expérience"}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray text-xs">
+                        Pas d&apos;image
+                      </div>
                     )}
-                  </p>
-                  {client && (
-                    <p className="text-sm text-dark/60 font-normal mt-0.5">
-                      Avec{" "}
-                      <span className="text-accent font-semibold text-sm">
-                        {client.first_name} {client.last_name}
-                      </span>
+                  </div>
+
+                  {/* Booking info */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-primary font-semibold text-lg truncate leading-tight mb-1 w-fit">
+                      {experience?.title || "Expérience inconnue"}
+                    </h3>
+                    <p className="text-sm text-dark/80 font-normal">
+                      {formatDate(booking.booking_date)}
+                      {city && (
+                        <span className="text-dark/80 ml-3 font-normal">
+                          {city.name}
+                        </span>
+                      )}
                     </p>
-                  )}
-                </div>
+                    {withName && (
+                      <p className="text-sm text-dark/60 font-normal mt-0.5">
+                        Avec{" "}
+                        <span className="text-accent font-semibold text-sm">
+                          {withName}
+                        </span>
+                      </p>
+                    )}
+                  </div>
 
-                {/* Status + Price */}
-                <div className="text-right shrink-0 min-w-[140px]">
-                  <p className="text-xs text-dark/50 font-normal">Statut</p>
-                  <p className={`text-sm font-semibold ${status.color}`}>
-                    {status.label}
-                  </p>
-                  <p className="text-xs text-dark/50 font-normal mt-2">Prix</p>
-                  <p className="text-lg font-bold text-accent">
-                    {booking.total_price} €
-                  </p>
-                </div>
+                  {/* Status + Price */}
+                  <div className="text-right shrink-0 min-w-[140px]">
+                    <p className="text-xs text-dark/50 font-normal">Statut</p>
+                    <p className={`text-sm font-semibold ${status.color}`}>
+                      {status.label}
+                    </p>
+                    <p className="text-xs text-dark/50 font-normal mt-2">
+                      Prix
+                    </p>
+                    <p className="text-lg font-bold text-accent">
+                      {booking.total_price} €
+                    </p>
+                  </div>
 
-                {/* Three dots menu */}
-                <button className="p-2 rounded-lg bg-transparent hover:bg-gray-light/30 transition cursor-pointer">
-                  <BsThreeDotsVertical size={18} className="text-dark/50" />
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      )}
+                  {/* Three dots menu */}
+                  <DropdownMenu
+                    items={[
+                      {
+                        label: "Modifier le statut",
+                        icon: FiRefreshCw,
+                      },
+                      {
+                        label: "Obtenir de l'aide",
+                        icon: FiHelpCircle,
+                      },
+                    ]}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        )}
     </div>
   );
 }
