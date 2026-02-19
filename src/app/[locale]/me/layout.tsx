@@ -104,7 +104,7 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex bg-light min-h-[80vh]">
       {/* Sidebar */}
-      <aside className="w-[340px] shrink-0 py-12 h-[85vh] sticky top-16">
+      <aside className="w-85 shrink-0 py-12 h-[85vh] sticky top-16">
         <nav className="bg-black-accent rounded-r-2xl p-6 flex flex-col h-full shadow-sm">
           {/* Retour au site */}
           <Link
@@ -138,7 +138,7 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={localizedPath(item.href)}
-                  className={`flex text-white items-center gap-3 px-3 py-3 rounded-xl text-sm transition font-normal text-lg ${
+                  className={`flex text-white items-center gap-3 px-3 py-3 rounded-xl transition font-normal text-lg ${
                     active ? "font-bold" : "hover:font-bold"
                   }`}
                 >

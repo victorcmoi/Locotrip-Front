@@ -191,7 +191,7 @@ export default function ExperienceDetailPage({
                 {experience.medias.map((media) => (
                   <div
                     key={media.id}
-                    className="relative aspect-[4/3] rounded-xl overflow-hidden border border-gray-light group"
+                    className="relative aspect-4/3 rounded-xl overflow-hidden border border-gray-light group"
                   >
                     <Image
                       src={MinioHelpers.experience(media.url)}

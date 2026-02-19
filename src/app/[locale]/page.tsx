@@ -20,18 +20,22 @@ export default function Page() {
   const dict = useTranslations();
   const localizedPath = useLocalizedPath();
   const router = useRouter();
-  const [selectedMode, setSelectedMode] = useState<"guide" | "activity">(
-    "guide"
-  );
   const { data: guides, isLoading: guidesLoading, error: guidesError } = useTopRatedGuides();
   const { data: reviews, isLoading: reviewsLoading, error: reviewsError } = useTopRatedReviews();
-  
+   const [initialDateRange, setInitialDateRange] = useState<{ start: Date | null; end: Date | null }>({
+    start: null,
+    end: null,
+  });
+  const [initialLocation, setInitialLocation] = useState<string>("");
+
   const handleSearch = (params: {
+    mode: "guide" | "activity";
     location: string;
     selectedCity: City | null;
     dateRange: { start: Date | null; end: Date | null };
   }) => {
     const searchParams = new URLSearchParams();
+    searchParams.append("mode", params.mode);
     if (params.selectedCity) searchParams.append("location", params.selectedCity.name);
     if (params.dateRange.start) {
       searchParams.append("startDate", params.dateRange.start.toISOString());
@@ -75,31 +79,12 @@ export default function Page() {
                 </span>
               </div>
             </div>
-            <nav className="mt-8 md:mt-10 flex justify-center mb-8 md:mb-12">
-              <button
-                onClick={() => setSelectedMode("guide")}
-                className={`px-15 py-3 rounded-full cursor-pointer transition-all duration-300 ${
-                  selectedMode === "guide"
-                    ? "bg-accent text-light"
-                    : "bg-light text-dark"
-                }`}
-              >
-                {dict.home.localGuide}
-              </button>
-              <button
-                onClick={() => setSelectedMode("activity")}
-                className={`px-18 py-3 rounded-full -ml-10 cursor-pointer transition-all duration-300 ${
-                  selectedMode === "activity"
-                    ? "bg-accent text-light"
-                    : "bg-light text-dark"
-                }`}
-              >
-                {dict.home.activity}
-              </button>
-            </nav>
             <SearchBar
               onSearch={handleSearch}
               className="w-full md:max-w-xl lg:max-w-2xl mx-auto"
+              initialMode="guide"
+              initialDateRange={initialDateRange}
+              initialLocation={initialLocation}
             />
           </main>
         </div>

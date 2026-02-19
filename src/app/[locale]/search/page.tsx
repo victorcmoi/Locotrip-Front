@@ -4,7 +4,7 @@ import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import GuideCard from "@/components/ui/guides/GuideCard";
-import { useSearchGuides } from "@/services/guides/getGuides";
+import { useSearchGuides } from "@/services/search/search";
 import { HOME_ROUTES } from "@/utils/routes";
 import { MdLanguage } from "react-icons/md";
 import { SlArrowDown } from "react-icons/sl";
@@ -19,13 +19,13 @@ export default function SearchPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const localizedPath = useLocalizedPath();
+
   const [initialDateRange, setInitialDateRange] = useState<{ start: Date | null; end: Date | null }>({
     start: null,
     end: null,
   });
   const [initialLocation, setInitialLocation] = useState<string>("");
-
-  const [selectedMode, setSelectedMode] = useState<"guide" | "activity">("guide");
+  const [initialMode, setInitialMode] = useState<"guide" | "activity">("guide");
   const [minPrice, setMinPrice] = useState<number | undefined>(undefined);
   const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
   const [showPriceFilter, setShowPriceFilter] = useState<boolean>(false);
@@ -33,12 +33,14 @@ export default function SearchPage() {
   const [showInterestFilter, setShowInterestFilter] = useState<boolean>(false);
 
   useEffect(() => {
+    const modeParam = searchParams.get("mode") as "guide" | "activity";
     const startDateParam = searchParams.get("startDate");
     const endDateParam = searchParams.get("endDate");
     const locationParam = searchParams.get("location");
     const minPriceParam = searchParams.get("minPrice");
     const maxPriceParam = searchParams.get("maxPrice");
 
+    if (modeParam) setInitialMode(modeParam);
     if (startDateParam) {
       const startDate = new Date(startDateParam);
       const endDate = endDateParam ? new Date(endDateParam) : null;
@@ -49,16 +51,24 @@ export default function SearchPage() {
     if (maxPriceParam) setMaxPrice(Number(maxPriceParam));
   }, [searchParams]);
 
+  const modeParam = searchParams.get("mode") as "guide" | "activity";
   const startDateParam = searchParams.get("startDate") || undefined;
   const endDateParam = searchParams.get("endDate") || undefined;
   const locationParam = searchParams.get("location") || undefined;
+  const minPriceParam = searchParams.get("minPrice");
+  const maxPriceParam = searchParams.get("maxPrice");
   
-  const { data: guides, isLoading: guidesLoading, error: guidesError } = useSearchGuides(
-    locationParam,
-    startDateParam,
-    endDateParam,
-    !!(startDateParam || endDateParam || locationParam)
+  const { data: guidesResponse, isLoading: guidesLoading, error: guidesError } = useSearchGuides(
+    {
+      location: locationParam,
+      startDate: startDateParam,
+      endDate: endDateParam,
+      minPrice: minPriceParam ? Number(minPriceParam) : undefined,
+      maxPrice: maxPriceParam ? Number(maxPriceParam) : undefined,
+    },
+    !!(modeParam || startDateParam || endDateParam || locationParam)
   );
+  const guides = guidesResponse?.data;
   const languages = guides?.flatMap((guide: Guide) => guide.languages ? guide.languages.split(", ").map((lang: string) => lang.trim()) : []);
   const uniqueLanguages = Array.from(new Set(languages));
 
@@ -66,18 +76,20 @@ export default function SearchPage() {
   const uniqueHobbies = Array.from(new Set(hobbies));
 
   const handleSearch = (params: {
+    mode : "guide" | "activity";
     location: string;
     selectedCity: City | null;
     dateRange: { start: Date | null; end: Date | null };
   }) => {
     const searchParams = new URLSearchParams();
-    if (params.selectedCity) searchParams.append("location", params.selectedCity.name);
+    if (params.mode) searchParams.append("mode", params.mode);
     if (params.dateRange.start) {
       searchParams.append("startDate", params.dateRange.start.toISOString());
     }
     if (params.dateRange.end) {
       searchParams.append("endDate", params.dateRange.end.toISOString());
     }
+    if (params.selectedCity) searchParams.append("location", params.selectedCity.name);
     if (minPrice !== undefined) searchParams.append("minPrice", minPrice.toString());
     if (maxPrice !== undefined) searchParams.append("maxPrice", maxPrice.toString());
     router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${searchParams.toString()}`));
@@ -101,119 +113,98 @@ export default function SearchPage() {
 
 
   return (
-    <div className="min-h-screen bg-light pt-24 pb-12">
+    <div className="min-h-screen bg-light pt-16 pb-12">
       <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12">
-        <nav className="mt-8 md:mt-10 flex justify-center mb-8 md:mb-12">
-          <button
-            onClick={() => setSelectedMode("guide")}
-            className={`px-15 py-3 rounded-full cursor-pointer transition-all duration-300 ${
-              selectedMode === "guide"
-                ? "bg-accent text-light border-2 border-accent"
-                : "bg-light text-dark border-2 border-gray-light hover:border-accent"
-            }`}
-          >
-            {dict.home.localGuide}
-          </button>
-          <button
-            onClick={() => setSelectedMode("activity")}
-            className={`px-18 py-3 rounded-full -ml-10 cursor-pointer transition-all duration-300 ${
-              selectedMode === "activity"
-                ? "bg-accent text-light border-2 border-accent"
-                : "bg-light text-dark border-2 border-gray-light hover:border-accent"
-            }`}
-          >
-            {dict.home.activity}
-          </button>
-        </nav>
 
         {/* Formulaire de recherche */}
         <SearchBar
           onSearch={handleSearch}
+          initialMode={initialMode}
           initialLocation={initialLocation}
           initialDateRange={initialDateRange}
           className="max-w-3xl mx-auto mb-12"
         />
+      </div>
 
-        {/* Filters */}
-        <div className="w-full flex gap-4 items-center justify-center py-4 bg-accent mb-10">
-          <div className="relative">
-            <button 
-              onClick={() => {
-                setShowLanguageFilter(!showLanguageFilter);
-                setShowInterestFilter(false);
-                setShowPriceFilter(false);
-              }}
-              className="bg-light text-gray-800 font-normal flex justify-center items-center gap-3 px-6 py-3"
-            >
-              <MdLanguage />
-              {dict.search.language}
-              <SlArrowDown />
-            </button>
-          </div>
+      {/* Filters */}
+      <div className="w-full flex gap-4 items-center justify-center py-4 bg-accent mb-10">
+        <div className="relative">
+          <button 
+            onClick={() => {
+              setShowLanguageFilter(!showLanguageFilter);
+              setShowInterestFilter(false);
+              setShowPriceFilter(false);
+            }}
+            className="bg-light text-gray-800 font-normal flex justify-center items-center gap-3 px-6 py-3"
+          >
+            <MdLanguage />
+            {dict.search.language}
+            <SlArrowDown />
+          </button>
+        </div>
 
-          <div className="relative">
-            <button 
-              onClick={() => {
-                setShowInterestFilter(!showInterestFilter);
-                setShowLanguageFilter(false);
-                setShowPriceFilter(false);
-              }}
-              className="bg-light text-gray-800 flex font-normal justify-center items-center gap-3 px-6 py-3"
-            >
-              <LuEarth />
-              {dict.search.interest}
-              <SlArrowDown />
-            </button>
-          </div>
+        <div className="relative">
+          <button 
+            onClick={() => {
+              setShowInterestFilter(!showInterestFilter);
+              setShowLanguageFilter(false);
+              setShowPriceFilter(false);
+            }}
+            className="bg-light text-gray-800 flex font-normal justify-center items-center gap-3 px-6 py-3"
+          >
+            <LuEarth />
+            {dict.search.interest}
+            <SlArrowDown />
+          </button>
+        </div>
 
-          <div className="relative">
-            <button 
-              onClick={() => {
-                setShowPriceFilter(!showPriceFilter);
-                setShowLanguageFilter(false);
-                setShowInterestFilter(false);
-              }}
-              className="bg-light text-gray-800 flex font-normal justify-center items-center gap-3 px-6 py-3"
-            >
-              <AiOutlineEuro />
-              {dict.search.price}
-              <SlArrowDown />
-            </button>
-            
-            {showPriceFilter && (
-              <div className="absolute top-full mt-2 left-0 bg-light shadow-xl rounded-lg p-6 z-50 min-w-75">
-                <h3 className="mb-4">{dict.search.priceRange}</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm mb-2">{dict.search.minPrice}</label>
-                    <input
-                      type="number"
-                      value={minPrice || ''}
-                      onChange={(e) => setMinPrice(e.target.value ? Number(e.target.value) : undefined)}
-                      placeholder="0"
-                      className="w-full px-3 py-2 border border-gray-light rounded focus:outline-none focus:border-accent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-2">{dict.search.maxPrice}</label>
-                    <input
-                      type="number"
-                      value={maxPrice || ''}
-                      onChange={(e) => setMaxPrice(e.target.value ? Number(e.target.value) : undefined)}
-                      placeholder="1000"
-                      className="w-full px-3 py-2 border border-gray-light rounded focus:outline-none focus:border-accent"
-                    />
-                  </div>
-                  <button
-                    onClick={handlePriceFilterApply}
-                    className="w-full bg-primary text-white py-2 rounded hover:bg-accent-dark transition-colors"
-                  >
-                    {dict.search.apply}
-                  </button>
+        <div className="relative">
+          <button 
+            onClick={() => {
+              setShowPriceFilter(!showPriceFilter);
+              setShowLanguageFilter(false);
+              setShowInterestFilter(false);
+            }}
+            className="bg-light text-gray-800 flex font-normal justify-center items-center gap-3 px-6 py-3"
+          >
+            <AiOutlineEuro />
+            {dict.search.price}
+            <SlArrowDown />
+          </button>
+          
+          {showPriceFilter && (
+            <div className="absolute top-full mt-2 left-0 bg-light shadow-xl rounded-lg p-6 z-50 min-w-75">
+              <h3 className="mb-4">{dict.search.priceRange}</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm mb-2">{dict.search.minPrice}</label>
+                  <input
+                    type="number"
+                    value={minPrice || ''}
+                    onChange={(e) => setMinPrice(e.target.value ? Number(e.target.value) : undefined)}
+                    placeholder="0"
+                    className="w-full px-3 py-2 border border-gray-light rounded focus:outline-none focus:border-accent"
+                  />
                 </div>
+                <div>
+                  <label className="block text-sm mb-2">{dict.search.maxPrice}</label>
+                  <input
+                    type="number"
+                    value={maxPrice || ''}
+                    onChange={(e) => setMaxPrice(e.target.value ? Number(e.target.value) : undefined)}
+                    placeholder="1000"
+                    className="w-full px-3 py-2 border border-gray-light rounded focus:outline-none focus:border-accent"
+                  />
+                </div>
+                <button
+                  onClick={handlePriceFilterApply}
+                  className="w-full bg-primary text-white py-2 rounded hover:bg-accent-dark transition-colors"
+                >
+                  {dict.search.apply}
+                </button>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 

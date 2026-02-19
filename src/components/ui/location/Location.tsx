@@ -90,7 +90,7 @@ export const Location: React.FC<LocationProps> = ({
                       />
                       <div className="flex-1 min-w-0">
                         <p className="font-bold">{city.name}, {city.country}</p>
-                        <span className="text-sm text-dark line-clamp-2">{city.description}</span>
+                        <p className="text-sm text-dark">{city.description}</p>
                       </div>
                     </li>
                   ))}
@@ -104,9 +104,9 @@ export const Location: React.FC<LocationProps> = ({
           {/* Résultats de recherche */}
           {searchQuery.trim() && (
             <div>
-              <h3 className="text-base text-left font-semibold text-dark mb-3">
+              <h4 className="text-base text-left font-semibold text-dark mb-3">
                 {dict.search.searchResults}
-              </h3>
+              </h4>
               {isSearching ? (
                 <p className="text-dark text-center py-4">{dict.common.loading}</p>
               ) : searchResults && searchResults.length > 0 ? (
@@ -126,7 +126,7 @@ export const Location: React.FC<LocationProps> = ({
                       />
                       <div className="flex-1 min-w-0">
                         <p className="font-bold">{city.name}, {city.country}</p>
-                        <span className="text-sm text-dark line-clamp-2">{city.description}</span>
+                        <p className="text-sm text-dark">{city.description}</p>
                       </div>
                     </li>
                   ))}
