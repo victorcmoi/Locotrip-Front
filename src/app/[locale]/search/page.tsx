@@ -141,6 +141,41 @@ export default function SearchPage() {
             {dict.search.language}
             <SlArrowDown />
           </button>
+
+          {showLanguageFilter && (
+            <div className="absolute top-full mt-2 left-0 bg-light shadow-xl rounded-lg p-6 z-50 min-w-75">
+              <h3 className="mb-4">{dict.search.languages}</h3>
+              <div className="space-y-4">
+                {uniqueLanguages.map((language) => (
+                  <div key={language} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`language-${language}`}
+                      className="mr-2"
+                      onChange={() => {
+                        const current = new URLSearchParams(window.location.search);
+                        const existing = current.get("languages")?.split(",") || [];
+                        if (existing.includes(language)) {
+                          const updated = existing.filter((lang) => lang !== language);
+                          if (updated.length > 0) {
+                            current.set("languages", updated.join(","));
+                          } else {
+                            current.delete("languages");
+                          }
+                        } else {
+                          current.set("languages", [...existing, language].join(","));
+                        }
+                        router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${current.toString()}`));
+                      }}
+                    />
+                    <label htmlFor={`language-${language}`} className="text-sm">
+                      {language}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="relative">
@@ -156,6 +191,41 @@ export default function SearchPage() {
             {dict.search.interest}
             <SlArrowDown />
           </button>
+
+          {showInterestFilter && (
+            <div className="absolute top-full mt-2 left-0 bg-light shadow-xl rounded-lg p-6 z-50 min-w-75">
+              <h3 className="mb-4">{dict.search.interestCategories}</h3>
+              <div className="space-y-4">
+                {uniqueHobbies.map((hobby) => (
+                  <div key={hobby} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`hobby-${hobby}`}
+                      className="mr-2"
+                      onChange={() => {
+                        const current = new URLSearchParams(window.location.search);
+                        const existing = current.get("categories")?.split(",") || [];
+                        if (existing.includes(hobby)) {
+                          const updated = existing.filter((cat) => cat !== hobby);
+                          if (updated.length > 0) {
+                            current.set("categories", updated.join(","));
+                          } else {
+                            current.delete("categories");
+                          }
+                        } else {
+                          current.set("categories", [...existing, hobby].join(","));
+                        }
+                        router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${current.toString()}`));
+                      }}
+                    />
+                    <label htmlFor={`hobby-${hobby}`} className="text-sm">
+                      {hobby}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="relative">
