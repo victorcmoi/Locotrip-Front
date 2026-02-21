@@ -8,7 +8,7 @@ import {
 } from "@/services/bookings/getBookings";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import { FiRefreshCw, FiHelpCircle } from "react-icons/fi";
+import { RefreshCw, HelpCircle } from "lucide-react";
 import DropdownMenu from "@/components/ui/DropdownMenu";
 
 dayjs.locale("fr");
@@ -203,11 +203,11 @@ export default function BookingsPage() {
                     items={[
                       {
                         label: "Modifier le statut",
-                        icon: FiRefreshCw,
+                        icon: RefreshCw,
                       },
                       {
                         label: "Obtenir de l'aide",
-                        icon: FiHelpCircle,
+                        icon: HelpCircle,
                       },
                     ]}
                   />

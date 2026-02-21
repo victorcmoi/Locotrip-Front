@@ -5,32 +5,34 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useLocalizedPath } from "@/providers/i18n.provider";
-import { LuTicket } from "react-icons/lu";
-import { LuMessageCircleMore } from "react-icons/lu";
-import { CiUser } from "react-icons/ci";
-import { TfiHelpAlt } from "react-icons/tfi";
-import { SlArrowLeft } from "react-icons/sl";
+import {
+  Ticket,
+  MessageCircleMore,
+  User,
+  CircleHelp,
+  ArrowLeft,
+} from "lucide-react";
 
 const userMenuItems = [
   {
     label: "Réservations",
     href: "/me/bookings",
-    icon: LuTicket,
+    icon: Ticket,
   },
   {
     label: "Messagerie",
     href: "/me/messages",
-    icon: LuMessageCircleMore,
+    icon: MessageCircleMore,
   },
   {
     label: "Gestion du profil",
     href: "/me/profile",
-    icon: CiUser,
+    icon: User,
   },
   {
     label: "Support / aide",
     href: "/me/support",
-    icon: TfiHelpAlt,
+    icon: CircleHelp,
   },
 ];
 
@@ -38,27 +40,27 @@ const guideMenuItems = [
   {
     label: "Réservations",
     href: "/me/bookings",
-    icon: LuTicket,
+    icon: Ticket,
   },
   {
     label: "Expériences",
     href: "/me/experiences",
-    icon: LuTicket,
+    icon: Ticket,
   },
   {
     label: "Messagerie",
     href: "/me/messages",
-    icon: LuMessageCircleMore,
+    icon: MessageCircleMore,
   },
   {
     label: "Gestion du profil",
     href: "/me/profile",
-    icon: CiUser,
+    icon: User,
   },
   {
     label: "Support / aide",
     href: "/me/support",
-    icon: TfiHelpAlt,
+    icon: CircleHelp,
   },
 ];
 
@@ -111,7 +113,7 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
             href={localizedPath("/")}
             className="flex items-center gap-3 text-sm text-white transition mb-6 font-normal"
           >
-            <SlArrowLeft size={14} />
+            <ArrowLeft size={14} />
             Retour au site
           </Link>
 

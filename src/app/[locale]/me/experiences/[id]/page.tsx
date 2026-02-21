@@ -1,19 +1,27 @@
 "use client";
 
-import React, { use } from "react";
+import React, { use, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useExperienceById } from "@/services/experiences/getExperiences";
+import { useRouter } from "next/navigation";
+import { useExperienceForGuide } from "@/services/experiences/getExperiences";
+import { useDeleteExperience } from "@/services/experiences/deleteExperiences";
 import { useGuideById } from "@/services/guides/getGuides";
 import { MinioHelpers } from "@/utils/minio";
-import { IoCheckmarkCircle } from "react-icons/io5";
-import { AiFillStar } from "react-icons/ai";
-import { LuMapPin } from "react-icons/lu";
-import { FiEdit, FiTrash2, FiFlag } from "react-icons/fi";
-import { SlArrowLeft } from "react-icons/sl";
+import {
+  CheckCircle,
+  Star,
+  MapPin,
+  Pencil,
+  Trash2,
+  Flag,
+  Calendar,
+  ArrowLeft,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLocalizedPath } from "@/providers/i18n.provider";
 import DropdownMenu from "@/components/ui/DropdownMenu";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function ExperienceDetailPage({
   params,
@@ -25,8 +33,15 @@ export default function ExperienceDetailPage({
   const guideId = session?.user?.guide_id;
   const isGuide = session?.user?.role === "guide";
   const localizedPath = useLocalizedPath();
+  const router = useRouter();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const deleteMutation = useDeleteExperience();
 
-  const { data: experience, isLoading, error } = useExperienceById(id);
+  const {
+    data: experience,
+    isLoading,
+    error,
+  } = useExperienceForGuide(id, guideId || "");
   const { data: guide } = useGuideById(guideId || "");
 
   if (!isGuide) {
@@ -84,16 +99,23 @@ export default function ExperienceDetailPage({
           href={localizedPath("/me/experiences")}
           className="flex items-center gap-2 text-dark/70 hover:text-dark transition text-sm font-medium"
         >
-          <SlArrowLeft size={12} />
+          <ArrowLeft size={12} />
           Retour aux expériences
         </Link>
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer bg-transparent">
-            <FiEdit size={16} />
+            <Calendar size={16} />
+            Publier
+          </button>
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer bg-transparent">
+            <Pencil size={16} />
             Modifier
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-400 text-red-500 font-semibold text-sm hover:bg-red-500 hover:text-white transition-colors duration-200 cursor-pointer bg-transparent">
-            <FiTrash2 size={16} />
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-400 text-red-500 font-semibold text-sm hover:bg-red-500 hover:text-white transition-colors duration-200 cursor-pointer bg-transparent"
+          >
+            <Trash2 size={16} />
             Supprimer
           </button>
         </div>
@@ -114,14 +136,14 @@ export default function ExperienceDetailPage({
         {/* Left column — details */}
         <div className="lg:col-span-2">
           {/* Title */}
-          <h1 className="text-3xl font-extrabold text-dark mb-2">
+          <h1 className="text-3xl font-extrabold text-dark mb-2 !text-left">
             {experience.title}
           </h1>
 
           {/* City */}
           {city && (
             <div className="flex items-center gap-1.5 mb-4">
-              <LuMapPin className="text-primary text-lg" />
+              <MapPin className="text-primary" size={18} />
               <span className="text-dark/80 font-medium">
                 {city.name}, {city.country}
               </span>
@@ -132,11 +154,12 @@ export default function ExperienceDetailPage({
           <div className="flex items-center gap-2 mb-6">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
-                <AiFillStar
+                <Star
                   key={i}
-                  className={`text-lg ${
+                  size={18}
+                  className={`${
                     i < Math.round(avgRating)
-                      ? "text-secondary"
+                      ? "text-secondary fill-secondary"
                       : "text-gray-300"
                   }`}
                 />
@@ -178,8 +201,30 @@ export default function ExperienceDetailPage({
                 Point de rencontre
               </h2>
               <p className="text-dark/70">{experience.meeting_point}</p>
+              {experience.meeting_latitude != null &&
+                experience.meeting_longitude != null && (
+                  <p className="text-dark/50 text-sm mt-1">
+                    {experience.meeting_latitude.toFixed(6)},{" "}
+                    {experience.meeting_longitude.toFixed(6)}
+                  </p>
+                )}
             </div>
           )}
+
+          {/* GPS only (no meeting point text) */}
+          {!experience.meeting_point &&
+            experience.meeting_latitude != null &&
+            experience.meeting_longitude != null && (
+              <div className="mb-8">
+                <h2 className="text-lg font-bold text-dark mb-2">
+                  Coordonnées GPS
+                </h2>
+                <p className="text-dark/70 text-sm">
+                  {experience.meeting_latitude.toFixed(6)},{" "}
+                  {experience.meeting_longitude.toFixed(6)}
+                </p>
+              </div>
+            )}
 
           {/* Photos */}
           {experience.medias && experience.medias.length > 0 && (
@@ -189,21 +234,82 @@ export default function ExperienceDetailPage({
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {experience.medias.map((media) => (
-                  <div
-                    key={media.id}
-                    className="relative aspect-4/3 rounded-xl overflow-hidden border border-gray-light group"
-                  >
-                    <Image
-                      src={MinioHelpers.experience(media.url)}
-                      alt={media.description || experience.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                  <div key={media.id} className="flex flex-col gap-1.5">
+                    <div className="relative aspect-4/3 rounded-xl overflow-hidden border border-gray-light group">
+                      <Image
+                        src={MinioHelpers.experience(media.url)}
+                        alt={media.description || experience.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    {media.description && (
+                      <p className="text-xs text-dark/60 px-1 line-clamp-2">
+                        {media.description}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           )}
+
+          {/* Availability */}
+          {experience.availabilities &&
+            experience.availabilities.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-lg font-bold text-dark mb-4">
+                  Disponibilités ({experience.availabilities.length})
+                </h2>
+                <div className="flex flex-col gap-2">
+                  {experience.availabilities.map((avail) => (
+                    <div
+                      key={avail.id}
+                      className="flex items-center gap-4 px-4 py-3 rounded-xl border border-gray-light bg-light text-sm"
+                    >
+                      <Calendar className="text-accent shrink-0" size={16} />
+                      <span className="text-dark font-medium">
+                        {new Date(avail.start_date).toLocaleDateString(
+                          "fr-FR",
+                          {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          },
+                        )}
+                      </span>
+                      <span className="text-dark/40">→</span>
+                      <span className="text-dark font-medium">
+                        {new Date(avail.end_date).toLocaleDateString("fr-FR", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          avail.status === "available"
+                            ? "bg-green-100 text-green-700"
+                            : avail.status === "blocked"
+                              ? "bg-red-100 text-red-600"
+                              : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {avail.status === "available"
+                          ? "Disponible"
+                          : avail.status === "blocked"
+                            ? "Bloqué"
+                            : "Indisponible"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
           {/* Reviews */}
           {reviews.length > 0 && (
@@ -222,7 +328,7 @@ export default function ExperienceDetailPage({
                         items={[
                           {
                             label: "Signaler",
-                            icon: FiFlag,
+                            icon: Flag,
                             variant: "danger",
                           },
                         ]}
@@ -231,11 +337,12 @@ export default function ExperienceDetailPage({
                     <div className="flex items-center gap-2 mb-2">
                       <div className="flex">
                         {[...Array(5)].map((_, i) => (
-                          <AiFillStar
+                          <Star
                             key={i}
-                            className={`text-sm ${
+                            size={14}
+                            className={`${
                               i < review.rating
-                                ? "text-secondary"
+                                ? "text-secondary fill-secondary"
                                 : "text-gray-300"
                             }`}
                           />
@@ -259,7 +366,7 @@ export default function ExperienceDetailPage({
 
         {/* Right column — info card */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-2xl shadow-md border border-gray-light p-6 sticky top-8">
+          <div className="bg-white rounded-2xl shadow-md border border-gray-light p-6 sticky top-32 -mt-24">
             {/* Guide info */}
             <div className="flex items-center gap-3 mb-6">
               <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-light shrink-0">
@@ -278,7 +385,7 @@ export default function ExperienceDetailPage({
                     {guide?.user?.last_name?.toUpperCase()}
                   </p>
                   {guide?.pro_card && (
-                    <IoCheckmarkCircle className="text-[#7BCECC] text-xl" />
+                    <CheckCircle className="text-[#7BCECC]" size={20} />
                   )}
                 </div>
                 {guide?.languages && (
@@ -337,6 +444,25 @@ export default function ExperienceDetailPage({
           </div>
         </div>
       </div>
+      {/* Delete confirmation modal */}
+      <ConfirmModal
+        open={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={() => {
+          deleteMutation.mutate(id, {
+            onSuccess: () => {
+              setShowDeleteModal(false);
+              router.push(localizedPath("/me/experiences"));
+            },
+          });
+        }}
+        title="Supprimer l'expérience"
+        message={`Êtes-vous sûr de vouloir supprimer « ${experience.title} » ? Cette action est irréversible.`}
+        confirmLabel="Supprimer"
+        cancelLabel="Annuler"
+        variant="danger"
+        loading={deleteMutation.isPending}
+      />
     </div>
   );
 }

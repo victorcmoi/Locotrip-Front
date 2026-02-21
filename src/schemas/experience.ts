@@ -62,6 +62,13 @@ export const experienceSchema = z.object({
   reviews: z.array(reviewSchema).optional(),
   bookings: z.array(bookingSchema).optional(),
   currency_prices: z.array(currencyPriceSchema).optional(),
+  availabilities: z.array(z.object({
+    id: z.string().uuid(),
+    experience_id: z.string().uuid(),
+    start_date: z.string().or(z.date()),
+    end_date: z.string().or(z.date()),
+    status: z.string(),
+  })).optional(),
   avgRating: z.number().optional(),
   reviewCount: z.number().optional(),
 });
@@ -71,14 +78,14 @@ export const experiencesSchema = z.array(experienceSchema);
 export const createExperienceSchema = z.object({
   title: z.string().min(10, 'Le titre doit contenir au moins 10 caractères').max(150),
   description: z.string().min(50, 'La description doit contenir au moins 50 caractères'),
-  price: z.number().positive(),
+  price: z.coerce.number().positive(),
   duration: z.number().int().positive(),
   city_id: z.string().uuid(),
   guide_id: z.string().uuid(),
   max_capacity: z.number().int().positive().optional(),
-  meeting_point: z.string().optional(),
-  meeting_latitude: z.number().optional(),
-  meeting_longitude: z.number().optional(),
+  meeting_point: z.string().max(255).optional(),
+  meeting_latitude: z.coerce.number().min(-90).max(90).optional(),
+  meeting_longitude: z.coerce.number().min(-180).max(180).optional(),
 });
 
 export const updateExperienceSchema = createExperienceSchema.partial();

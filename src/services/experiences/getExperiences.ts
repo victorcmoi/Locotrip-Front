@@ -14,11 +14,23 @@ export const getExperiencesByGuide = async (guideId: string) => {
   return new ApiRequest<Experiences>(experiencesSchema).get(`experiences/guide/${guideId}`);
 };
 
+export const getExperienceForGuide = async (id: string, guideId: string) => {
+  return new ApiRequest<Experience>(experienceSchema).get(`experiences/${id}/guide/${guideId}`);
+};
+
 export const useExperienceById = (id: string) => {
   return useQuery({
     queryKey: ['experience', id],
     queryFn: () => getExperienceById(id),
     enabled: !!id,
+  });
+};
+
+export const useExperienceForGuide = (id: string, guideId: string) => {
+  return useQuery({
+    queryKey: ['experience', id, 'guide', guideId],
+    queryFn: () => getExperienceForGuide(id, guideId),
+    enabled: !!id && !!guideId,
   });
 };
 

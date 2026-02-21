@@ -1,24 +1,37 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useExperiencesByGuide } from "@/services/experiences/getExperiences";
+import { useDeleteExperience } from "@/services/experiences/deleteExperiences";
 import { useGuideById } from "@/services/guides/getGuides";
 import { MinioHelpers } from "@/utils/minio";
-import { IoCheckmarkCircle } from "react-icons/io5";
-import { AiFillStar } from "react-icons/ai";
-import { LuMapPin } from "react-icons/lu";
-import { FiExternalLink, FiEdit, FiTrash2 } from "react-icons/fi";
+import {
+  CheckCircle,
+  Star,
+  MapPin,
+  ExternalLink,
+  Pencil,
+  Trash2,
+  Plus,
+} from "lucide-react";
 import type { Experience } from "@/schemas/experience";
 import Image from "next/image";
 import { useLocalizedPath } from "@/providers/i18n.provider";
 import DropdownMenu from "@/components/ui/DropdownMenu";
+import ConfirmModal from "@/components/ui/ConfirmModal";
+import Link from "next/link";
 
 export default function ExperiencesPage() {
   const { data: session } = useSession();
   const guideId = session?.user?.guide_id;
   const isGuide = session?.user?.role === "guide";
   const localizedPath = useLocalizedPath();
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+  const deleteMutation = useDeleteExperience();
 
   const { data: guide } = useGuideById(guideId || "");
   const {
@@ -50,11 +63,20 @@ export default function ExperiencesPage() {
   return (
     <div>
       {/* Header */}
-      <div className="my-12">
-        <h1 className="text-3xl font-extrabold text-dark !text-left mb-1">
-          Bienvenu {session?.user?.first_name} {session?.user?.last_name}
-        </h1>
-        <p className="text-lg text-dark/80 font-semibold">Gérer vos offres</p>
+      <div className="my-12 flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-extrabold text-dark !text-left mb-1">
+            Bienvenu {session?.user?.first_name} {session?.user?.last_name}
+          </h1>
+          <p className="text-lg text-dark/80 font-semibold">Gérer vos offres</p>
+        </div>
+        <Link
+          href={localizedPath("/me/experiences/create")}
+          className="flex items-center gap-2 bg-accent text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-accent/90 transition-colors duration-200 shadow-md shadow-accent/20"
+        >
+          <Plus size={18} />
+          Créer une expérience
+        </Link>
       </div>
 
       {/* Loading */}
@@ -101,25 +123,39 @@ export default function ExperiencesPage() {
                     fill
                     className="object-cover"
                   />
-                  {/* Three dots dropdown menu */}
-                  <div className="absolute top-3 right-3">
+                  {/* Status badge + Three dots dropdown menu */}
+                  <div className="absolute top-3 right-3 flex items-center gap-2">
+                    <span
+                      className={`text-xs font-semibold px-3 py-1 rounded-full shadow-sm ${
+                        experience.is_published
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {experience.is_published ? "Publiée" : "Brouillon"}
+                    </span>
                     <DropdownMenu
                       items={[
                         {
                           label: "Ouvrir",
-                          icon: FiExternalLink,
+                          icon: ExternalLink,
                           href: localizedPath(
                             `/me/experiences/${experience.id}`,
                           ),
                         },
                         {
                           label: "Modifier",
-                          icon: FiEdit,
+                          icon: Pencil,
                         },
                         {
                           label: "Supprimer",
-                          icon: FiTrash2,
+                          icon: Trash2,
                           variant: "danger",
+                          onClick: () =>
+                            setDeleteTarget({
+                              id: experience.id,
+                              title: experience.title,
+                            }),
                         },
                       ]}
                     />
@@ -154,7 +190,7 @@ export default function ExperiencesPage() {
                       </span>
                     </p>
                     {guide?.pro_card && (
-                      <IoCheckmarkCircle className="text-[#7BCECC] text-xl" />
+                      <CheckCircle className="text-[#7BCECC] text-xl" />
                     )}
                   </div>
 
@@ -162,11 +198,12 @@ export default function ExperiencesPage() {
                   <div className="flex items-center gap-2 mb-3">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
-                        <AiFillStar
+                        <Star
                           key={i}
-                          className={`text-base ${
+                          size={16}
+                          className={`${
                             i < Math.round(avgRating)
-                              ? "text-secondary"
+                              ? "text-secondary fill-secondary"
                               : "text-gray-300"
                           }`}
                         />
@@ -185,7 +222,7 @@ export default function ExperiencesPage() {
                   {/* City */}
                   {city && (
                     <div className="flex items-center gap-1 mb-2">
-                      <LuMapPin className="text-primary text-base" />
+                      <MapPin className="text-primary" size={16} />
                       <span className="text-dark font-medium text-sm">
                         {city.name}
                       </span>
@@ -229,6 +266,25 @@ export default function ExperiencesPage() {
           })}
         </div>
       )}
+
+      {/* Delete confirmation modal */}
+      <ConfirmModal
+        open={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={() => {
+          if (deleteTarget) {
+            deleteMutation.mutate(deleteTarget.id, {
+              onSuccess: () => setDeleteTarget(null),
+            });
+          }
+        }}
+        title="Supprimer l'expérience"
+        message={`Êtes-vous sûr de vouloir supprimer « ${deleteTarget?.title} » ? Cette action est irréversible.`}
+        confirmLabel="Supprimer"
+        cancelLabel="Annuler"
+        variant="danger"
+        loading={deleteMutation.isPending}
+      />
     </div>
   );
 }

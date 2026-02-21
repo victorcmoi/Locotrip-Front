@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { EllipsisVertical, type LucideIcon } from "lucide-react";
 import Link from "next/link";
-import type { IconType } from "react-icons";
 
 export interface DropdownMenuItem {
   label: string;
-  icon: IconType;
+  icon: LucideIcon;
   href?: string;
   onClick?: () => void;
   variant?: "default" | "danger";
@@ -40,7 +39,7 @@ export default function DropdownMenu({ items }: DropdownMenuProps) {
         onClick={() => setOpen(!open)}
         className="bg-white/90 rounded-full p-2 shadow-sm hover:bg-white transition cursor-pointer"
       >
-        <BsThreeDotsVertical size={16} className="text-dark/70" />
+        <EllipsisVertical size={16} className="text-dark/70" />
       </button>
       {open && (
         <div className="absolute right-0 mt-1 bg-white rounded-xl shadow-lg min-w-[160px] w-fit z-20 overflow-hidden">
