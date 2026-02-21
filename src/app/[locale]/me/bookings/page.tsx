@@ -10,6 +10,8 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import { RefreshCw, HelpCircle } from "lucide-react";
 import DropdownMenu from "@/components/ui/DropdownMenu";
+import Image from "next/image";
+import { MinioHelpers } from "@/utils/minio";
 
 dayjs.locale("fr");
 
@@ -58,8 +60,6 @@ export default function BookingsPage() {
       ),
     [bookings, statusFilter],
   );
-
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE?.replace("/api/", "") || "";
 
   const formatDate = (dateString: string | Date) => {
     return dayjs(dateString).format("D MMMM YYYY");
@@ -147,12 +147,13 @@ export default function BookingsPage() {
                   className="flex items-center rounded-2xl p-4 gap-5 shadow-sm hover:shadow-md transition"
                 >
                   {/* Experience image */}
-                  <div className="w-[130px] h-[100px] rounded-xl overflow-hidden shrink-0 bg-gray-light/30">
+                  <div className="w-[130px] h-[100px] rounded-xl overflow-hidden shrink-0 bg-gray-light/30 relative">
                     {imageUrl ? (
-                      <img
-                        src={`${apiBase}${imageUrl}`}
+                      <Image
+                        src={MinioHelpers.experience(imageUrl)}
                         alt={experience?.title || "Expérience"}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray text-xs">
