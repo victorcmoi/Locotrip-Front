@@ -146,6 +146,9 @@ export default function ExperiencesPage() {
                         {
                           label: "Modifier",
                           icon: Pencil,
+                          href: localizedPath(
+                            `/me/experiences/${experience.id}/update`,
+                          ),
                         },
                         {
                           label: "Supprimer",

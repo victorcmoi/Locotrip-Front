@@ -5,6 +5,10 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useExperienceForGuide } from "@/services/experiences/getExperiences";
 import { useDeleteExperience } from "@/services/experiences/deleteExperiences";
+import {
+  usePublishExperience,
+  useUnpublishExperience,
+} from "@/services/experiences/publishExperiences";
 import { useGuideById } from "@/services/guides/getGuides";
 import { MinioHelpers } from "@/utils/minio";
 import {
@@ -14,6 +18,7 @@ import {
   Pencil,
   Trash2,
   Flag,
+  Send,
   Calendar,
   ArrowLeft,
 } from "lucide-react";
@@ -35,7 +40,10 @@ export default function ExperienceDetailPage({
   const localizedPath = useLocalizedPath();
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showPublishModal, setShowPublishModal] = useState(false);
   const deleteMutation = useDeleteExperience();
+  const publishMutation = usePublishExperience();
+  const unpublishMutation = useUnpublishExperience();
 
   const {
     data: experience,
@@ -103,14 +111,24 @@ export default function ExperienceDetailPage({
           Retour aux expériences
         </Link>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer bg-transparent">
-            <Calendar size={16} />
-            Publier
+          <button
+            onClick={() => setShowPublishModal(true)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg border font-semibold text-sm transition-colors duration-200 cursor-pointer bg-transparent ${
+              experience.is_published
+                ? "border-yellow-400 text-yellow-600 hover:bg-yellow-500 hover:text-white"
+                : "border-accent text-accent hover:bg-accent hover:text-white"
+            }`}
+          >
+            <Send size={16} />
+            {experience.is_published ? "Mettre en brouillon" : "Publier"}
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer bg-transparent">
+          <Link
+            href={localizedPath(`/me/experiences/${id}/update`)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer bg-transparent"
+          >
             <Pencil size={16} />
             Modifier
-          </button>
+          </Link>
           <button
             onClick={() => setShowDeleteModal(true)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-400 text-red-500 font-semibold text-sm hover:bg-red-500 hover:text-white transition-colors duration-200 cursor-pointer bg-transparent"
@@ -444,6 +462,35 @@ export default function ExperienceDetailPage({
           </div>
         </div>
       </div>
+      {/* Publish/Unpublish confirmation modal */}
+      <ConfirmModal
+        open={showPublishModal}
+        onClose={() => setShowPublishModal(false)}
+        onConfirm={() => {
+          const mutation = experience.is_published
+            ? unpublishMutation
+            : publishMutation;
+          mutation.mutate(id, {
+            onSuccess: () => setShowPublishModal(false),
+          });
+        }}
+        title={
+          experience.is_published
+            ? "Mettre en brouillon"
+            : "Publier l'expérience"
+        }
+        message={
+          experience.is_published
+            ? `Êtes-vous sûr de vouloir mettre en brouillon « ${experience.title} » ? Elle ne sera plus visible publiquement.`
+            : `Êtes-vous sûr de vouloir publier « ${experience.title} » ? Elle sera visible par tous les utilisateurs.`
+        }
+        confirmLabel={
+          experience.is_published ? "Mettre en brouillon" : "Publier"
+        }
+        cancelLabel="Annuler"
+        variant={experience.is_published ? "danger" : "default"}
+        loading={publishMutation.isPending || unpublishMutation.isPending}
+      />
       {/* Delete confirmation modal */}
       <ConfirmModal
         open={showDeleteModal}
