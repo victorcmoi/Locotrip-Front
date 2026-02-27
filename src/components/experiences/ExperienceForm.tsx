@@ -836,16 +836,16 @@ export default function ExperienceForm({
                         <button
                           type="button"
                           onClick={() => toggleDeleteExistingMedia(media.id)}
-                          className={`absolute z-10 top-2 right-2 rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity ${
+                          className={`absolute z-10 top-2 p-1 right-2 rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity ${
                             media.toDelete
                               ? "bg-accent text-white"
                               : "bg-light text-red-600"
                           }`}
                         >
                           {media.toDelete ? (
-                            <Plus size={14} className="rotate-45" />
+                            <Plus size={16} className="rotate-45" />
                           ) : (
-                            <X size={14} />
+                            <X size={16} />
                           )}
                         </button>
                         {media.toDelete && (
@@ -926,7 +926,7 @@ export default function ExperienceForm({
                       <button
                         type="button"
                         onClick={() => removeNewPhoto(index)}
-                        className="absolute z-10 bg-light text-red-600 top-2 right-2 stroke-2 rounded-full w-6 h-6 flex opacity-0 group-hover:opacity-100 cursor-pointer"
+                        className="absolute z-10 p-1 bg-light text-red-600 top-2 right-2 stroke-2 rounded-full w-6 h-6 flex opacity-0 group-hover:opacity-100 cursor-pointer"
                       >
                         <X width={16} height={16} />
                       </button>
@@ -1070,7 +1070,7 @@ export default function ExperienceForm({
                         <button
                           type="button"
                           onClick={() => removeAvailabilitySlot(index)}
-                          className="text-red-400 hover:text-red-600 transition cursor-pointer"
+                          className="text-red-400 hover:text-red-600 transition cursor-pointer bg-light p-1"
                         >
                           <X size={16} />
                         </button>

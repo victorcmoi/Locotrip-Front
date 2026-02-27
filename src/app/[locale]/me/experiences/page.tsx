@@ -66,15 +66,15 @@ export default function ExperiencesPage() {
       <div className="my-12 flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-extrabold text-dark !text-left mb-1">
-            Bienvenu {session?.user?.first_name} {session?.user?.last_name}
+            Bienvenue {session?.user?.first_name} {session?.user?.last_name}
           </h1>
           <p className="text-lg text-dark/80 font-semibold">Gérer vos offres</p>
         </div>
         <Link
           href={localizedPath("/me/experiences/create")}
-          className="flex items-center gap-2 bg-accent text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-accent/90 transition-colors duration-200 shadow-md shadow-accent/20"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-white font-semibold text-sm hover:bg-accent/90 transition-colors duration-200 shadow-md shadow-accent/20 cursor-pointer"
         >
-          <Plus size={18} />
+          <Plus size={16} />
           Créer une expérience
         </Link>
       </div>
@@ -260,7 +260,7 @@ export default function ExperiencesPage() {
                   <div className="flex-1" />
 
                   {/* Booster button */}
-                  <button className="bg-transparent mt-2 px-6 py-2 rounded-full border-2 border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer">
+                  <button className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer bg-transparent mt-2 w-full">
                     Booster
                   </button>
                 </div>

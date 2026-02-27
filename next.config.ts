@@ -5,6 +5,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'http',
+        hostname: 'localhost',
+        port: '9000',
+        pathname: '/locotrip/**',
+      },
+      {
+        protocol: 'http',
         hostname: 'dev.s3.loco-trip.com',
         port: '9000',
         pathname: '/locotrip/**',

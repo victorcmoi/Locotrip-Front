@@ -70,7 +70,7 @@ export default function BookingsPage() {
       {/* Header */}
       <div className="my-12">
         <h1 className="text-3xl font-extrabold text-dark !text-left mb-1">
-          Bienvenu {session?.user?.first_name} {session?.user?.last_name}
+          Bienvenue {session?.user?.first_name} {session?.user?.last_name}
         </h1>
         <p className="text-lg text-dark/80 font-normal">
           {isGuide ? "Gérer vos réservations reçues" : "Gérer vos réservations"}
@@ -207,7 +207,7 @@ export default function BookingsPage() {
                         icon: RefreshCw,
                       },
                       {
-                        label: "Obtenir de l'aide",
+                        label: "Signaler un problème",
                         icon: HelpCircle,
                       },
                     ]}

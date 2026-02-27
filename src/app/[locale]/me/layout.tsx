@@ -31,7 +31,7 @@ const userMenuItems = [
   },
   {
     label: "Support / aide",
-    href: "/me/support",
+    href: "/help",
     icon: CircleHelp,
   },
 ];
@@ -54,12 +54,12 @@ const guideMenuItems = [
   },
   {
     label: "Gestion du profil",
-    href: "/me/profile",
+    href: "/me/manage-profile",
     icon: User,
   },
   {
     label: "Support / aide",
-    href: "/me/support",
+    href: "/help",
     icon: CircleHelp,
   },
 ];
