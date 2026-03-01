@@ -2,7 +2,7 @@
  * Routes pour le profil utilisateur
  */
 class UserRoutes {
-  private static readonly BASE = '/profile';
+  private static readonly BASE = '/me';
 
   static readonly PROFILE = this.BASE;
   static readonly EDIT = `${this.BASE}/edit`;
