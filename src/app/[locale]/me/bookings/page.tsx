@@ -12,6 +12,8 @@ import { RefreshCw, HelpCircle } from "lucide-react";
 import DropdownMenu from "@/components/ui/DropdownMenu";
 import Image from "next/image";
 import { MinioHelpers } from "@/utils/minio";
+import BookingDetailsModal from "@/components/ui/bookings/BookingDetailsModal";
+import CreateDisputeModal from "@/components/ui/bookings/CreateDisputeModal";
 
 dayjs.locale("fr");
 
@@ -36,6 +38,8 @@ export default function BookingsPage() {
   const guideId = session?.user?.guide_id;
   const isGuide = session?.user?.role === "guide";
   const [statusFilter, setStatusFilter] = useState("all");
+  const [editingBookingId, setEditingBookingId] = useState<string | null>(null);
+  const [reportingBookingId, setReportingBookingId] = useState<string | null>(null);
 
   const {
     data: guideBookings,
@@ -205,13 +209,35 @@ export default function BookingsPage() {
                       {
                         label: "Modifier le statut",
                         icon: RefreshCw,
+                        onClick: () => setEditingBookingId(booking.id),
                       },
                       {
                         label: "Signaler un problème",
                         icon: HelpCircle,
+                        onClick: () => setReportingBookingId(booking.id),
                       },
                     ]}
                   />
+
+                  {/* Booking Details (Admin Style) Modal */}
+                  {editingBookingId === booking.id && (
+                    <BookingDetailsModal
+                      booking={booking}
+                      showBoth={true}
+                      trigger={null}
+                      isOpen={true}
+                      onClose={() => setEditingBookingId(null)}
+                    />
+                  )}
+
+                  {/* Create Dispute Modal */}
+                  {reportingBookingId === booking.id && (
+                    <CreateDisputeModal
+                      bookingId={booking.id}
+                      isOpen={true}
+                      onClose={() => setReportingBookingId(null)}
+                    />
+                  )}
                 </div>
               );
             })}

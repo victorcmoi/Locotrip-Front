@@ -26,7 +26,7 @@ const userMenuItems = [
   },
   {
     label: "Gestion du profil",
-    href: "/me/profile",
+    href: "/me/manage-profile",
     icon: User,
   },
   {
