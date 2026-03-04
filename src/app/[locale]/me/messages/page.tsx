@@ -6,10 +6,12 @@ import { useConversations } from "@/services/messages/getConversations";
 import { useConversation } from "@/services/messages/getConversation";
 import { useSendMessage } from "@/services/messages/sendMessage";
 import { useMarkConversationRead } from "@/services/messages/markConversationRead";
+import { useVideoToken } from "@/services/video/getVideoToken";
+import VideoCallModal from "@/components/ui/video/VideoCallModal";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { MessageCircleMore, Send, ArrowLeft } from "lucide-react";
+import { MessageCircleMore, Send, ArrowLeft, Video } from "lucide-react";
 import type { ConversationListItem } from "@/schemas/conversation";
 
 dayjs.locale("fr");
@@ -178,10 +180,13 @@ function ChatPanel({ conversationId, currentUserId, isGuide }: ChatPanelProps) {
   const { data: conv, isLoading } = useConversation(conversationId);
   const { mutate: send, isPending: isSending } = useSendMessage(conversationId);
   const { mutate: markRead } = useMarkConversationRead();
+  const { mutate: fetchToken, isPending: isTokenLoading } = useVideoToken();
   const [draft, setDraft] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isUserScrollingRef = useRef(false);
+  const [showVideoCall, setShowVideoCall] = useState(false);
+  const [videoToken, setVideoToken] = useState<string | null>(null);
 
   // Mark conversation as read on mount/update if there are unread messages
   useEffect(() => {
@@ -235,6 +240,23 @@ function ChatPanel({ conversationId, currentUserId, isGuide }: ChatPanelProps) {
       { conversation_id: conversationId, author_id: currentUserId, content },
       { onSuccess: () => setDraft("") },
     );
+  };
+
+  const handleStartVideoCall = () => {
+    fetchToken(
+      { identity: currentUserId, room: conversationId },
+      {
+        onSuccess: (data) => {
+          setVideoToken(data.token);
+          setShowVideoCall(true);
+        },
+      },
+    );
+  };
+
+  const handleEndVideoCall = () => {
+    setShowVideoCall(false);
+    setVideoToken(null);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -306,11 +328,24 @@ function ChatPanel({ conversationId, currentUserId, isGuide }: ChatPanelProps) {
   return (
     <div className="flex flex-col h-full bg-white border border-black/10 rounded-xl">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-dark/10 shrink-0">
-        <p className="font-semibold text-dark">{correspondentName}</p>
-        <p className="text-xs text-dark/50 font-normal mt-0.5">
-          {experienceTitle}
-        </p>
+      <div className="px-6 py-4 border-b border-dark/10 shrink-0 flex items-center justify-between">
+        <div>
+          <p className="font-semibold text-dark">{correspondentName}</p>
+          <p className="text-xs text-dark/50 font-normal mt-0.5">
+            {experienceTitle}
+          </p>
+        </div>
+        <button
+          onClick={handleStartVideoCall}
+          disabled={isTokenLoading}
+          className="flex items-center gap-2 px-3 py-2 rounded-xl bg-accent/10 text-accent hover:bg-accent/20 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Démarrer un appel vidéo"
+        >
+          <Video size={18} />
+          <span className="text-sm font-medium hidden sm:inline">
+            {isTokenLoading ? "Connexion…" : "Appel vidéo"}
+          </span>
+        </button>
       </div>
 
       {/* Messages */}
@@ -420,6 +455,17 @@ function ChatPanel({ conversationId, currentUserId, isGuide }: ChatPanelProps) {
           </button>
         </div>
       </div>
+
+      {/* Video Call Modal */}
+      {videoToken && (
+        <VideoCallModal
+          open={showVideoCall}
+          onClose={handleEndVideoCall}
+          token={videoToken}
+          roomName={conversationId}
+          correspondentName={correspondentName}
+        />
+      )}
     </div>
   );
 }
