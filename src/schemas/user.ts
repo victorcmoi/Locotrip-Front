@@ -26,6 +26,7 @@ export const createUserSchema = z.object({
   first_name: z.string().min(1, 'Ce champ est requis.'),
   last_name: z.string().min(1, 'Ce champ est requis.'),
   phone: z.string().optional(),
+  birth_date: z.string().min(1, 'La date de naissance est requise.'),
 });
 
 export const updateUserSchema = z.object({

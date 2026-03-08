@@ -1,15 +1,16 @@
 "use client";
 
-import React, {useState} from "react";
-import {signIn} from "next-auth/react";
-import {toast} from "sonner";
-import {useRouter} from "next/navigation";
+import React, { useState } from "react";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { HOME_ROUTES, AUTH_ROUTES } from "@/utils/routes";
 import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import Link from "next/link";
+import { useRegisterUser } from "@/services/auth/registerUser";
 
 export default function RegisterForm() {
-  const [loading, setLoading] = useState(false);
+  const registerUserMutation = useRegisterUser();
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
   const router = useRouter();
@@ -18,13 +19,15 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const formData = new FormData(e.currentTarget);
-    const firstName = formData.get('firstName') as string;
-    const lastName = formData.get('lastName') as string;
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const confirmPassword = formData.get('confirmPassword') as string;
+    const firstName = formData.get("firstName") as string;
+    const lastName = formData.get("lastName") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirmPassword") as string;
+    const birthDateStr = formData.get("birthDate") as string;
+    const phone = formData.get("phone") as string;
 
     // Validation
     if (password !== confirmPassword) {
@@ -37,19 +40,34 @@ export default function RegisterForm() {
       return;
     }
 
-    setLoading(true);
+    // Age validation
+    const birthDate = new Date(birthDateStr);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    if (age < 18) {
+      toast.error("Vous devez avoir au moins 18 ans pour vous inscrire.");
+      return;
+    }
 
     try {
-      // TODO: Appel API pour créer le compte
-      // const response = await fetch('/api/auth/register', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ firstName, lastName, email, password, subscribeNewsletter })
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error('Erreur lors de l\'inscription');
-      // }
+      await registerUserMutation.mutateAsync({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        password,
+        role: "client",
+        birth_date: birthDateStr,
+        ...(phone ? { phone } : {}),
+      });
 
       // Connexion automatique après inscription
       const result = await signIn("credentials", {
@@ -60,14 +78,14 @@ export default function RegisterForm() {
 
       if (result?.error) {
         toast.error(result.error);
-        setLoading(false);
       } else {
         toast.success("Compte créé avec succès !");
         router.replace(localizedPath(HOME_ROUTES.HOME));
       }
-    } catch (error) {
-      toast.error("Une erreur est survenue lors de l'inscription");
-      setLoading(false);
+    } catch (error: any) {
+      toast.error(
+        error.message || "Une erreur est survenue lors de l'inscription",
+      );
     }
   };
 
@@ -76,7 +94,10 @@ export default function RegisterForm() {
       {/* Prénom et Nom */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label htmlFor="firstName" className="block text-base font-semibold text-dark mb-2">
+          <label
+            htmlFor="firstName"
+            className="block text-base font-semibold text-dark mb-2"
+          >
             {dict.auth.firstName}
           </label>
           <input
@@ -91,7 +112,10 @@ export default function RegisterForm() {
         </div>
 
         <div>
-          <label htmlFor="lastName" className="block text-base font-semibold text-dark mb-2">
+          <label
+            htmlFor="lastName"
+            className="block text-base font-semibold text-dark mb-2"
+          >
             {dict.auth.lastName}
           </label>
           <input
@@ -108,7 +132,10 @@ export default function RegisterForm() {
 
       {/* Email */}
       <div>
-        <label htmlFor="email" className="block text-base font-semibold text-dark mb-2">
+        <label
+          htmlFor="email"
+          className="block text-base font-semibold text-dark mb-2"
+        >
           {dict.auth.email}
         </label>
         <input
@@ -124,7 +151,10 @@ export default function RegisterForm() {
 
       {/* Password */}
       <div>
-        <label htmlFor="password" className="block text-base font-semibold text-dark mb-2">
+        <label
+          htmlFor="password"
+          className="block text-base font-semibold text-dark mb-2"
+        >
           {dict.auth.password}
         </label>
         <input
@@ -140,7 +170,10 @@ export default function RegisterForm() {
 
       {/* Confirm Password */}
       <div>
-        <label htmlFor="confirmPassword" className="block text-base font-semibold text-dark mb-2">
+        <label
+          htmlFor="confirmPassword"
+          className="block text-base font-semibold text-dark mb-2"
+        >
           {dict.auth.confirmPassword}
         </label>
         <input
@@ -151,6 +184,42 @@ export default function RegisterForm() {
           autoComplete="new-password"
           className="w-full px-4 py-3 rounded-xl border border-gray-light bg-white text-dark focus:outline-none focus:ring-2 focus:ring-accent transition-all"
           placeholder="••••••••"
+        />
+      </div>
+
+      {/* Phone */}
+      <div>
+        <label
+          htmlFor="phone"
+          className="block text-base font-semibold text-dark mb-2"
+        >
+          Numéro de téléphone (optionnel)
+        </label>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          className="w-full px-4 py-3 rounded-xl border border-gray-light bg-white text-dark focus:outline-none focus:ring-2 focus:ring-accent transition-all"
+          placeholder="+33612345678"
+        />
+      </div>
+
+      {/* Birth Date */}
+      <div>
+        <label
+          htmlFor="birthDate"
+          className="block text-base font-semibold text-dark mb-2"
+        >
+          Date de naissance
+        </label>
+        <input
+          id="birthDate"
+          name="birthDate"
+          type="date"
+          required
+          autoComplete="bday"
+          className="w-full px-4 py-3 rounded-xl border border-gray-light bg-white text-dark focus:outline-none focus:ring-2 focus:ring-accent transition-all"
         />
       </div>
 
@@ -192,19 +261,21 @@ export default function RegisterForm() {
       <div>
         <button
           type="submit"
-          disabled={loading}
-          className="w-full bg-primary hover:bg-accent text-white font-bold py-3 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-button cursor-pointer" 
+          disabled={registerUserMutation.isPending}
+          className="w-full bg-primary hover:bg-accent text-white font-bold py-3 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-button cursor-pointer"
         >
-          {loading ? "Inscription en cours..." : dict.auth.register}
+          {registerUserMutation.isPending
+            ? "Inscription en cours..."
+            : dict.auth.register}
         </button>
       </div>
 
       {/* Lien vers login */}
       <div className="text-center">
         <p className="text-sm text-dark">
-          {dict.auth.alreadyHaveAccount}{' '}
-          <Link 
-            href={localizedPath(AUTH_ROUTES.LOGIN)} 
+          {dict.auth.alreadyHaveAccount}{" "}
+          <Link
+            href={localizedPath(AUTH_ROUTES.LOGIN)}
             className="font-semibold text-accent hover:text-primary transition-colors"
           >
             {dict.auth.login}
