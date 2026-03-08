@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useLocalizedPath } from "@/providers/i18n.provider";
+import { useGuideByUserId } from "@/services/guides/getGuideByUserId";
+import { MinioHelpers } from "@/utils/minio";
+import Image from "next/image";
 import {
   Ticket,
   MessageCircleMore,
@@ -72,6 +75,10 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
   const isGuide = session?.user?.role === "guide";
   const menuItems = isGuide ? guideMenuItems : userMenuItems;
 
+  const { data: guide } = useGuideByUserId(
+    isGuide ? session?.user?.id : undefined,
+  );
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push(localizedPath("/login"));
@@ -119,8 +126,17 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
 
           {/* User info */}
           <div className="flex items-center gap-3 my-8 border-b border-white/20 pb-8">
-            <div className="bg-accent text-light rounded-full w-10 h-10 flex items-center justify-center font-semibold text-sm shrink-0">
-              {userInitials}
+            <div className="bg-accent text-light rounded-full w-14 h-14 flex items-center justify-center font-semibold text-sm shrink-0 overflow-hidden relative">
+              {isGuide && guide?.medias?.[0]?.url ? (
+                <Image
+                  src={MinioHelpers.guideProfile(guide.id, guide.medias[0].url)}
+                  alt={`${session?.user?.first_name} ${session?.user?.last_name}`}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                userInitials
+              )}
             </div>
             <Link href={localizedPath("/me/profile")} className="">
               <p className="font-semibold text-sm text-white">

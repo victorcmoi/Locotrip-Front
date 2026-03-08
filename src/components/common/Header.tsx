@@ -20,6 +20,8 @@ import {
 } from "@/utils/routes";
 import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import { useCurrencies } from "@/services/currencies/getCurrencies";
+import { useGuideByUserId } from "@/services/guides/getGuideByUserId";
+import { MinioHelpers } from "@/utils/minio";
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -29,6 +31,11 @@ export default function Header() {
   const { data: currencies, isLoading: currenciesLoading } = useCurrencies();
   const router = useRouter();
   const pathname = usePathname();
+
+  const isGuide = session?.user?.role === "guide";
+  const { data: guide } = useGuideByUserId(
+    isGuide ? session?.user?.id : undefined,
+  );
 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
@@ -254,11 +261,23 @@ export default function Header() {
             {!isAuthenticated ? (
               <CiUser size={24} />
             ) : (
-              <div className="bg-accent text-light rounded-full p-2.5 flex items-center font-semibold">
-                <p>
-                  {session?.user?.first_name?.charAt(0).toUpperCase()}
-                  {session?.user?.last_name?.charAt(0).toUpperCase()}
-                </p>
+              <div className="bg-accent text-light rounded-full w-12 h-12 flex items-center justify-center font-semibold overflow-hidden relative shrink-0">
+                {isGuide && guide?.medias?.[0]?.url ? (
+                  <Image
+                    src={MinioHelpers.guideProfile(
+                      guide.id,
+                      guide.medias[0].url,
+                    )}
+                    alt={`${session?.user?.first_name} ${session?.user?.last_name}`}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <p>
+                    {session?.user?.first_name?.charAt(0).toUpperCase()}
+                    {session?.user?.last_name?.charAt(0).toUpperCase()}
+                  </p>
+                )}
               </div>
             )}
           </div>
@@ -295,11 +314,23 @@ export default function Header() {
                     onClick={() => setIsUserMenuOpen(false)}
                     className="flex items-center gap-2 p-3 duration-300 hover:bg-gray-light rounded-lg"
                   >
-                    <div className="bg-accent text-light rounded-full w-10 h-10 flex items-center justify-center font-semibold shrink-0 ">
-                      <p>
-                        {session?.user?.first_name?.charAt(0).toUpperCase()}
-                        {session?.user?.last_name?.charAt(0).toUpperCase()}
-                      </p>
+                    <div className="bg-accent text-light rounded-full w-10 h-10 flex items-center justify-center font-semibold overflow-hidden relative shrink-0">
+                      {isGuide && guide?.medias?.[0]?.url ? (
+                        <Image
+                          src={MinioHelpers.guideProfile(
+                            guide.id,
+                            guide.medias[0].url,
+                          )}
+                          alt={`${session?.user?.first_name} ${session?.user?.last_name}`}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <p>
+                          {session?.user?.first_name?.charAt(0).toUpperCase()}
+                          {session?.user?.last_name?.charAt(0).toUpperCase()}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <p>
