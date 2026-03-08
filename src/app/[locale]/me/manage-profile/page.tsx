@@ -10,14 +10,70 @@ import { MinioHelpers } from "@/utils/minio";
 import Image from "next/image";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import { Pencil, Camera } from "lucide-react";
+import {
+  Pencil,
+  Camera,
+  Crown,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Upload,
+  FileText,
+} from "lucide-react";
 import EditUserModal from "@/components/ui/users/EditUserModal";
 import EditGuideModal from "@/components/ui/guides/EditGuideModal";
 import EditProfilePictureModal from "@/components/ui/guides/EditProfilePictureModal";
+import RequestProModal from "@/components/ui/guides/RequestProModal";
+import { useResubmitGuideDocument } from "@/services/guides/resubmitGuideDocument";
+import { toast } from "sonner";
 import type { UpdateUser } from "@/schemas/user";
 import type { UpdateGuide } from "@/schemas/guide";
 
 dayjs.locale("fr");
+
+function ResubmitButton({
+  guideId,
+  documentId,
+  userId,
+}: {
+  guideId: string;
+  documentId: string;
+  userId: string;
+}) {
+  const resubmitMutation = useResubmitGuideDocument(userId);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleResubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      await resubmitMutation.mutateAsync({ guideId, documentId, file });
+      toast.success("Document re-soumis avec succès !");
+    } catch {
+      toast.error("Erreur lors de la re-soumission du document.");
+    }
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  return (
+    <label className="cursor-pointer">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pdf,.jpg,.jpeg,.png"
+        className="hidden"
+        disabled={resubmitMutation.isPending}
+        onChange={handleResubmit}
+      />
+      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 text-accent text-xs font-semibold hover:bg-accent/20 transition-colors cursor-pointer">
+        <Upload size={12} />
+        {resubmitMutation.isPending ? "Envoi..." : "Resoumettre"}
+      </span>
+    </label>
+  );
+}
 
 export default function ManageProfilePage() {
   const { data: session } = useSession();
@@ -27,6 +83,7 @@ export default function ManageProfilePage() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [isPictureModalOpen, setIsPictureModalOpen] = useState(false);
+  const [isProModalOpen, setIsProModalOpen] = useState(false);
 
   const {
     data: user,
@@ -39,6 +96,20 @@ export default function ManageProfilePage() {
     isLoading: isLoadingGuide,
     error: errorGuide,
   } = useGuideByUserId(isGuide ? userId : undefined);
+
+  const isAlreadyPro = guide?.guide_status === "pro";
+
+  // Déterminer si une demande pro est en cours (uniquement si le guide n'est pas déjà pro)
+  const hasPendingProRequest =
+    !isAlreadyPro &&
+    guide?.documents?.some(
+      (doc) =>
+        doc.document_type === "guide_card" &&
+        doc.verification_status === "pending",
+    );
+
+  const canRequestPro =
+    isGuide && guide && !isAlreadyPro && !hasPendingProRequest;
 
   const userInitials =
     (user?.first_name?.charAt(0).toUpperCase() || "") +
@@ -184,14 +255,38 @@ export default function ManageProfilePage() {
                 <h2 className="text-xl font-bold text-dark">
                   Informations Guide
                 </h2>
-                <button
-                  type="button"
-                  onClick={() => setIsGuideModalOpen(true)}
-                  className="flex bg-transparent items-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer"
-                >
-                  <Pencil size={15} />
-                  Modifier
-                </button>
+                <div className="flex items-center gap-3">
+                  {isAlreadyPro && (
+                    <span className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent border border-accent/20 text-white font-semibold text-sm shadow-sm">
+                      <Crown size={15} />
+                      Guide Professionnel
+                    </span>
+                  )}
+                  {hasPendingProRequest && (
+                    <span className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 font-semibold text-sm">
+                      <Clock size={15} />
+                      Demande pro en cours
+                    </span>
+                  )}
+                  {canRequestPro && (
+                    <button
+                      type="button"
+                      onClick={() => setIsProModalOpen(true)}
+                      className="flex bg-transparent items-center gap-2 px-4 py-2 rounded-lg border border-emerald-500 text-emerald-600 font-semibold text-sm hover:bg-emerald-500 hover:text-white transition-colors duration-200 cursor-pointer"
+                    >
+                      <Crown size={15} />
+                      Passer pro
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setIsGuideModalOpen(true)}
+                    className="flex bg-transparent items-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer"
+                  >
+                    <Pencil size={15} />
+                    Modifier
+                  </button>
+                </div>
               </div>
               <div className="gap-6 flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -247,6 +342,104 @@ export default function ManageProfilePage() {
               </div>
             </div>
           )}
+
+          {/* Section Ma demande pro */}
+          {isGuide &&
+            guide &&
+            hasPendingProRequest &&
+            (() => {
+              const proDocuments =
+                guide.documents?.filter(
+                  (doc) => doc.document_type !== "guide_card",
+                ) || [];
+
+              const getDocTypeName = (type: string) => {
+                switch (type) {
+                  case "CV":
+                    return "CV";
+                  case "diploma":
+                    return "Diplôme";
+                  case "proof_of_residence":
+                    return "Justificatif de domicile";
+                  case "guide_card":
+                    return "Carte professionnelle";
+                  default:
+                    return type;
+                }
+              };
+
+              const getStatusBadge = (status: string) => {
+                switch (status) {
+                  case "verified":
+                    return (
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+                        <CheckCircle size={12} /> Validé
+                      </span>
+                    );
+                  case "rejected":
+                    return (
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
+                        <XCircle size={12} /> Refusé
+                      </span>
+                    );
+                  default:
+                    return (
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold">
+                        <Clock size={12} /> En attente
+                      </span>
+                    );
+                }
+              };
+
+              return proDocuments.length > 0 ? (
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-black/5">
+                  <div className="flex items-center justify-between mb-4 border-b border-black/5 pb-2">
+                    <h2 className="text-xl font-bold text-dark">
+                      Ma demande pro
+                    </h2>
+                    <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 font-semibold text-xs">
+                      <Clock size={13} />
+                      En cours de traitement
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    {proDocuments.map((doc) => (
+                      <div
+                        key={doc.id}
+                        className="flex items-center justify-between p-4 rounded-xl bg-light border border-black/5"
+                      >
+                        <div className="flex items-center gap-3">
+                          <FileText size={18} className="text-dark/40" />
+                          <div>
+                            <p className="text-sm font-semibold text-dark">
+                              {getDocTypeName(doc.document_type)}
+                            </p>
+                            {doc.verification_comment &&
+                              doc.verification_status === "rejected" && (
+                                <p className="text-xs text-red-500 mt-0.5">
+                                  {doc.verification_comment}
+                                </p>
+                              )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          {getStatusBadge(doc.verification_status)}
+                          {doc.verification_status === "rejected" &&
+                            guide &&
+                            userId && (
+                              <ResubmitButton
+                                guideId={guide.id}
+                                documentId={doc.id}
+                                userId={userId}
+                              />
+                            )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null;
+            })()}
         </div>
       )}
 
@@ -282,6 +475,15 @@ export default function ManageProfilePage() {
             guide.medias?.[0]?.url,
           )}
           previousMediaId={guide.medias?.[0]?.id ?? null}
+        />
+      )}
+
+      {guide && userId && canRequestPro && (
+        <RequestProModal
+          open={isProModalOpen}
+          onClose={() => setIsProModalOpen(false)}
+          guide={guide}
+          userId={userId}
         />
       )}
     </div>

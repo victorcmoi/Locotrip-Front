@@ -1,7 +1,18 @@
 import { z } from 'zod';
-import { GuideStatusEnum } from './enums';
+import { GuideStatusEnum, VerificationStatusEnum, DocumentTypeEnum } from './enums';
 import { userSchema } from './user';
 import { mediaSchema } from './media';
+
+export const guideDocumentSchema = z.object({
+  id: z.string().uuid(),
+  guide_id: z.string().uuid(),
+  document_type: DocumentTypeEnum,
+  document_url: z.string().nullish(),
+  verification_status: VerificationStatusEnum,
+  verification_comment: z.string().nullish(),
+  upload_date: z.string().or(z.date()),
+  verification_date: z.string().or(z.date()).nullish(),
+});
 
 export const guideSchema = z.object({
   id: z.string().uuid(),
@@ -22,6 +33,8 @@ export const guideSchema = z.object({
   internal_comment: z.string().nullish(),
   response_time_hours: z.number().nullish(),
   response_time_range: z.string().nullish(),
+  card_request_date: z.string().or(z.date()).nullish(),
+  card_verification_date: z.string().or(z.date()).nullish(),
   is_active: z.boolean().default(true),
   suspended_at: z.string().or(z.date()).nullish(),
   suspension_reason: z.string().nullish(),
@@ -33,6 +46,7 @@ export const guideSchema = z.object({
   weightedScore: z.number().optional(),
   categories: z.array(z.string()).optional(),
   medias: z.array(mediaSchema).optional(),
+  documents: z.array(guideDocumentSchema).optional(),
   hobbies: z.array(z.object({
     category_id: z.string().uuid(),
     category: z.object({
