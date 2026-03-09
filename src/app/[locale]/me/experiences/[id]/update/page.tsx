@@ -16,7 +16,7 @@ import { ApiRequest } from "@/services/instance";
 import { z } from "zod";
 import ExperienceForm, {
   type ExperienceFormPayload,
-} from "@/components/experiences/ExperienceForm";
+} from "@/components/ui/experiences/ExperienceForm";
 
 export default function UpdateExperiencePage({
   params,

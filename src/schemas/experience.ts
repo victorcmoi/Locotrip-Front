@@ -50,7 +50,9 @@ export const experienceSchema = z.object({
     languages: z.string().nullish(),
     country: z.string().nullish(),
     pro_card: z.boolean().optional(),
-  }).optional(),
+    reviewCount: z.number().optional(),
+    medias: z.array(mediaSchema).optional(),
+  }),
   medias: z.array(mediaSchema).optional(),
   categories: z.array(z.object({
     category_id: z.string().uuid(),

@@ -4,7 +4,8 @@ import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import GuideCard from "@/components/ui/guides/GuideCard";
-import { useSearchGuides } from "@/services/search/search";
+import ExperienceCard from "@/components/ui/experiences/ExperienceCard";
+import { useSearchGuides, useSearchExperiences } from "@/services/search/search";
 import { HOME_ROUTES } from "@/utils/routes";
 import { MdLanguage } from "react-icons/md";
 import { SlArrowDown } from "react-icons/sl";
@@ -13,6 +14,7 @@ import { AiOutlineEuro } from "react-icons/ai";
 import { SearchBar } from "@/components/common/SearchBar";
 import { City } from "@/schemas/city";
 import type { Guide } from "@/schemas/guide";
+import type { Experience } from "@/schemas/experience";
 
 export default function SearchPage() {
   const dict = useTranslations();
@@ -66,9 +68,21 @@ export default function SearchPage() {
       minPrice: minPriceParam ? Number(minPriceParam) : undefined,
       maxPrice: maxPriceParam ? Number(maxPriceParam) : undefined,
     },
-    !!(modeParam || startDateParam || endDateParam || locationParam)
+    (!modeParam || modeParam === "guide") && !!(startDateParam || endDateParam || locationParam)
   );
   const guides = guidesResponse?.data;
+
+  const { data: experiencesResponse, isLoading: experiencesLoading, error: experiencesError } = useSearchExperiences(
+    {
+      location: locationParam,
+      startDate: startDateParam,
+      endDate: endDateParam,
+      minPrice: minPriceParam ? Number(minPriceParam) : undefined,
+      maxPrice: maxPriceParam ? Number(maxPriceParam) : undefined,
+    },
+    modeParam === "activity" && !!(startDateParam || endDateParam || locationParam)
+  );
+  const experiences = experiencesResponse?.data;
   const languages = guides?.flatMap((guide: Guide) => guide.languages ? guide.languages.split(", ").map((lang: string) => lang.trim()) : []);
   const uniqueLanguages = Array.from(new Set(languages));
 
@@ -281,25 +295,26 @@ export default function SearchPage() {
       <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12">
         {/* Résultats */}
         <div className="mt-12">
-          {guidesLoading && (
+          {(guidesLoading || experiencesLoading) && (
             <div className="text-center text-gray py-12">
               <p className="text-xl">{dict.search.loading}</p>
             </div>
           )}
 
-          {guidesError && (
+          {(guidesError || experiencesError) && (
             <div className="text-center text-error py-12">
               <p className="text-xl">{dict.search.error}</p>
             </div>
           )}
 
-          {guides && guides.length === 0 && !guidesLoading && (
+          {/* Résultats pour les guides */}
+          {(!modeParam || modeParam === "guide") && guides && guides.length === 0 && !guidesLoading && (
             <div className="text-center text-gray py-12">
               <p className="text-xl">{dict.search.noResult}</p>
             </div>
           )}
 
-          {guides && guides.length > 0 && (
+          {(!modeParam || modeParam === "guide") && guides && guides.length > 0 && (
             <div>
               <h2 className="mb-4">
                 {dict.search.titleGuide}
@@ -308,6 +323,27 @@ export default function SearchPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {guides.map((guide: Guide) => (
                   <GuideCard key={guide.id} guide={guide} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Résultats pour les expériences */}
+          {modeParam === "activity" && experiences && experiences.length === 0 && !experiencesLoading && (
+            <div className="text-center text-gray py-12">
+              <p className="text-xl">{dict.search.noResult}</p>
+            </div>
+          )}
+
+          {modeParam === "activity" && experiences && experiences.length > 0 && (
+            <div>
+              <h2 className="mb-4">
+                {dict.search.title}
+              </h2>
+              <p className="mb-12">{experiences.length} {experiences.length === 1 ? dict.search.resultTitle : dict.search.resultsTitle}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {experiences.map((experience: Experience) => (
+                  <ExperienceCard key={experience.id} experience={experience} />
                 ))}
               </div>
             </div>

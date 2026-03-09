@@ -15,7 +15,9 @@
     "language": "Choisissez une langue",
     "currency": "Choisissez une devise",
     "review": "avis",
-    "languages": "Langue :"
+    "languages": "Langue :",
+    "person": "Pers",
+    "checkAvailability": "Vérifier ses disponibilités"
   },
   "navigation": {
     "home": "Accueil",
@@ -326,6 +328,7 @@
     "searchCity": "Rechercher une ville...",
     "searchResults": "Résultats de recherche :",
     "noCitiesFound": "Aucune ville trouvée",
-    "noSuggestedCities": "Aucune suggestion disponible"
+    "noSuggestedCities": "Aucune suggestion disponible",
+    "experienceName": "Avec"
   }
 }

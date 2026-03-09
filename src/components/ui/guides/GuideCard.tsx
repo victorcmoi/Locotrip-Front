@@ -14,9 +14,7 @@ interface GuideCardProps {
 
 export default function GuideCard({ guide }: GuideCardProps) {
   const dict = useTranslations();
-
   const hobbies = guide.hobbies?.map((h) => h.category?.name).filter((name): name is string => Boolean(name)) || [];
-  
   const profilePicture = guide.medias?.[0]?.url;
 
   return (
@@ -44,7 +42,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
               {guide.user?.first_name}
             </h3>
             {guide.pro_card && (
-              <IoCheckmarkCircle className="text-[#7BCECC] text-3xl" />
+              <IoCheckmarkCircle className="text-accent text-3xl" />
             )}
           </div>
           <div className="flex items-center gap-1 text-xl text-light">

@@ -13,7 +13,11 @@
     "followUs": "Folgen Sie uns",
     "emailAddress": "E-Mail-Adresse",
     "language": "Sprache wählen",
-    "currency": "Währung wählen"
+    "currency": "Währung wählen",
+    "review": "Bewertungen",
+    "languages": "Sprache:",
+    "person": "Pers",
+    "checkAvailability": "Verfügbarkeit prüfen"
   },
   "navigation": {
     "home": "Startseite",

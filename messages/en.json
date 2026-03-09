@@ -13,7 +13,11 @@
     "followUs": "Follow us",
     "emailAddress": "Email address",
     "language": "Choose a language",
-    "currency": "Choose a currency"
+    "currency": "Choose a currency",
+    "review": "reviews",
+    "languages": "Language:",
+    "person": "Person",
+    "checkAvailability": "Check availability"
   },
   "navigation": {
     "home": "Home",

@@ -13,7 +13,7 @@ import {
 import { addCategoryToExperience } from "@/services/experiences/createExperienceCategory";
 import ExperienceForm, {
   type ExperienceFormPayload,
-} from "@/components/experiences/ExperienceForm";
+} from "@/components/ui/experiences/ExperienceForm";
 
 export default function CreateExperiencePage() {
   const { data: session } = useSession();
