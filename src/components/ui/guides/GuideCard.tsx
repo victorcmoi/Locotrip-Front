@@ -68,7 +68,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
         {guide.languages && (
           <div className="mb-8 flex justify-center text-center">
             <p className="text-base">
-              <span className="font-bold text-dark">{dict.common.languages}</span>{" "}
+              <span className="text-dark">{dict.common.languages}</span>{" "}
               <span className="text-dark">{guide.languages}</span>
             </p>
           </div>

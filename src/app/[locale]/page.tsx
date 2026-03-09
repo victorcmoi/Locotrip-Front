@@ -53,7 +53,7 @@ export default function Page() {
         className="relative min-h-screen pt-20 md:pt-10 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-24 after:bg-light after:rounded-t-[50%]"
       >
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-[0.5]"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-[0.75]"
           style={{
             backgroundImage: `var(--gradient-accent), url('/assets/accueil.png')`,
           }}

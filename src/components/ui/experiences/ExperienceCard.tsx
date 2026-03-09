@@ -58,7 +58,7 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
         {/* Nom guide */}
         <Link href={GuidesRoutes.PROFILE(guide.id)} className="flex items-center gap-2 mb-4 justify-center hover:opacity-80 transition-opacity">
           <p className="text-base text-dark">
-            {dict.search.experienceName} <span className="font-bold">{guide.user?.first_name} {guide.user?.last_name}</span>
+            {dict.search.experienceName} <span className="font-bold text-dark">{guide.user?.first_name}</span> <span className="font-bold uppercase text-dark">{guide.user?.last_name}</span>
           </p>
           {guide?.pro_card && (
             <IoCheckmarkCircle className="text-accent text-2xl" />
@@ -92,7 +92,7 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
         {guide.languages && (
           <div className="mb-4 flex justify-center text-center">
             <p className="text-base">
-              <span className="font-bold text-dark">{dict.common.languages}</span>{" "}
+              <span className="text-dark">{dict.common.languages}</span>{" "}
               <span className="text-dark">{guide.languages}</span>
             </p>
           </div>
