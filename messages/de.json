@@ -108,7 +108,20 @@
     "alreadyHaveAccount": "Sie haben bereits ein Konto?",
     "noAccountYet": "Noch kein Konto?",
     "acceptTerms": "Akzeptieren Sie die Nutzungsbedingungen und Datenschutzrichtlinien",
-    "subscribeNewsletter": "Für den Newsletter anmelden"
+    "subscribeNewsletter": "Für den Newsletter anmelden",
+    "guideRegisterTitle": "Werden Sie Locotrip-Guide",
+    "guideRegisterButton": "Mein Guide-Konto erstellen",
+    "personalInfo": "Persönliche Informationen",
+    "guideInfo": "Guide-Informationen",
+    "bio": "Biografie",
+    "bioPlaceholder": "Stellen Sie sich vor: Ihr Werdegang, Ihre Leidenschaften, was Sie gerne mit Reisenden teilen... (mindestens 50 Zeichen)",
+    "country": "Land",
+    "languages": "Gesprochene Sprachen",
+    "yearsOfExperience": "Jahre Erfahrung",
+    "profilePicture": "Profilbild",
+    "profilePictureHint": "Sie können Ihr Profilbild in Ihrem persönlichen Bereich ändern",
+    "phone": "Telefonnummer (optional)",
+    "birthDate": "Geburtsdatum"
   },
   "guides": {
     "profile": {

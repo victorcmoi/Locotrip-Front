@@ -6,6 +6,7 @@ class AuthRoutes {
 
   static readonly LOGIN = '/login';
   static readonly REGISTER = '/register';
+  static readonly GUIDE_REGISTER = '/guide-register';
   static readonly FORGOT_PASSWORD = `${this.BASE}/forgot-password`;
   static readonly RESET_PASSWORD = `${this.BASE}/reset-password`;
   static readonly VERIFY_EMAIL = `${this.BASE}/verify-email`;
