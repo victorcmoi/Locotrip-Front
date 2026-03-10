@@ -81,8 +81,11 @@ export default function Page() {
             </div>
             <SearchBar
               onSearch={handleSearch}
+              currentMode="guide"
+              onModeChange={(mode) => {
+                // Mode change handled in SearchBar component
+              }}
               className="w-full md:max-w-xl lg:max-w-2xl mx-auto"
-              initialMode="guide"
               initialDateRange={initialDateRange}
               initialLocation={initialLocation}
             />

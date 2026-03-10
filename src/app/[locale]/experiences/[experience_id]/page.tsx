@@ -136,7 +136,7 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
 
                     {/* Description */}
                     <div className="w-full mt-6">
-                        <p className="text-gray-700 leading-relaxed">{experience.description}</p>
+                        <p className="text-dark leading-relaxed">{experience.description}</p>
                     </div>
 
                     {/* Tableau d'informations */}
@@ -271,25 +271,27 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
             <div className="w-full h-24 flex items-center justify-center bg-accent text-white mt-12 gap-8">
                 <button
                     onClick={() => setSelectedSection('informations')}
-                    className={`px-6 py-2 rounded-full transition-all ${selectedSection === 'informations' ? 'bg-white text-accent font-semibold' : 'hover:bg-white/20'}`}
+                    className={`px-6 py-2 rounded-full transition-all duration-300 cursor-pointer font-semibold border-2 ${selectedSection === 'informations' ? 'bg-secondary text-dark border-secondary' : 'bg-accent text-white border-transparent hover:border-secondary'}`}
                 >
                     {dict.experiences.informations}
                 </button>
                 <button
                     onClick={() => setSelectedSection('photos')}
-                    className={`px-6 py-2 rounded-full transition-all ${selectedSection === 'photos' ? 'bg-white text-accent font-semibold' : 'hover:bg-white/20'}`}
+                    className={`px-6 py-2 rounded-full transition-all duration-300 cursor-pointer font-semibold border-2 ${selectedSection === 'photos' ? 'bg-secondary text-dark border-secondary' : 'bg-accent text-white border-transparent hover:border-secondary'}`}
                 >
                     {dict.experiences.pictures}
                 </button>
                 <button
                     onClick={() => setSelectedSection('reviews')}
-                    className={`px-6 py-2 rounded-full transition-all ${selectedSection === 'reviews' ? 'bg-white text-accent font-semibold' : 'hover:bg-white/20'}`}
+                    className={`px-6 py-2 rounded-full transition-all duration-300 cursor-pointer font-semibold border-2 ${selectedSection === 'reviews' ? 'bg-secondary text-dark border-secondary' : 'bg-accent text-white border-transparent hover:border-secondary'}`}
                 >
                     {dict.experiences.reviews}
                 </button>
             </div>
 
-            {/* Section Informations */}
+            
+            
+            {/* TODO : Section Informations */}
             {selectedSection === 'informations' && (
                 <div className="max-w-[90vw] w-full mt-12">
                     <h2 className="text-2xl font-bold text-dark mb-8 text-center">{dict.experiences.informations}</h2>
@@ -301,7 +303,7 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
                                 <h3 className="text-xl font-semibold text-dark">{dict.experiences.meetingPoint}</h3>
                             </div>
                             {experience.meeting_point ? (
-                                <p className="text-gray-700">{experience.meeting_point}</p>
+                                <p className="text-dark">{experience.meeting_point}</p>
                             ) : (
                                 <p className="text-gray-500 italic">{dict.experiences.noMeetingPoint}</p>
                             )}
@@ -312,7 +314,7 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
                                 <Info size={24} className="text-accent" />
                                 <h3 className="text-xl font-semibold text-dark">{dict.experiences.importantInfo}</h3>
                             </div>
-                            <ul className="text-gray-700 space-y-2">
+                            <ul className="text-dark space-y-2">
                                 <li>• {dict.experiences.duration}: {Math.floor(experience.duration / 60)}h{experience.duration % 60 > 0 ? ` ${experience.duration % 60}min` : ''}</li>
                                 <li>• {dict.experiences.maxCapacity}: {experience.max_capacity ?? '-'} {dict.experiences.persons}</li>
                                 <li>• {dict.experiences.language}: {guideLanguages}</li>
@@ -403,7 +405,7 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
                                         </div>
                                     </div>
                                     {review.title && <p className="font-semibold text-dark mb-2">{review.title}</p>}
-                                    {review.comment && <p className="text-gray-700">{review.comment}</p>}
+                                    {review.comment && <p className="text-dark">{review.comment}</p>}
                                     <p className="text-gray-400 text-sm mt-3">
                                         {new Date(review.review_date).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric' })}
                                     </p>

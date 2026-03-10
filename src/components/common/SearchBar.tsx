@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "@/providers/i18n.provider";
 import { LuMapPin } from "react-icons/lu";
 import { BsCalendar2 } from "react-icons/bs";
@@ -16,7 +16,9 @@ interface SearchBarProps {
     selectedCity: City | null;
     dateRange: { start: Date | null; end: Date | null };
   }) => void;
-  initialMode?: "guide" | "activity";
+  currentMode?: "guide" | "activity";
+  showModeButtons?: boolean;
+  onModeChange?: (mode: "guide" | "activity") => void;
   initialLocation?: string;
   initialDateRange?: { start: Date | null; end: Date | null };
   className?: string;
@@ -24,12 +26,15 @@ interface SearchBarProps {
 
 export const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
-  initialMode = "guide",
+  currentMode = "guide",
+  showModeButtons = true,
+  onModeChange,
   initialLocation = "",
   initialDateRange = { start: null, end: null },
   className = "",
 }) => {
   const dict = useTranslations();
+  const locationInputRef = useRef<HTMLInputElement>(null);
   const [location, setLocation] = useState<string>(initialLocation);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [searchDate, setSearchDate] = useState<string>("");
@@ -39,11 +44,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     start: Date | null;
     end: Date | null;
   }>(initialDateRange);
-  const [selectedMode, setSelectedMode] = useState<"guide" | "activity">(initialMode);
+  const [selectedMode, setSelectedMode] = useState<"guide" | "activity">(currentMode);
 
   useEffect(() => {
-    setSelectedMode(initialMode);
-  }, [initialMode]);
+    setSelectedMode(currentMode);
+  }, [currentMode]);
 
   useEffect(() => {
     setLocation(initialLocation);
@@ -112,36 +117,44 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-      <div>
-        <nav className="mt-8 md:mt-10 flex justify-center mb-8 md:mb-12 ">
-          <button
-            onClick={() => setSelectedMode("guide")}
-            className={`px-15 py-3 rounded-full cursor-pointer shadow-lg transition-all duration-300 ${
-              selectedMode === "guide"
-                ? "bg-accent text-light"
-                : "bg-light text-dark"
-            }`}
-          >
-            {dict.home.localGuide}
-          </button>
-          <button
-            onClick={() => setSelectedMode("activity")}
-            className={`px-18 py-3 rounded-full -ml-10 cursor-pointer  shadow-lg transition-all duration-300 ${
-              selectedMode === "activity"
-                ? "bg-accent text-light"
-                : "bg-light text-dark"
-            }`}
-          >
-            {dict.home.activity}
-          </button>
-        </nav>
-        <div className={`relative ${className}`}>
-          <form
+      <div className={`relative ${className}`}>
+        {showModeButtons && (
+          <nav className="flex justify-center mb-8 md:mb-12">
+            <button
+              onClick={() => {
+                setSelectedMode("guide");
+                onModeChange?.("guide");
+              }}
+              className={`px-15 py-3 rounded-full cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-300 ${
+                selectedMode === "guide"
+                  ? "bg-accent text-light"
+                  : "bg-light text-dark"
+              }`}
+            >
+              {dict.home.localGuide}
+            </button>
+            <button
+              onClick={() => {
+                setSelectedMode("activity");
+                onModeChange?.("activity");
+              }}
+              className={`px-18 py-3 rounded-full -ml-10 cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-300 ${
+                selectedMode === "activity"
+                  ? "bg-accent text-light"
+                  : "bg-light text-dark"
+              }`}
+            >
+              {dict.home.activity}
+            </button>
+          </nav>
+        )}
+        <form
             onSubmit={handleSearch}
-            className="w-full flex items-center bg-light rounded-full shadow-lg pl-6 text-black"
+            className="w-full flex items-center bg-light rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] pl-6 text-black"
           >
             <LuMapPin size={24} className="text-dark shrink-0" />
             <input
+              ref={locationInputRef}
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -162,7 +175,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
             <button
               type="submit"
-              className="bg-accent text-light p-4 rounded-full hover:bg-accent-dark transition-colors duration-300 cursor-pointer flex items-center justify-center shrink-0"
+              className="bg-accent text-light p-4 rounded-full hover:bg-accent-dark hover:scale-110 transition-all duration-300 cursor-pointer flex items-center justify-center shrink-0"
             >
               <HiMagnifyingGlass size={24} />
             </button>
@@ -188,9 +201,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               onChange={handleCitySelect}
               onClose={() => setShowLocation(false)}
               searchQuery={location}
+              ignoreRef={locationInputRef}
             />
           )}
-        </div>
-    </div>
+      </div>
   );
 };

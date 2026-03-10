@@ -15,6 +15,7 @@ export interface LocationProps {
   className?: string;
   showTitle?: boolean;
   title?: string;
+  ignoreRef?: React.RefObject<HTMLElement | null>;
 }
 
 export const Location: React.FC<LocationProps> = ({
@@ -23,6 +24,7 @@ export const Location: React.FC<LocationProps> = ({
   onClose,
   searchQuery = '',
   className = '',
+  ignoreRef,
 }) => {
   const dict = useTranslations();
   const locationRef = useRef<HTMLDivElement>(null);
@@ -41,16 +43,21 @@ export const Location: React.FC<LocationProps> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (locationRef.current && !locationRef.current.contains(event.target as Node)) {
-        onClose?.();
+      const target = event.target as Node;
+      if (locationRef.current && locationRef.current.contains(target)) {
+        return;
       }
+      if (ignoreRef?.current && ignoreRef.current.contains(target)) {
+        return;
+      }
+      onClose?.();
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [onClose]);
+  }, [onClose, ignoreRef]);
 
   const handleCitySelect = (city: City) => {
     onChange?.(city);
