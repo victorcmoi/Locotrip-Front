@@ -8,7 +8,7 @@ import {
 } from "@/services/bookings/getBookings";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import { RefreshCw, HelpCircle } from "lucide-react";
+import { RefreshCw, HelpCircle, PinIcon } from "lucide-react";
 import DropdownMenu from "@/components/ui/DropdownMenu";
 import Image from "next/image";
 import { MinioHelpers } from "@/utils/minio";
@@ -39,7 +39,9 @@ export default function BookingsPage() {
   const isGuide = session?.user?.role === "guide";
   const [statusFilter, setStatusFilter] = useState("all");
   const [editingBookingId, setEditingBookingId] = useState<string | null>(null);
-  const [reportingBookingId, setReportingBookingId] = useState<string | null>(null);
+  const [reportingBookingId, setReportingBookingId] = useState<string | null>(
+    null,
+  );
 
   const {
     data: guideBookings,
@@ -145,6 +147,13 @@ export default function BookingsPage() {
                   ? `${guideUser.first_name} ${guideUser.last_name}`
                   : null;
 
+              const duration = experience?.duration || 0;
+              const meetingPoint = experience?.meeting_point;
+
+              const startTime = dayjs(booking.booking_date);
+              const endTime = startTime.add(duration, "minute");
+              const timeSchedule = `${startTime.format("HH:mm")} - ${endTime.format("HH:mm")}`;
+
               return (
                 <div
                   key={booking.id}
@@ -168,17 +177,31 @@ export default function BookingsPage() {
 
                   {/* Booking info */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-primary font-semibold text-lg truncate leading-tight mb-1 w-fit">
+                    <h3 className="text-primary font-semibold !text-xl truncate leading-tight mb-1 w-fit">
                       {experience?.title || "Expérience inconnue"}
                     </h3>
-                    <p className="text-sm text-dark/80 font-normal">
-                      {formatDate(booking.booking_date)}
-                      {city && (
-                        <span className="text-dark/80 ml-3 font-normal">
-                          {city.name}
+                    <p className="text-sm text-dark/80 font-normal flex gap-3">
+                      <p>
+                        {formatDate(booking.booking_date)}
+                        <span className="text-dark/80 ml-2 font-normal">
+                          ({timeSchedule})
                         </span>
+                      </p>
+                      {city && (
+                        <p className="text-dark/80 font-normal flex items-center">
+                          <PinIcon className="h-4" />
+                          {city.name}
+                        </p>
                       )}
                     </p>
+                    {meetingPoint && (
+                      <p className="text-sm text-dark/70 font-normal mt-0.5">
+                        Lieu de rdv :{" "}
+                        <span className="font-medium text-dark/90">
+                          {meetingPoint}
+                        </span>
+                      </p>
+                    )}
                     {withName && (
                       <p className="text-sm text-dark/60 font-normal mt-0.5">
                         Avec{" "}

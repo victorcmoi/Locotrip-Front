@@ -44,6 +44,7 @@ export const bookingExperienceSchema = z.object({
   duration: z.number(),
   city_id: z.string().uuid().optional(),
   guide_id: z.string().uuid().optional(),
+  meeting_point: z.string().nullable().optional(),
   city: bookingCitySchema.optional().nullable(),
   guide: bookingGuideSchema.optional().nullable(),
   medias: z.array(bookingMediaSchema).optional(),

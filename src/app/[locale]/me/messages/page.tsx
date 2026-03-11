@@ -342,7 +342,7 @@ function ChatPanel({ conversationId, currentUserId, isGuide }: ChatPanelProps) {
           title="Démarrer un appel vidéo"
         >
           <Video size={18} />
-          <span className="text-sm font-medium hidden sm:inline">
+          <span className="text-sm text-accent font-medium hidden sm:inline">
             {isTokenLoading ? "Connexion…" : "Appel vidéo"}
           </span>
         </button>

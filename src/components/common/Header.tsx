@@ -22,6 +22,14 @@ import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import { useCurrencies } from "@/services/currencies/getCurrencies";
 import { useGuideByUserId } from "@/services/guides/getGuideByUserId";
 import { MinioHelpers } from "@/utils/minio";
+import { useNotifications } from "@/services/notifications/getNotifications";
+import { useMarkNotificationRead } from "@/services/notifications/markNotificationRead";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/fr";
+
+dayjs.locale("fr");
+dayjs.extend(relativeTime);
 
 export default function Header() {
   const { data: session, status } = useSession();
@@ -39,12 +47,27 @@ export default function Header() {
 
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [langCurrencyTab, setLangCurrencyTab] = useState<
     "language" | "currency"
   >("language");
 
   const userMenuRef = useRef<HTMLDivElement>(null);
   const langMenuRef = useRef<HTMLDivElement>(null);
+  const notificationsRef = useRef<HTMLDivElement>(null);
+
+  const { data: notifications } = useNotifications(
+    isAuthenticated ? session?.user?.id : undefined,
+  );
+  const { mutate: markAsRead } = useMarkNotificationRead();
+
+  const handleNotificationClick = (id: string, read: boolean) => {
+    if (!read) {
+      markAsRead(id);
+    }
+  };
+
+  const unreadCount = notifications?.filter((n) => !n.read).length || 0;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -59,6 +82,12 @@ export default function Header() {
         !langMenuRef.current.contains(event.target as Node)
       ) {
         setIsLangMenuOpen(false);
+      }
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target as Node)
+      ) {
+        setIsNotificationsOpen(false);
       }
     }
 
@@ -241,10 +270,87 @@ export default function Header() {
 
         {/* Menu Notifications (Connecté seulement) */}
         {isAuthenticated && (
-          <div className="nav-item">
-            <Link href={localizedPath(HOME_ROUTES.NOTIFICATIONS)}>
+          <div className="relative" ref={notificationsRef}>
+            <div
+              className="nav-item cursor-pointer relative"
+              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+            >
               <IoNotificationsOutline size={24} />
-            </Link>
+              {unreadCount > 0 && (
+                <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </div>
+
+            {isNotificationsOpen && (
+              <div className="absolute top-10 right-[-60px] md:right-0 mt-2 bg-white border border-gray-light rounded-xl shadow-xl w-80 z-50 overflow-hidden">
+                <div className="p-4 border-b border-gray-light bg-gray-50 flex justify-between items-center">
+                  <h3 className="font-bold !text-base text-gray-800">
+                    Notifications
+                  </h3>
+                  {unreadCount > 0 && (
+                    <span className="bg-accent/10 text-accent text-xs px-2 py-0.5 rounded-full font-semibold">
+                      {unreadCount} nouvelle{unreadCount > 1 && "s"}
+                    </span>
+                  )}
+                </div>
+
+                <div className="max-h-80 overflow-y-auto">
+                  {!notifications || notifications.length === 0 ? (
+                    <div className="p-6 text-center text-gray-500 text-sm">
+                      Aucune notification
+                    </div>
+                  ) : (
+                    <div className="flex flex-col">
+                      {notifications
+                        .sort(
+                          (a, b) =>
+                            new Date(b.sent_at).getTime() -
+                            new Date(a.sent_at).getTime(),
+                        )
+                        .map((notif) => (
+                          <div
+                            key={notif.id}
+                            onClick={() =>
+                              handleNotificationClick(notif.id, notif.read)
+                            }
+                            className={`p-4 border-b border-gray-light last:border-0 hover:bg-gray-50 transition cursor-pointer flex flex-col gap-1 ${
+                              notif.read
+                                ? "opacity-70"
+                                : "bg-accent/5 font-semibold"
+                            }`}
+                          >
+                            <p
+                              className={`text-sm ${notif.read ? "text-gray-700" : "text-gray-900"}`}
+                            >
+                              {notif.content}
+                            </p>
+                            <span className="text-xs text-gray-400">
+                              {dayjs(notif.sent_at).fromNow()}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </div>
+
+                {notifications && notifications.length > 0 && (
+                  <div className="p-2 border-t border-gray-light bg-gray-50 text-center">
+                    <button
+                      onClick={() => {
+                        notifications
+                          .filter((n) => !n.read)
+                          .forEach((n) => markAsRead(n.id));
+                      }}
+                      className="bg-white p-0 mb-2 text-xs text-accent hover:underline cursor-pointer"
+                    >
+                      Tout marquer comme lu
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
