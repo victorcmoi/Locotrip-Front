@@ -12,6 +12,7 @@ import {
   type CreateAvailabilityData,
 } from "@/services/experiences/createExperienceAvailability";
 import { addCategoryToExperience } from "@/services/experiences/createExperienceCategory";
+import { updateExperienceSteps } from "@/services/experiences/updateExperienceSteps";
 import { ApiRequest } from "@/services/instance";
 import { z } from "zod";
 import ExperienceForm, {
@@ -75,6 +76,7 @@ export default function UpdateExperiencePage({
       captions,
       existingMediasToDelete,
       newAvailabilitySlots,
+      steps,
     } = payload;
 
     const data = {
@@ -96,6 +98,11 @@ export default function UpdateExperiencePage({
       ...(formData.meeting_longitude !== "" && {
         meeting_longitude: formData.meeting_longitude,
       }),
+      ...(formData.additional_info &&
+        formData.additional_info !== "<p><br></p>"
+        ? { additional_info: formData.additional_info }
+        : { additional_info: undefined }),
+      is_accessible: formData.is_accessible,
     };
 
     // 1. Update experience core fields
@@ -138,6 +145,17 @@ export default function UpdateExperiencePage({
       };
       await createExperienceAvailability(availData);
     }
+
+    // 6. Replace steps
+    const validSteps = steps.filter((s) => s.title.trim());
+    await updateExperienceSteps(
+      id,
+      validSteps.map((s, i) => ({
+        step_number: i + 1,
+        title: s.title,
+        ...(s.description && { description: s.description }),
+      })),
+    );
 
     router.push(localizedPath(`/me/experiences/${id}`));
   };

@@ -21,12 +21,24 @@ import {
   Send,
   Calendar,
   ArrowLeft,
+  Accessibility,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLocalizedPath } from "@/providers/i18n.provider";
 import DropdownMenu from "@/components/ui/DropdownMenu";
 import ConfirmModal from "@/components/ui/ConfirmModal";
+import dynamic from "next/dynamic";
+
+const LocationDisplay = dynamic(
+  () => import("@/components/ui/experiences/LocationDisplay"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[260px] rounded-xl bg-gray-100 animate-pulse" />
+    ),
+  },
+);
 
 export default function ExperienceDetailPage({
   params,
@@ -212,37 +224,77 @@ export default function ExperienceDetailPage({
             </div>
           )}
 
+          {/* Informations complémentaires */}
+          {experience.additional_info &&
+            experience.additional_info !== "<p><br></p>" && (
+              <div className="mb-8">
+                <h2 className="text-lg font-bold text-dark mb-2">
+                  Informations complémentaires
+                </h2>
+                <div
+                  className="text-dark/70 leading-relaxed prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{
+                    __html: experience.additional_info,
+                  }}
+                />
+              </div>
+            )}
+
+          {/* Étapes de l'expérience */}
+          {experience.steps && experience.steps.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-lg font-bold text-dark mb-4">
+                Déroulement ({experience.steps.length} étapes)
+              </h2>
+              <div className="flex flex-col gap-3">
+                {experience.steps.map((step, i) => (
+                  <div
+                    key={step.id}
+                    className="flex items-start gap-3 p-4 rounded-xl border border-gray-light bg-light"
+                  >
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white font-bold text-sm shrink-0">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="text-dark font-semibold">{step.title}</p>
+                      {step.description && (
+                        <p className="text-dark/60 text-sm mt-1">
+                          {step.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Meeting point */}
-          {experience.meeting_point && (
+          {(experience.meeting_point ||
+            (experience.meeting_latitude != null &&
+              experience.meeting_longitude != null)) && (
             <div className="mb-8">
               <h2 className="text-lg font-bold text-dark mb-2">
                 Point de rencontre
               </h2>
-              <p className="text-dark/70">{experience.meeting_point}</p>
+              {experience.meeting_point && (
+                <p className="text-dark/70 mb-3">{experience.meeting_point}</p>
+              )}
               {experience.meeting_latitude != null &&
                 experience.meeting_longitude != null && (
-                  <p className="text-dark/50 text-sm mt-1">
-                    {experience.meeting_latitude.toFixed(6)},{" "}
-                    {experience.meeting_longitude.toFixed(6)}
-                  </p>
+                  <>
+                    <LocationDisplay
+                      latitude={experience.meeting_latitude}
+                      longitude={experience.meeting_longitude}
+                    />
+                    <p className="text-dark/50 text-xs mt-2 font-mono">
+                      📍 {experience.meeting_latitude.toFixed(6)},{" "}
+                      {experience.meeting_longitude.toFixed(6)}
+                    </p>
+                  </>
                 )}
             </div>
           )}
-
-          {/* GPS only (no meeting point text) */}
-          {!experience.meeting_point &&
-            experience.meeting_latitude != null &&
-            experience.meeting_longitude != null && (
-              <div className="mb-8">
-                <h2 className="text-lg font-bold text-dark mb-2">
-                  Coordonnées GPS
-                </h2>
-                <p className="text-dark/70 text-sm">
-                  {experience.meeting_latitude.toFixed(6)},{" "}
-                  {experience.meeting_longitude.toFixed(6)}
-                </p>
-              </div>
-            )}
 
           {/* Photos */}
           {experience.medias && experience.medias.length > 0 && (
@@ -436,6 +488,19 @@ export default function ExperienceDetailPage({
                   </span>
                 </div>
               )}
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-dark/60 flex items-center gap-1.5">
+                  Accessibilité
+                </span>
+                <span
+                  className={`text-sm flex gap-1.5 font-semibold ${
+                    experience.is_accessible ? "text-green-600" : "text-red-500"
+                  }`}
+                >
+                  <Accessibility size={16} />{" "}
+                  {experience.is_accessible ? "Oui" : "Non"}
+                </span>
+              </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-dark/60">Statut</span>
                 <span

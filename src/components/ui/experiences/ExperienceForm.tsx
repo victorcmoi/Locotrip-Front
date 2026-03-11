@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useSearchCities } from "@/services/cities/getCities";
 import { useCategories } from "@/services/categories/getCategories";
 import {
@@ -15,20 +15,41 @@ import {
   Plus,
   X,
   UploadCloud,
+  List,
+  Accessibility,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { MinioHelpers } from "@/utils/minio";
 import type { City } from "@/schemas/city";
 import type { Category } from "@/schemas/category";
 import type { Experience } from "@/schemas/experience";
 import { z } from "zod";
 
+const LocationPicker = dynamic(
+  () => import("@/components/ui/experiences/LocationPicker"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[400px] rounded-xl bg-gray-100 animate-pulse" />
+    ),
+  },
+);
+
+const RichTextEditor = dynamic(() => import("@/components/ui/RichTextEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[160px] rounded-xl bg-gray-100 animate-pulse" />
+  ),
+});
+
 // ── Types ──────────────────────────────────────────────
 
 export type ExperienceFormData = {
   title: string;
   description: string;
+  additional_info: string;
   price: number | "";
   duration: number | "";
   max_capacity: number | "";
@@ -36,6 +57,12 @@ export type ExperienceFormData = {
   meeting_point: string;
   meeting_latitude: number | "";
   meeting_longitude: number | "";
+  is_accessible: boolean;
+};
+
+export type ExperienceStep = {
+  title: string;
+  description: string;
 };
 
 export type AvailabilitySlot = {
@@ -61,6 +88,7 @@ export type ExperienceFormPayload = {
   captions: string[];
   existingMediasToDelete: string[];
   newAvailabilitySlots: AvailabilitySlot[];
+  steps: ExperienceStep[];
 };
 
 // ── Validation schemas ─────────────────────────────────
@@ -101,6 +129,7 @@ const step3Schema = z.object({
 
 const STEPS = [
   { label: "Informations", icon: FileText },
+  { label: "Détails", icon: List },
   { label: "Catégories", icon: Tag },
   { label: "Localisation", icon: MapPin },
   { label: "Photos", icon: ImageIcon },
@@ -141,6 +170,7 @@ export default function ExperienceForm({
   const [formData, setFormData] = useState<ExperienceFormData>({
     title: "",
     description: "",
+    additional_info: "",
     price: "",
     duration: "",
     max_capacity: "",
@@ -148,7 +178,11 @@ export default function ExperienceForm({
     meeting_point: "",
     meeting_latitude: "",
     meeting_longitude: "",
+    is_accessible: false,
   });
+
+  // Steps
+  const [steps, setSteps] = useState<ExperienceStep[]>([]);
 
   // Categories
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -188,6 +222,7 @@ export default function ExperienceForm({
       setFormData({
         title: initialExperience.title,
         description: initialExperience.description || "",
+        additional_info: initialExperience.additional_info || "",
         price: initialExperience.price,
         duration: initialExperience.duration,
         max_capacity: initialExperience.max_capacity ?? "",
@@ -195,7 +230,17 @@ export default function ExperienceForm({
         meeting_point: initialExperience.meeting_point || "",
         meeting_latitude: initialExperience.meeting_latitude ?? "",
         meeting_longitude: initialExperience.meeting_longitude ?? "",
+        is_accessible: initialExperience.is_accessible ?? false,
       });
+
+      if (initialExperience.steps && initialExperience.steps.length > 0) {
+        setSteps(
+          initialExperience.steps.map((s) => ({
+            title: s.title,
+            description: s.description || "",
+          })),
+        );
+      }
 
       if (initialExperience.city) {
         setSelectedCity(initialExperience.city as City);
@@ -242,7 +287,7 @@ export default function ExperienceForm({
 
   const updateField = (
     field: keyof ExperienceFormData,
-    value: string | number,
+    value: string | number | boolean,
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
@@ -265,7 +310,7 @@ export default function ExperienceForm({
         max_capacity:
           formData.max_capacity === "" ? undefined : formData.max_capacity,
       });
-    } else if (step === 2) {
+    } else if (step === 3) {
       result = step3Schema.safeParse({
         city_id: formData.city_id || undefined,
         meeting_point: formData.meeting_point || undefined,
@@ -396,6 +441,7 @@ export default function ExperienceForm({
           .filter((m) => m.toDelete)
           .map((m) => m.id),
         newAvailabilitySlots: availabilitySlots.filter((s) => !s.isExisting),
+        steps,
       });
     } catch (err) {
       setApiError(
@@ -611,11 +657,139 @@ export default function ExperienceForm({
                 </p>
               )}
             </div>
+
+            {/* Accessibilité PMR */}
+            <div className="flex items-center justify-between p-4 rounded-xl border border-gray-light bg-light">
+              <div className="flex items-center gap-3">
+                <Accessibility size={24} className="text-dark/70" />
+                <div>
+                  <p className="text-sm font-semibold text-dark">
+                    Accessible aux personnes à mobilité réduite
+                  </p>
+                  <p className="text-xs text-dark/50">
+                    Cette expérience est adaptée aux PMR
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  updateField("is_accessible", !formData.is_accessible)
+                }
+                className={`p-0 relative w-14 h-8 rounded-full transition-colors cursor-pointer ${
+                  formData.is_accessible ? "bg-accent" : "bg-gray-300"
+                }`}
+              >
+                <span
+                  className={`absolute top-1 left-1 w-6 h-6 rounded-full bg-white shadow transition-transform ${
+                    formData.is_accessible ? "translate-x-6" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
           </div>
         )}
 
-        {/* ========== Step 2: Catégories ========== */}
+        {/* ========== Step 2: Détails ========== */}
         {currentStep === 1 && (
+          <div className="flex flex-col gap-6">
+            {/* Informations complémentaires (WYSIWYG) */}
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-1.5">
+                Informations complémentaires{" "}
+                <span className="text-dark/40 font-normal">(optionnel)</span>
+              </label>
+              <p className="text-xs text-dark/50 mb-2">
+                Ajoutez des détails supplémentaires : équipement à prévoir,
+                conseils, accessibilité, etc.
+              </p>
+              <RichTextEditor
+                value={formData.additional_info}
+                onChange={(val) => updateField("additional_info", val)}
+                placeholder="Ex: Pensez à apporter des chaussures confortables et une bouteille d'eau..."
+              />
+            </div>
+
+            {/* Étapes de l'expérience */}
+            <div>
+              <label className="block text-sm font-semibold text-dark mb-1.5">
+                Étapes de l&apos;expérience{" "}
+                <span className="text-dark/40 font-normal">(optionnel)</span>
+              </label>
+              <p className="text-xs text-dark/50 mb-3">
+                Décrivez le déroulement de votre expérience étape par étape.
+              </p>
+
+              {steps.length > 0 && (
+                <div className="flex flex-col gap-3 mb-4">
+                  {steps.map((step, index) => (
+                    <div
+                      key={index}
+                      className="flex gap-3 items-start p-4 rounded-xl border border-gray-light bg-light"
+                    >
+                      <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent text-white font-bold text-sm shrink-0 mt-0.5">
+                        {index + 1}
+                      </span>
+                      <div className="flex-1 flex flex-col gap-2">
+                        <input
+                          type="text"
+                          value={step.title}
+                          onChange={(e) => {
+                            const updated = [...steps];
+                            updated[index] = {
+                              ...updated[index],
+                              title: e.target.value,
+                            };
+                            setSteps(updated);
+                          }}
+                          placeholder="Titre de l'étape"
+                          className="w-full px-3 py-2 rounded-lg border border-gray-light bg-white text-sm focus:outline-none focus:ring-2 focus:ring-accent/30"
+                        />
+                        <textarea
+                          value={step.description}
+                          onChange={(e) => {
+                            const updated = [...steps];
+                            updated[index] = {
+                              ...updated[index],
+                              description: e.target.value,
+                            };
+                            setSteps(updated);
+                          }}
+                          placeholder="Description de l'étape (optionnel)"
+                          rows={2}
+                          className="w-full px-3 py-2 rounded-lg border border-gray-light bg-white text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 resize-none"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setSteps((prev) => prev.filter((_, i) => i !== index))
+                        }
+                        className="bg-white p-1.5 rounded-lg text-red-400 hover:bg-red-50 hover:text-red-500 transition cursor-pointer shrink-0"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() =>
+                  setSteps((prev) => [...prev, { title: "", description: "" }])
+                }
+                className="flex bg-white items-center gap-2 px-4 py-2 rounded-lg border border-dashed border-accent/40 text-accent text-sm font-medium hover:bg-accent/5 transition cursor-pointer"
+              >
+                <Plus size={16} />
+                Ajouter une étape
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ========== Step 3: Catégories ========== */}
+        {currentStep === 2 && (
           <div className="flex flex-col gap-6">
             <h2 className="text-xl font-bold text-dark mb-1">Catégories</h2>
             <p className="text-sm text-dark/60">
@@ -661,8 +835,8 @@ export default function ExperienceForm({
           </div>
         )}
 
-        {/* ========== Step 3: Localisation ========== */}
-        {currentStep === 2 && (
+        {/* ========== Step 4: Localisation ========== */}
+        {currentStep === 3 && (
           <div className="flex flex-col gap-6">
             <h2 className="text-xl font-bold text-dark mb-2">Localisation</h2>
 
@@ -749,59 +923,40 @@ export default function ExperienceForm({
 
             <div>
               <label className="block text-sm font-semibold text-dark mb-1.5">
-                Coordonnées GPS
+                Point de rencontre sur la carte
               </label>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <input
-                    type="number"
-                    step="any"
-                    value={formData.meeting_latitude}
-                    onChange={(e) =>
-                      updateField(
-                        "meeting_latitude",
-                        e.target.value === "" ? "" : parseFloat(e.target.value),
-                      )
-                    }
-                    placeholder="Latitude (ex: 48.8566)"
-                    className={inputClass("meeting_latitude")}
-                  />
-                  {errors.meeting_latitude && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.meeting_latitude}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <input
-                    type="number"
-                    step="any"
-                    value={formData.meeting_longitude}
-                    onChange={(e) =>
-                      updateField(
-                        "meeting_longitude",
-                        e.target.value === "" ? "" : parseFloat(e.target.value),
-                      )
-                    }
-                    placeholder="Longitude (ex: 2.3522)"
-                    className={inputClass("meeting_longitude")}
-                  />
-                  {errors.meeting_longitude && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.meeting_longitude}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <p className="text-xs text-dark/40 mt-1">
-                Optionnel. Permet d&apos;afficher le lieu sur une carte.
+              <p className="text-xs text-dark/40 mb-3">
+                Cliquez sur la carte pour placer le marqueur, ou déplacez-le
+                pour ajuster la position.
               </p>
+
+              <LocationPicker
+                latitude={formData.meeting_latitude}
+                longitude={formData.meeting_longitude}
+                onChange={(lat, lng) => {
+                  updateField("meeting_latitude", lat);
+                  updateField("meeting_longitude", lng);
+                }}
+              />
+
+              {formData.meeting_latitude !== "" &&
+                formData.meeting_longitude !== "" && (
+                  <p className="text-xs text-dark/60 mt-2 font-mono">
+                    📍 {formData.meeting_latitude}, {formData.meeting_longitude}
+                  </p>
+                )}
+
+              {(errors.meeting_latitude || errors.meeting_longitude) && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.meeting_latitude || errors.meeting_longitude}
+                </p>
+              )}
             </div>
           </div>
         )}
 
-        {/* ========== Step 4: Photos ========== */}
-        {currentStep === 3 && (
+        {/* ========== Step 5: Photos ========== */}
+        {currentStep === 4 && (
           <div className="flex flex-col gap-6">
             <h2 className="text-xl font-bold text-dark mb-1">Photos</h2>
             <p className="text-sm text-dark/60">
@@ -953,8 +1108,8 @@ export default function ExperienceForm({
           </div>
         )}
 
-        {/* ========== Step 5: Disponibilités + Récapitulatif ========== */}
-        {currentStep === 4 && (
+        {/* ========== Step 6: Disponibilités + Récapitulatif ========== */}
+        {currentStep === 5 && (
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-4">
               <h2 className="text-xl font-bold text-dark">Disponibilités</h2>
@@ -1112,6 +1267,53 @@ export default function ExperienceForm({
                   </p>
                 </div>
 
+                {formData.additional_info &&
+                  formData.additional_info !== "<p><br></p>" && (
+                    <div className="md:col-span-2">
+                      <p className="text-xs font-semibold text-dark/50 uppercase tracking-wider mb-1">
+                        Informations complémentaires
+                      </p>
+                      <div
+                        className="text-dark/80 text-sm leading-relaxed prose prose-sm max-w-none"
+                        dangerouslySetInnerHTML={{
+                          __html: formData.additional_info,
+                        }}
+                      />
+                    </div>
+                  )}
+
+                {steps.length > 0 && (
+                  <div className="md:col-span-2">
+                    <p className="text-xs font-semibold text-dark/50 uppercase tracking-wider mb-2">
+                      Étapes ({steps.length})
+                    </p>
+                    <div className="flex flex-col gap-2">
+                      {steps
+                        .filter((s) => s.title.trim())
+                        .map((step, i) => (
+                          <div
+                            key={i}
+                            className="flex items-start gap-2 text-sm"
+                          >
+                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-accent/10 text-accent font-bold text-xs shrink-0 mt-0.5">
+                              {i + 1}
+                            </span>
+                            <div>
+                              <p className="text-dark font-medium">
+                                {step.title}
+                              </p>
+                              {step.description && (
+                                <p className="text-dark/60 text-xs">
+                                  {step.description}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <p className="text-xs font-semibold text-dark/50 uppercase tracking-wider mb-1">
                     Prix
@@ -1142,6 +1344,19 @@ export default function ExperienceForm({
                     </p>
                   </div>
                 )}
+
+                <div>
+                  <p className="text-xs font-semibold text-dark/50 uppercase tracking-wider mb-1">
+                    Accessibilité PMR
+                  </p>
+                  <p className="text-dark font-medium flex items-center gap-1.5">
+                    {formData.is_accessible ? (
+                      <span className="text-green-600">Oui</span>
+                    ) : (
+                      <span className="text-dark/40">Non</span>
+                    )}
+                  </p>
+                </div>
 
                 <div>
                   <p className="text-xs font-semibold text-dark/50 uppercase tracking-wider mb-1">
@@ -1220,12 +1435,17 @@ export default function ExperienceForm({
 
                 {formData.meeting_latitude !== "" &&
                   formData.meeting_longitude !== "" && (
-                    <div>
-                      <p className="text-xs font-semibold text-dark/50 uppercase tracking-wider mb-1">
-                        Coordonnées GPS
+                    <div className="md:col-span-2">
+                      <p className="text-xs font-semibold text-dark/50 uppercase tracking-wider mb-2">
+                        Point de rencontre
                       </p>
-                      <p className="text-dark font-medium text-sm">
-                        {formData.meeting_latitude},{" "}
+                      <LocationPicker
+                        latitude={formData.meeting_latitude}
+                        longitude={formData.meeting_longitude}
+                        onChange={() => {}}
+                      />
+                      <p className="text-dark/50 text-xs mt-2 font-mono">
+                        📍 {formData.meeting_latitude},{" "}
                         {formData.meeting_longitude}
                       </p>
                     </div>

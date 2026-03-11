@@ -3,6 +3,7 @@ import Image from "next/image";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { LuMapPin } from "react-icons/lu";
 import { AiFillStar } from "react-icons/ai";
+import { Accessibility } from "lucide-react";
 import Link from "next/link";
 import { MinioHelpers } from "@/utils/minio";
 import { Experience } from "@/schemas/experience";
@@ -92,6 +93,13 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
         <div className="flex items-center gap-1 justify-center mb-4">
           <LuMapPin className="text-dark text-xl" />
           <span className="text-dark text-base">{experience.city?.name}</span>
+          
+          {/* Accessibilité */}
+          {experience.is_accessible && (
+            <div className="flex items-center gap-1 text-green-600 ml-2" title="Accessible PMR">
+              <Accessibility size={18} />
+            </div>
+          )}
         </div>
 
         {/* Langues */}

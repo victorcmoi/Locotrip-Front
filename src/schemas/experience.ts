@@ -4,6 +4,14 @@ import { mediaSchema } from './media';
 import { reviewSchema } from './reviews';
 import { bookingSchema } from './booking';
 
+export const experienceStepSchema = z.object({
+  id: z.string().uuid(),
+  experience_id: z.string().uuid(),
+  step_number: z.number(),
+  title: z.string(),
+  description: z.string().nullish(),
+});
+
 export const currencyPriceSchema = z.object({
   id: z.string().uuid().optional(),
   experience_id: z.string().uuid(),
@@ -20,6 +28,7 @@ export const experienceSchema = z.object({
   id: z.string().uuid(),
   title: z.string(),
   description: z.string().nullish(),
+  additional_info: z.string().nullish(),
   price: z.coerce.number(),
   duration: z.number().int(),
   city_id: z.string().uuid(),
@@ -28,6 +37,7 @@ export const experienceSchema = z.object({
   meeting_point: z.string().nullish(),
   meeting_latitude: z.number().nullish(),
   meeting_longitude: z.number().nullish(),
+  is_accessible: z.boolean().optional().default(false),
   is_active: z.boolean().default(true),
   is_published: z.boolean().default(false),
   deleted_at: z.string().or(z.date()).nullish(),
@@ -71,6 +81,7 @@ export const experienceSchema = z.object({
     end_date: z.string().or(z.date()),
     status: z.string(),
   })).optional(),
+  steps: z.array(experienceStepSchema).optional(),
   avgRating: z.number().optional(),
   reviewCount: z.number().optional(),
 });
@@ -88,6 +99,8 @@ export const createExperienceSchema = z.object({
   meeting_point: z.string().max(255).optional(),
   meeting_latitude: z.coerce.number().min(-90).max(90).optional(),
   meeting_longitude: z.coerce.number().min(-180).max(180).optional(),
+  additional_info: z.string().optional(),
+  is_accessible: z.boolean().optional(),
 });
 
 export const updateExperienceSchema = createExperienceSchema.partial();

@@ -160,7 +160,7 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
                                 <Accessibility size={28} />
                                 <span className="text-dark">{dict.experiences.accessibility}</span>
                             </div>
-                            <span className="font-semibold text-dark">{dict.common.no}</span>
+                            <span className="font-semibold text-dark">{experience.is_accessible ? dict.common.yes : dict.common.no}</span>
                         </div>
                         <div className="flex flex-col items-center justify-center py-6 gap-4">
                             <div className="flex items-center gap-2 ">

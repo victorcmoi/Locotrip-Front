@@ -11,6 +11,7 @@ import {
   type CreateAvailabilityData,
 } from "@/services/experiences/createExperienceAvailability";
 import { addCategoryToExperience } from "@/services/experiences/createExperienceCategory";
+import { updateExperienceSteps } from "@/services/experiences/updateExperienceSteps";
 import ExperienceForm, {
   type ExperienceFormPayload,
 } from "@/components/ui/experiences/ExperienceForm";
@@ -43,6 +44,7 @@ export default function CreateExperiencePage() {
       newFiles,
       captions,
       newAvailabilitySlots,
+      steps,
     } = payload;
 
     const data = {
@@ -64,6 +66,11 @@ export default function CreateExperiencePage() {
       ...(formData.meeting_longitude !== "" && {
         meeting_longitude: formData.meeting_longitude,
       }),
+      ...(formData.additional_info &&
+        formData.additional_info !== "<p><br></p>" && {
+          additional_info: formData.additional_info,
+        }),
+      is_accessible: formData.is_accessible,
     };
 
     // 1. Create base experience
@@ -89,6 +96,19 @@ export default function CreateExperiencePage() {
         status: slot.status,
       };
       await createExperienceAvailability(availData);
+    }
+
+    // 5. Save steps
+    const validSteps = steps.filter((s) => s.title.trim());
+    if (validSteps.length > 0) {
+      await updateExperienceSteps(
+        id,
+        validSteps.map((s, i) => ({
+          step_number: i + 1,
+          title: s.title,
+          ...(s.description && { description: s.description }),
+        })),
+      );
     }
 
     // Redirect to success
