@@ -332,34 +332,34 @@ export default function ExperienceDetailPage({
                   Disponibilités ({experience.availabilities.length})
                 </h2>
                 <div className="flex flex-col gap-2">
-                  {experience.availabilities.map((avail) => (
+                  {experience.availabilities.map((avail) => {
+                    const startDate = new Date(avail.start_date);
+                    const endDate = new Date(avail.end_date);
+                    const durationMins = Math.round((endDate.getTime() - startDate.getTime()) / 60000);
+                    
+                    return (
                     <div
                       key={avail.id}
-                      className="flex items-center gap-4 px-4 py-3 rounded-xl border border-gray-light bg-light text-sm"
+                      className="flex items-center justify-between gap-4 px-4 py-3 rounded-xl border border-gray-light bg-light text-sm"
                     >
-                      <Calendar className="text-accent shrink-0" size={16} />
-                      <span className="text-dark font-medium">
-                        {new Date(avail.start_date).toLocaleDateString(
-                          "fr-FR",
-                          {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          },
-                        )}
-                      </span>
-                      <span className="text-dark/40">→</span>
-                      <span className="text-dark font-medium">
-                        {new Date(avail.end_date).toLocaleDateString("fr-FR", {
-                          day: "numeric",
-                          month: "short",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
+                      <div className="flex items-center gap-4">
+                        <Calendar className="text-accent shrink-0" size={16} />
+                        <span className="text-dark font-medium capitalize">
+                          {startDate.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" })}
+                        </span>
+                        <div className="flex items-center gap-1.5 text-dark/80 bg-white px-2 py-0.5 rounded-md border border-gray-100">
+                          <span className="font-semibold">
+                            {startDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                          <span className="text-dark/40">→</span>
+                          <span className="font-semibold">
+                            {endDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                        </div>
+                        <span className="text-dark/40 text-xs hidden sm:inline">
+                          (durée : {formatDuration(durationMins)})
+                        </span>
+                      </div>
                       <span
                         className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                           avail.status === "available"
@@ -376,7 +376,7 @@ export default function ExperienceDetailPage({
                             : "Indisponible"}
                       </span>
                     </div>
-                  ))}
+                  ); })}
                 </div>
               </div>
             )}

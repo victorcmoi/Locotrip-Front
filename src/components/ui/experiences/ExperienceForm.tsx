@@ -412,10 +412,23 @@ export default function ExperienceForm({
   // ── Availability handlers ────────────────────────────
 
   const addAvailabilitySlot = () => {
-    if (!newSlot.start_date || !newSlot.end_date) return;
+    if (!newSlot.start_date) return;
+
+    if (!formData.duration) {
+      setApiError("Veuillez saisir une durée pour l'expérience à l'étape 1 avant d'ajouter des disponibilités.");
+      return;
+    }
+    setApiError(null);
+
+    const start = new Date(newSlot.start_date);
+    const end = new Date(start.getTime() + formData.duration * 60000);
+    
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    const end_date = `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}T${pad(end.getHours())}:${pad(end.getMinutes())}`;
+
     setAvailabilitySlots((prev) => [
       ...prev,
-      { ...newSlot, isExisting: false },
+      { ...newSlot, end_date, isExisting: false },
     ]);
     setNewSlot({ start_date: "", end_date: "", status: "available" });
   };
@@ -1121,10 +1134,10 @@ export default function ExperienceForm({
 
               {/* Add slot form */}
               <div className="bg-light rounded-xl p-4 border border-gray-light">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-dark/70 mb-1">
-                      Date de début
+                      Date et heure de début
                     </label>
                     <input
                       type="datetime-local"
@@ -1138,27 +1151,11 @@ export default function ExperienceForm({
                       className="w-full px-3 py-2 rounded-lg border border-gray-light bg-white text-dark text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-dark/70 mb-1">
-                      Date de fin
-                    </label>
-                    <input
-                      type="datetime-local"
-                      value={newSlot.end_date}
-                      onChange={(e) =>
-                        setNewSlot((prev) => ({
-                          ...prev,
-                          end_date: e.target.value,
-                        }))
-                      }
-                      className="w-full px-3 py-2 rounded-lg border border-gray-light bg-white text-dark text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition"
-                    />
-                  </div>
                   <div className="flex items-end">
                     <button
                       type="button"
                       onClick={addAvailabilitySlot}
-                      disabled={!newSlot.start_date || !newSlot.end_date}
+                      disabled={!newSlot.start_date}
                       className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-accent text-white font-semibold text-sm hover:bg-accent/90 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <Plus size={16} />
@@ -1166,42 +1163,49 @@ export default function ExperienceForm({
                     </button>
                   </div>
                 </div>
+                {formData.duration ? (
+                  <p className="text-xs text-dark/50 mt-3 font-medium">
+                    La date de fin sera calculée automatiquement selon la durée de l'expérience ({formatDuration(formData.duration)}).
+                  </p>
+                ) : (
+                  <p className="text-xs text-red-500 mt-3 font-medium">
+                    ⚠️ Veuillez définir la durée de l'expérience à l'étape 1 avant d'ajouter des disponibilités.
+                  </p>
+                )}
               </div>
 
               {/* Slots list */}
               {availabilitySlots.length > 0 && (
                 <div className="flex flex-col gap-2">
-                  {availabilitySlots.map((slot, index) => (
+                  {availabilitySlots.map((slot, index) => {
+                    const startDate = new Date(slot.start_date);
+                    const endDate = new Date(slot.end_date);
+                    const durationMins = Math.round((endDate.getTime() - startDate.getTime()) / 60000);
+                    
+                    return (
                     <div
                       key={slot.id || index}
                       className="flex items-center justify-between bg-white rounded-xl px-4 py-3 border border-gray-light"
                     >
                       <div className="flex items-center gap-4 text-sm">
-                        <Calendar className="text-accent" size={16} />
-                        <span className="text-dark font-medium">
-                          {new Date(slot.start_date).toLocaleDateString(
-                            "fr-FR",
-                            {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            },
-                          )}
+                        <Calendar className="text-accent shrink-0" size={16} />
+                        <span className="text-dark font-medium capitalize">
+                          {startDate.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" })}
                         </span>
-                        <span className="text-dark/40">→</span>
-                        <span className="text-dark font-medium">
-                          {new Date(slot.end_date).toLocaleDateString("fr-FR", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
+                        <div className="flex items-center gap-1.5 text-dark/80 bg-light px-2 py-0.5 rounded-md border border-gray-100">
+                          <span className="font-semibold">
+                            {startDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                          <span className="text-dark/40">→</span>
+                          <span className="font-semibold">
+                            {endDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                        </div>
+                        <span className="text-dark/40 text-xs hidden lg:inline">
+                          (durée : {formatDuration(durationMins)})
                         </span>
                         <span
-                          className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          className={`px-2 py-0.5 rounded-full text-xs font-semibold hidden md:inline-flex ${
                             slot.status === "available"
                               ? "bg-green-100 text-green-700"
                               : slot.status === "blocked"
@@ -1216,7 +1220,7 @@ export default function ExperienceForm({
                               : "Indisponible"}
                         </span>
                         {slot.isExisting && (
-                          <span className="text-xs text-dark/30">
+                          <span className="text-xs text-dark/30 hidden xl:inline">
                             (existant)
                           </span>
                         )}
@@ -1231,7 +1235,7 @@ export default function ExperienceForm({
                         </button>
                       )}
                     </div>
-                  ))}
+                  ); })}
                 </div>
               )}
             </div>
