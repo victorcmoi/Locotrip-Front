@@ -121,7 +121,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
         {showHobbiesFilter && mode === "guide" && (
             <div className="absolute top-full mt-2 left-0 bg-light shadow-2xl rounded-xl p-4 z-50 min-w-90 border border-gray-100">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-xl! text-dark">{dict.search.interestCategories}</h3>
+              <h3 className="font-semibold text-xl! text-dark">{dict.search.HobbieCategorie}</h3>
               {selectedCategories.length > 0 && (
                 <button 
                   onClick={(e) => {
@@ -134,7 +134,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
                 </button>
               )}
             </div>
-            <div className="space-y-1.5 max-h-60 overflow-y-auto">
+            <div className="max-h-60 overflow-y-auto">
               {uniqueHobbies.length > 0 ? uniqueHobbies.map((hobby) => (
                 <label key={hobby} className="flex items-center gap-2.5 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors group">
                   <input
@@ -168,7 +168,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
                 </button>
               )}
             </div>
-            <div className="space-y-1.5 max-h-60 overflow-y-auto">
+            <div className="max-h-60 overflow-y-auto">
               {uniqueExperienceCategories.length > 0 ? uniqueExperienceCategories.map((category) => (
                 <label key={category} className="flex items-center gap-2.5 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors group">
                   <input

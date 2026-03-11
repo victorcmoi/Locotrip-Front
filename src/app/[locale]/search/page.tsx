@@ -249,6 +249,22 @@ export default function SearchPage() {
     return map;
   }, [experiencesResponse?.data]);
 
+  // Extract price data for histogram
+  const priceData = useMemo(() => {
+    const allExperiences = experiencesResponse?.data || [];
+    return allExperiences
+      .filter((exp: Experience) => exp.price && exp.price > 0)
+      .map((exp: Experience) => exp.price);
+  }, [experiencesResponse?.data]);
+
+  // Extract duration data for histogram
+  const durationData = useMemo(() => {
+    const allExperiences = experiencesResponse?.data || [];
+    return allExperiences
+      .filter((exp: Experience) => exp.duration && exp.duration > 0)
+      .map((exp: Experience) => exp.duration);
+  }, [experiencesResponse?.data]);
+
   const uniqueHobbies = Array.from(hobbiesMap.values());
   const uniqueExperienceCategories = Array.from(experienceCategoriesMap.values());
   
@@ -624,7 +640,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-light pt-16 pb-12">
+    <div className="min-h-screen bg-light pt-8 pb-12">
       {/* Sticky Search Bar + Filters */}
       <div className="sticky top-16 z-40 bg-light shadow-md">
         <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12 pt-3 pb-2">
@@ -675,6 +691,7 @@ export default function SearchPage() {
             currentPage={currentPage}
             totalPages={modeParam === "guide" ? totalGuidesPages : totalExperiencesPages}
             onPageChange={handlePageChange}
+            onResetFilters={handleResetFilters}
           />
         </div>
       </div>
@@ -705,6 +722,7 @@ export default function SearchPage() {
         maxPrice={tempMaxPrice}
         setMinPrice={setTempMinPrice}
         setMaxPrice={setTempMaxPrice}
+        priceData={priceData}
         onApply={handleApplyModalFilters}
         onReset={handleResetModalFilters}
       />

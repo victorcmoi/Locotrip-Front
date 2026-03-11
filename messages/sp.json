@@ -349,7 +349,13 @@
     "evening": "Noche",
     "category": "Categoría",
     "resetFilters": "Reiniciar",
-    "closeFilters": "Cerrar"
+    "closeFilters": "Cerrar",
+    "mode": "Modo de búsqueda",
+    "noResult": "No se encontraron resultados",
+    "noResultMessage": "Intenta ajustar tus criterios de búsqueda",
+    "noResultSuggestion": "Puedes modificar tus fechas, destino o filtros para encontrar lo que te conviene.",
+    "pricePerTraveler": "Precio sin tasas ni impuestos",
+    "durationInMinutes": "Duración en minutos"
   },
   "experiences": {
     "loading": "Cargando experiencias...",

@@ -55,14 +55,18 @@ export default function GuideCard({ guide }: GuideCardProps) {
       {/* Contenu de la carte */}
       <div className="p-6 flex-1 flex flex-col">
         {/* Note */}
-        <div className="flex items-center gap-2 mb-8 justify-center">
-          <div className="flex">
-            {[...Array(5)].map((_, i) => (
-              <AiFillStar key={i} className="text-secondary text-xl" />
-            ))}
+        {(guide.reviewCount || 0) > 0 ? (
+          <div className="flex items-center gap-2 mb-8 justify-center">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <AiFillStar key={i} className="text-secondary text-xl" />
+              ))}
+            </div>
+            <span className="text-dark text-base">{guide.reviewCount} {dict.common.review}</span>
           </div>
-          <span className="text-dark text-base">{guide.reviewCount} {dict.common.review}</span>
-        </div>
+        ) : (
+          <div className="mb-8" />
+        )}
 
         {/* Langues */}
         {guide.languages && (

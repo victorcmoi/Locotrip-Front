@@ -6,6 +6,8 @@ import { MdLanguage } from "react-icons/md";
 import { AiOutlineEuro } from "react-icons/ai";
 import { LuClock, LuSun, LuEarth } from "react-icons/lu";
 import { IoShieldCheckmark, IoAccessibility } from "react-icons/io5";
+import { PriceHistogram } from "./PriceHistogram";
+import { DurationHistogram } from "./DurationHistogram";
 
 interface FiltersModalProps {
   isOpen: boolean;
@@ -37,6 +39,8 @@ interface FiltersModalProps {
   setMinPrice: (value: number | undefined) => void;
   setMaxPrice: (value: number | undefined) => void;
   
+  priceData?: number[];
+  
   onApply: () => void;
   onReset: () => void;
 }
@@ -66,6 +70,7 @@ export const FiltersModal: React.FC<FiltersModalProps> = ({
   maxPrice,
   setMinPrice,
   setMaxPrice,
+  priceData = [],
   onApply,
   onReset,
 }) => {
@@ -73,13 +78,13 @@ export const FiltersModal: React.FC<FiltersModalProps> = ({
 
   return (
     <Modal open={isOpen} onClose={onClose} title={dict.search.allFilters}>
-      <div className="space-y-6 max-h-[70vh] overflow-y-auto px-1">
+      <div className="space-y-6 max-h-[70vh] overflow-y-auto overflow-x-hidden px-4">
         <div>
-          <h3 className="mb-3 font-semibold flex items-center gap-2 text-2xl!">
+          <h3 className="mb-2 font-semibold flex items-center gap-2 text-2xl!">
             <LuEarth className="text-accent" size={25} />
             {mode === "guide" ? dict.search.hobbies : dict.search.category}
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
             {mode === "guide" ? (
               uniqueHobbies.length > 0 ? uniqueHobbies.map((hobby) => (
                 <label key={hobby} className="flex items-center gap-2 cursor-pointer">
@@ -112,43 +117,31 @@ export const FiltersModal: React.FC<FiltersModalProps> = ({
           </div>
         </div>
         
-        <div>
-          <h3 className="mb-3 font-semibold flex items-center gap-2 text-2xl!">
-            <AiOutlineEuro className="text-accent" size={25} />
-            {dict.search.price}
-          </h3>
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">{dict.search.minPrice}</label>
-              <input
-                type="number"
-                value={minPrice || ''}
-                onChange={(e) => setMinPrice(e.target.value ? Number(e.target.value) : undefined)}
-                placeholder="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-accent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-1">{dict.search.maxPrice}</label>
-              <input
-                type="number"
-                value={maxPrice || ''}
-                onChange={(e) => setMaxPrice(e.target.value ? Number(e.target.value) : undefined)}
-                placeholder="1000"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-accent"
-              />
-            </div>
+        {mode === "activity" && (
+          <div>
+            <h3 className="mb-2 font-semibold flex items-center gap-2 text-2xl!">
+              <AiOutlineEuro className="text-accent" size={25} />
+              {dict.search.price}
+            </h3>
+            <PriceHistogram
+              data={priceData}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              onMinPriceChange={setMinPrice}
+              onMaxPriceChange={setMaxPrice}
+              currency="€"
+            />
           </div>
-        </div>
+        )}
 
         {mode === "guide" && (
           <>
             <div>
-              <h3 className="mb-3 font-semibold flex items-center gap-2 text-2xl!">
+              <h3 className="mb-2 font-semibold flex items-center gap-2 text-2xl!">
                 <MdLanguage className="text-accent" size={25} />
                 {dict.search.languages}
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
                 {uniqueLanguages.length > 0 ? uniqueLanguages.map((language) => (
                   <label key={language} className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -166,7 +159,7 @@ export const FiltersModal: React.FC<FiltersModalProps> = ({
             </div>
 
             <div>
-              <h3 className="mb-3 font-semibold flex items-center gap-2 text-2xl!">
+              <h3 className="mb-2 font-semibold flex items-center gap-2 text-2xl!">
                 <IoShieldCheckmark className="text-accent" size={25} />
                 {dict.search.guidePro}
               </h3>
@@ -186,36 +179,20 @@ export const FiltersModal: React.FC<FiltersModalProps> = ({
         {mode === "activity" && (
           <>
             <div>
-              <h3 className="mb-3 font-semibold flex items-center gap-2 text-2xl!">
+              <h3 className="mb-2 font-semibold flex items-center gap-2 text-2xl!">
                 <LuClock className="text-accent" size={25} />
                 {dict.search.duration}
               </h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 mb-1">{dict.search.minDuration}</label>
-                  <input
-                    type="number"
-                    value={minDuration || ''}
-                    onChange={(e) => setMinDuration(e.target.value ? Number(e.target.value) : undefined)}
-                    placeholder="0"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-accent"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 mb-1">{dict.search.maxDuration}</label>
-                  <input
-                    type="number"
-                    value={maxDuration || ''}
-                    onChange={(e) => setMaxDuration(e.target.value ? Number(e.target.value) : undefined)}
-                    placeholder="480"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-accent"
-                  />
-                </div>
-              </div>
+              <DurationHistogram
+                minDuration={minDuration}
+                maxDuration={maxDuration}
+                onMinDurationChange={setMinDuration}
+                onMaxDurationChange={setMaxDuration}
+              />
             </div>
 
             <div>
-              <h3 className="mb-3 font-semibold flex items-center gap-2 text-2xl!">
+              <h3 className="mb-2 font-semibold flex items-center gap-2 text-2xl!">
                 <LuSun className="text-accent" size={25} />
                 {dict.search.timePeriod}
               </h3>
@@ -251,7 +228,7 @@ export const FiltersModal: React.FC<FiltersModalProps> = ({
             </div>
 
             <div>
-              <h3 className="mb-3 font-semibold flex items-center gap-2 text-2xl!">
+              <h3 className="mb-2 font-semibold flex items-center gap-2 text-2xl!">
                 <IoAccessibility className="text-accent" size={25} />
                 {dict.search.accessibility}
               </h3>
@@ -269,7 +246,7 @@ export const FiltersModal: React.FC<FiltersModalProps> = ({
         )}
       </div>
 
-      <div className="flex gap-3 mt-6 pt-4 border-t">
+      <div className="flex gap-3 mt-6 pt-4 border-t border-gray-200">
         <button
           onClick={onReset}
           className="flex-1 px-6 py-3 bg-gray-100 text-gray-800 rounded-xl hover:bg-gray-250 active:scale-[0.98] transition-all font-semibold"

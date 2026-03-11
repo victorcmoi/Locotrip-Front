@@ -349,7 +349,13 @@
     "evening": "Abend",
     "category": "Kategorie",
     "resetFilters": "Zurücksetzen",
-    "closeFilters": "Schließen"
+    "closeFilters": "Schließen",
+    "mode": "Suchmodus",
+    "noResult": "Keine Ergebnisse gefunden",
+    "noResultMessage": "Versuchen Sie, Ihre Suchkriterien anzupassen",
+    "noResultSuggestion": "Sie können Ihre Daten, Ihr Ziel oder Ihre Filter ändern, um zu finden, was zu Ihnen passt.",
+    "pricePerTraveler": "Preis ohne Gebühren und Steuern",
+    "durationInMinutes": "Dauer in Minuten"
   },
   "experiences": {
     "loading": "Erlebnisse werden geladen...",

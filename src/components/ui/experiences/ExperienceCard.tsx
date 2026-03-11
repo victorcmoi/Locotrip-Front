@@ -17,6 +17,8 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
   const dict = useTranslations();
   const guide = experience.guide;
   
+  if (!guide) return null;
+  
   const experienceImage = experience.medias?.[0]?.url;
   const guideProfilePicture = guide.medias?.[0]?.url;
 
@@ -66,14 +68,18 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
         </Link>
 
         {/* Note */}
-        <div className="flex items-center gap-2 mb-4 justify-center">
-          <div className="flex">
-            {[...Array(5)].map((_, i) => (
-              <AiFillStar key={i} className="text-secondary text-xl" />
-            ))}
+        {(guide.reviewCount || 0) > 0 ? (
+          <div className="flex items-center gap-2 mb-4 justify-center">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <AiFillStar key={i} className="text-secondary text-xl" />
+              ))}
+            </div>
+            <span className="text-dark text-base">{guide.reviewCount || 0} {dict.common.review}</span>
           </div>
-          <span className="text-dark text-base">{guide.reviewCount || 0} {dict.common.review}</span>
-        </div>
+        ) : (
+          <div className="mb-4" />
+        )}
 
         {/* Titre expérience */}
         <Link href={ExperiencesRoutes.DETAIL(experience.id)}>

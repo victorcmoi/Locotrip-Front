@@ -349,7 +349,13 @@
     "evening": "Evening",
     "category": "Category",
     "resetFilters": "Reset",
-    "closeFilters": "Close"
+    "closeFilters": "Close",
+    "mode": "Search mode",
+    "noResult": "No results found",
+    "noResultMessage": "Try adjusting your search criteria",
+    "noResultSuggestion": "You can modify your dates, destination, or filters to find what suits you.",
+    "pricePerTraveler": "Price excluding fees and taxes",
+    "durationInMinutes": "Duration in minutes"
   },
   "experiences": {
     "loading": "Loading experiences...",
