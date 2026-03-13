@@ -415,6 +415,7 @@
     "meetingPoint": "Lieu de rendez-vous",
     "noMeetingPoint": "Lieu de rendez-vous non spécifié",
     "importantInfo": "Informations importantes",
-    "noReviews": "Aucun avis pour le moment"
+    "noReviews": "Aucun avis pour le moment",
+    "program": "Programme"
   }
 }

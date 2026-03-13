@@ -3,6 +3,7 @@ import { citySchema } from './city';
 import { mediaSchema } from './media';
 import { reviewSchema } from './reviews';
 import { bookingSchema } from './booking';
+import { AvailabilityStatusEnum } from './enums';
 
 export const experienceStepSchema = z.object({
   id: z.string().uuid(),
@@ -79,18 +80,19 @@ export const experienceSchema = z.object({
     experience_id: z.string().uuid(),
     start_date: z.string().or(z.date()),
     end_date: z.string().or(z.date()),
-    status: z.string(),
+    status: AvailabilityStatusEnum,
   })).optional(),
   steps: z.array(experienceStepSchema).optional(),
   avgRating: z.number().optional(),
   reviewCount: z.number().optional(),
+  bookingsCount: z.number().optional(),
 });
 
 export const experiencesSchema = z.array(experienceSchema);
 
 export const createExperienceSchema = z.object({
-  title: z.string().min(10, 'Le titre doit contenir au moins 10 caractères').max(150),
-  description: z.string().min(50, 'La description doit contenir au moins 50 caractères'),
+  title: z.string().min(1, 'Le titre est requis').max(150),
+  description: z.string().optional(),
   price: z.coerce.number().positive(),
   duration: z.number().int().positive(),
   city_id: z.string().uuid(),

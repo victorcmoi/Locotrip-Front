@@ -2,7 +2,8 @@ import { useTranslations } from "@/providers/i18n.provider";
 import Image from "next/image";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { LuMapPin } from "react-icons/lu";
-import { AiFillStar } from "react-icons/ai";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { BsStarHalf } from "react-icons/bs";
 import { Accessibility } from "lucide-react";
 import Link from "next/link";
 import { MinioHelpers } from "@/utils/minio";
@@ -17,6 +18,13 @@ interface ExperienceCardProps {
 export default function ExperienceCard({ experience }: ExperienceCardProps) {
   const dict = useTranslations();
   const guide = experience.guide;
+  const experienceReviewCount = experience.reviewCount ?? experience.reviews?.length ?? 0;
+  const avgRating =
+    experience.avgRating ??
+    (experience.reviews && experience.reviews.length > 0
+      ? experience.reviews.reduce((sum, review) => sum + review.rating, 0) / experience.reviews.length
+      : 0);
+  const reviewCountLabel = experienceReviewCount > 99 ? "99+" : `${experienceReviewCount}`;
   
   if (!guide) return null;
   
@@ -35,7 +43,7 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
   return (
     <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col border border-gray-light">
       {/* Image de l'expérience */}
-      <Link href={ExperiencesRoutes.DETAIL(experience.id)} className="relative h-48 w-full block cursor-pointer overflow-hidden group">
+      <Link href={ExperiencesRoutes.DETAIL(experience.id)} target="_blank" rel="noopener noreferrer" className="relative h-48 w-full block cursor-pointer overflow-hidden group">
         <Image
           src={MinioHelpers.experience(experienceImage)}
           alt={experience.title}
@@ -69,21 +77,27 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
         </Link>
 
         {/* Note */}
-        {(guide.reviewCount || 0) > 0 ? (
+        {experienceReviewCount > 0 ? (
           <div className="flex items-center gap-2 mb-4 justify-center">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
-                <AiFillStar key={i} className="text-secondary text-xl" />
+                avgRating >= i + 1 ? (
+                  <AiFillStar key={i} className="text-secondary text-xl" />
+                ) : avgRating >= i + 0.5 ? (
+                  <BsStarHalf key={i} className="text-secondary text-xl" />
+                ) : (
+                  <AiOutlineStar key={i} className="text-gray-300 text-xl" />
+                )
               ))}
             </div>
-            <span className="text-dark text-base">{guide.reviewCount || 0} {dict.common.review}</span>
+            <span className="text-dark text-base">{reviewCountLabel} {dict.common.review}</span>
           </div>
         ) : (
-          <div className="mb-4" />
+          <div className="mb-10" />
         )}
 
         {/* Titre expérience */}
-        <Link href={ExperiencesRoutes.DETAIL(experience.id)}>
+        <Link href={ExperiencesRoutes.DETAIL(experience.id)} target="_blank" rel="noopener noreferrer">
           <h3 className="text-center font-bold text-2xl! text-accent mb-4 line-clamp-2 hover:underline cursor-pointer">
             {experience.title}
           </h3>
@@ -93,20 +107,13 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
         <div className="flex items-center gap-1 justify-center mb-4">
           <LuMapPin className="text-dark text-xl" />
           <span className="text-dark text-base">{experience.city?.name}</span>
-          
-          {/* Accessibilité */}
-          {experience.is_accessible && (
-            <div className="flex items-center gap-1 text-green-600 ml-2" title="Accessible PMR">
-              <Accessibility size={18} />
-            </div>
-          )}
         </div>
 
         {/* Langues */}
         {guide.languages && (
           <div className="mb-4 flex justify-center text-center">
             <p className="text-base">
-              <span className="text-dark">{dict.common.languages}</span>{" "}
+              <span className="text-dark font-bold">{dict.common.languages}</span>{" "}
               <span className="text-dark">{guide.languages}</span>
             </p>
           </div>
@@ -134,7 +141,9 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
 
         {/* Bouton */}
         <button className="mx-auto hover:bg-accent text-light transition-colors duration-300 cursor-pointer text-base py-2.5">
-          {dict.common.checkAvailability}
+          <Link href={ExperiencesRoutes.DETAIL(experience.id)} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+            {dict.common.checkAvailability}
+          </Link>
         </button>
       </div>
     </div>

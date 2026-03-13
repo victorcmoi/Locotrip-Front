@@ -18,10 +18,13 @@ export interface CalendarProps {
   unavailableDates?: Date[];
   minDate?: Date;
   maxDate?: Date;
+  selectableDates?: Date[];
   locale?: string;
   className?: string;
   showTitle?: boolean;
   title?: string;
+  strikeThroughUnavailableDates?: boolean;
+  monthsToShow?: number;
 }
 
 export const Calendar: React.FC<CalendarProps> = ({
@@ -33,10 +36,13 @@ export const Calendar: React.FC<CalendarProps> = ({
   unavailableDates = [],
   minDate,
   maxDate,
+  selectableDates,
   locale = 'fr',
   className = '',
   showTitle = false,
   title = 'Disponibilité du guide',
+  strikeThroughUnavailableDates = false,
+  monthsToShow = 2,
 }) => {
   const dict = useTranslations();
   const [currentMonth, setCurrentMonth] = useState(dayjs().locale(locale));
@@ -55,7 +61,10 @@ export const Calendar: React.FC<CalendarProps> = ({
     };
   }, [onClose]);
 
-  const monthsToDisplay = [currentMonth, currentMonth.add(1, 'month')];
+  const safeMonthsToShow = monthsToShow > 1 ? 2 : 1;
+  const monthsToDisplay = Array.from({ length: safeMonthsToShow }, (_, index) =>
+    currentMonth.add(index, 'month')
+  );
 
   const handlePrevious = () => {
     setCurrentMonth(currentMonth.subtract(1, 'month'));
@@ -80,8 +89,16 @@ export const Calendar: React.FC<CalendarProps> = ({
     return maxDate && date.isAfter(dayjs(maxDate), 'day');
   };
 
+  const isDateNotSelectable = (date: Dayjs) => {
+    if (!selectableDates) return false;
+    return !selectableDates.some(
+      (selectableDate) =>
+        dayjs(selectableDate).format('YYYY-MM-DD') === date.format('YYYY-MM-DD')
+    );
+  };
+
   const isDateDisabled = (date: Dayjs) => {
-    return isDateUnavailable(date) || isDateBeforeMin(date) || isDateAfterMax(date);
+    return isDateUnavailable(date) || isDateBeforeMin(date) || isDateAfterMax(date) || isDateNotSelectable(date);
   };
 
   const isDateSelected = (date: Dayjs) => {
@@ -160,6 +177,12 @@ export const Calendar: React.FC<CalendarProps> = ({
       const date = month.date(day);
       const disabled = isDateDisabled(date);
       const selected = isDateSelected(date);
+      const unavailable = isDateUnavailable(date);
+
+      const disabledClassName =
+        strikeThroughUnavailableDates && unavailable
+          ? 'text-gray-300 cursor-not-allowed line-through border-gray-200'
+          : 'text-gray-300 cursor-not-allowed border-gray-200';
 
       days.push(
         <button
@@ -170,7 +193,7 @@ export const Calendar: React.FC<CalendarProps> = ({
             h-10 rounded-3xl flex items-center justify-center text-sm font-medium
             transition-all duration-200 border bg-light px-2
             ${disabled 
-              ? 'text-gray-300 cursor-not-allowed line-through border-gray-200' 
+              ? disabledClassName
               : 'text-gray-800 hover:bg-gray-100 cursor-pointer border-accent'
             }
             ${selected && !disabled 
@@ -224,10 +247,10 @@ export const Calendar: React.FC<CalendarProps> = ({
           <SlArrowLeft className="text-gray-700" size={12} />
         </button>
 
-        <div className="flex gap-8 flex-1">
+        <div className={`flex flex-1 ${safeMonthsToShow === 1 ? '' : 'gap-8'}`}>
           {monthsToDisplay.map((month, index) => (
             <React.Fragment key={`title-${index}`}>
-              {renderMonthTitle(month, index === 1 ? 'right' : 'left')}
+              {renderMonthTitle(month, safeMonthsToShow === 2 && index === 1 ? 'right' : 'left')}
             </React.Fragment>
           ))}
         </div>
@@ -242,7 +265,7 @@ export const Calendar: React.FC<CalendarProps> = ({
       </div>
 
       {/* Calendriers */}
-      <div className="flex gap-8">
+      <div className={`flex ${safeMonthsToShow === 1 ? '' : 'gap-8'}`}>
         {monthsToDisplay.map((month, index) => (
           <React.Fragment key={`calendar-${index}`}>{renderMonthCalendar(month)}</React.Fragment>
         ))}

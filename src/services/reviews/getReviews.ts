@@ -11,6 +11,10 @@ export const getTopRatedReviews = async () => {
   return new ApiRequest<ReviewsApiResponse>(reviewsApiResponseSchema).get('reviews/top-reviews?limit=3&minDescriptionLength=40');
 };
 
+export const getReviewsByExperience = async (experienceId: string) => {
+  return new ApiRequest<ReviewsApiResponse>(reviewsApiResponseSchema).get(`reviews/experience/${experienceId}`);
+};
+
 export const useReviews = () => {
   return useQuery({
     queryKey: ['reviews'],
@@ -22,5 +26,13 @@ export const useTopRatedReviews = () => {
   return useQuery({
     queryKey: ['topRatedReviews'],
     queryFn: () => getTopRatedReviews(),
+  });
+};
+
+export const useReviewsByExperience = (experienceId: string) => {
+  return useQuery({
+    queryKey: ['reviews', 'experience', experienceId],
+    queryFn: () => getReviewsByExperience(experienceId),
+    enabled: !!experienceId,
   });
 };

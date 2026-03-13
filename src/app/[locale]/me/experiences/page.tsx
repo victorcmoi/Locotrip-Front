@@ -8,13 +8,14 @@ import { useGuideById } from "@/services/guides/getGuides";
 import { MinioHelpers } from "@/utils/minio";
 import {
   CheckCircle,
-  Star,
   MapPin,
   ExternalLink,
   Pencil,
   Trash2,
   Plus,
 } from "lucide-react";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { BsStarHalf } from "react-icons/bs";
 import type { Experience } from "@/schemas/experience";
 import Image from "next/image";
 import { useLocalizedPath } from "@/providers/i18n.provider";
@@ -201,15 +202,13 @@ export default function ExperiencesPage() {
                   <div className="flex items-center gap-2 mb-3">
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          size={16}
-                          className={`${
-                            i < Math.round(avgRating)
-                              ? "text-secondary fill-secondary"
-                              : "text-gray-300"
-                          }`}
-                        />
+                        avgRating >= i + 1 ? (
+                          <AiFillStar key={i} className="text-secondary text-base" />
+                        ) : avgRating >= i + 0.5 ? (
+                          <BsStarHalf key={i} className="text-secondary text-base" />
+                        ) : (
+                          <AiOutlineStar key={i} className="text-gray-300 text-base" />
+                        )
                       ))}
                     </div>
                     <span className="text-sm text-dark/60">

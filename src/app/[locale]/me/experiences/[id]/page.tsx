@@ -13,7 +13,6 @@ import { useGuideById } from "@/services/guides/getGuides";
 import { MinioHelpers } from "@/utils/minio";
 import {
   CheckCircle,
-  Star,
   MapPin,
   Pencil,
   Trash2,
@@ -23,6 +22,8 @@ import {
   ArrowLeft,
   Accessibility,
 } from "lucide-react";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { BsStarHalf } from "react-icons/bs";
 import Image from "next/image";
 import Link from "next/link";
 import { useLocalizedPath } from "@/providers/i18n.provider";
@@ -184,15 +185,13 @@ export default function ExperienceDetailPage({
           <div className="flex items-center gap-2 mb-6">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={18}
-                  className={`${
-                    i < Math.round(avgRating)
-                      ? "text-secondary fill-secondary"
-                      : "text-gray-300"
-                  }`}
-                />
+                avgRating >= i + 1 ? (
+                  <AiFillStar key={i} className="text-secondary text-lg" />
+                ) : avgRating >= i + 0.5 ? (
+                  <BsStarHalf key={i} className="text-secondary text-lg" />
+                ) : (
+                  <AiOutlineStar key={i} className="text-gray-300 text-lg" />
+                )
               ))}
             </div>
             <span className="text-sm text-dark/60 font-medium">
@@ -407,15 +406,13 @@ export default function ExperienceDetailPage({
                     <div className="flex items-center gap-2 mb-2">
                       <div className="flex">
                         {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            size={14}
-                            className={`${
-                              i < review.rating
-                                ? "text-secondary fill-secondary"
-                                : "text-gray-300"
-                            }`}
-                          />
+                          review.rating >= i + 1 ? (
+                            <AiFillStar key={i} className="text-secondary text-sm" />
+                          ) : review.rating >= i + 0.5 ? (
+                            <BsStarHalf key={i} className="text-secondary text-sm" />
+                          ) : (
+                            <AiOutlineStar key={i} className="text-gray-300 text-sm" />
+                          )
                         ))}
                       </div>
                       {review.user && (

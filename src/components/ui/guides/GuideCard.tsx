@@ -3,7 +3,8 @@ import Image from "next/image";
 import { Guide } from "@/schemas/guide";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { LuMapPin } from "react-icons/lu";
-import { AiFillStar } from "react-icons/ai";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { BsStarHalf } from "react-icons/bs";
 import Link from "next/link";
 import GuidesRoutes from "@/utils/routes/guides.routes";
 import { MinioHelpers } from "@/utils/minio";
@@ -16,6 +17,9 @@ export default function GuideCard({ guide }: GuideCardProps) {
   const dict = useTranslations();
   const hobbies = guide.hobbies?.map((h) => h.category?.name).filter((name): name is string => Boolean(name)) || [];
   const profilePicture = guide.medias?.[0]?.url;
+  const avgRating = guide.avgRating ?? 0;
+  const reviewCount = guide.reviewCount ?? 0;
+  const reviewCountLabel = reviewCount > 99 ? "99+" : `${reviewCount}`;
 
   return (
     <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col border border-gray-light ">
@@ -55,14 +59,20 @@ export default function GuideCard({ guide }: GuideCardProps) {
       {/* Contenu de la carte */}
       <div className="p-6 flex-1 flex flex-col">
         {/* Note */}
-        {(guide.reviewCount || 0) > 0 ? (
+        {reviewCount > 0 ? (
           <div className="flex items-center gap-2 mb-8 justify-center">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
-                <AiFillStar key={i} className="text-secondary text-xl" />
+                avgRating >= i + 1 ? (
+                  <AiFillStar key={i} className="text-secondary text-xl" />
+                ) : avgRating >= i + 0.5 ? (
+                  <BsStarHalf key={i} className="text-secondary text-xl" />
+                ) : (
+                  <AiOutlineStar key={i} className="text-gray-300 text-xl" />
+                )
               ))}
             </div>
-            <span className="text-dark text-base">{guide.reviewCount} {dict.common.review}</span>
+            <span className="text-dark text-base">{reviewCountLabel} {dict.common.review}</span>
           </div>
         ) : (
           <div className="mb-8" />
@@ -72,7 +82,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
         {guide.languages && (
           <div className="mb-8 flex justify-center text-center">
             <p className="text-base">
-              <span className="text-dark">{dict.common.languages}</span>{" "}
+              <span className="text-dark font-bold">{dict.common.languages}</span>{" "}
               <span className="text-dark">{guide.languages}</span>
             </p>
           </div>

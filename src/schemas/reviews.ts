@@ -2,13 +2,13 @@ import { z } from 'zod';
 
 // Schéma pour une review individuelle
 export const reviewSchema = z.object({
-  id: z.string().uuid(),
-  user_id: z.string().uuid(),
-  experience_id: z.string().uuid(),
+  id: z.string(),
+  user_id: z.string(),
+  experience_id: z.string(),
   rating: z.number().int().min(1).max(5),
-  title: z.string().nullish(),
-  comment: z.string().nullish(),
-  review_date: z.string().datetime().or(z.date()),
+  title: z.string().nullable().optional(),
+  comment: z.string().nullable().optional(),
+  review_date: z.string().or(z.date()),
   // Relations optionnelles
   user: z
     .object({
@@ -17,6 +17,7 @@ export const reviewSchema = z.object({
       last_name: z.string(),
       email: z.string().email().optional(),
     })
+    .nullable()
     .optional(),
   experience: z
     .object({
@@ -47,20 +48,20 @@ export const updateReviewSchema = z.object({
 
 // Schéma pour la réponse API d'une review
 export const reviewApiResponseSchema = z.object({
-  id: z.string().uuid(),
-  user_id: z.string().uuid(),
-  experience_id: z.string().uuid(),
+  id: z.string(),
+  user_id: z.string(),
+  experience_id: z.string(),
   rating: z.number().int().min(1).max(5),
-  title: z.string().nullable(),
-  comment: z.string().nullable(),
-  review_date: z.string(),
+  title: z.string().nullable().optional(),
+  comment: z.string().nullable().optional(),
+  review_date: z.string().or(z.date()),
   user: z.object({
-    id: z.string().uuid(),
+    id: z.string(),
     first_name: z.string(),
     last_name: z.string(),
-  }).optional(),
+  }).nullable().optional(),
   experience: z.object({
-    id: z.string().uuid(),
+    id: z.string(),
     title: z.string(),
     description: z.string().nullish(),
     price: z.coerce.number().optional(), 
@@ -80,7 +81,7 @@ export const reviewApiResponseSchema = z.object({
         last_name: z.string(),
       }),
     }).optional(),
-  }).optional(),
+  }).nullable().optional(),
 });
 
 // Schéma pour un tableau de réponses API de reviews

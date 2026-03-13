@@ -6,12 +6,12 @@ import Image from "next/image";
 import { useGuideById } from "@/services/guides/getGuides";
 import { LuMapPin } from "react-icons/lu";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { AiFillStar } from "react-icons/ai";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { BsStarHalf } from "react-icons/bs";
 import { use } from "react";
 import { MdLanguage } from "react-icons/md";
 import { BsCalendar2 } from "react-icons/bs";
 import { PiHandbagLight } from "react-icons/pi";
-import { SlClock } from "react-icons/sl";
 import { Calendar } from "@/components/ui/calendar/Calendar";
 import { MinioHelpers } from "@/utils/minio";
 
@@ -32,6 +32,9 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
 
     const hobbies = guide?.hobbies?.map((h: { category?: { id: string; name: string } }) => h.category?.name).filter((name: string | undefined): name is string => !!name) || [];
     const profilePicture = guide?.medias?.[0]?.url;
+    const avgRating = guide?.avgRating ?? 0;
+    const reviewCount = guide?.reviewCount ?? 0;
+    const reviewCountLabel = reviewCount > 99 ? '99+' : `${reviewCount}`;
     return (
         <section id="guide-profile" className="flex flex-col w-full items-center justify-center pt-20 pb-16">
             <div className="w-full min-h-[85vh] grid grid-cols-12 items-start bg-light p-12 py-16 gap-16">
@@ -51,16 +54,24 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
                     {guide?.guide_status === 'pro' && (
                         <p className="flex items-center gap-2 text-lg font-medium text-accent"><IoCheckmarkCircle className="text-3xl" /> {dict.guides.profile.guidePro}</p>
                     )}
-                    <div className="flex items-center gap-3 mt-2">
-                        <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                            <AiFillStar key={i} className="text-secondary text-2xl" />
-                        ))}
+                    {reviewCount > 0 && (
+                        <div className="flex items-center gap-3 mt-2">
+                            <div className="flex">
+                            {[...Array(5)].map((_, i) => (
+                                avgRating >= i + 1 ? (
+                                    <AiFillStar key={i} className="text-secondary text-2xl" />
+                                ) : avgRating >= i + 0.5 ? (
+                                    <BsStarHalf key={i} className="text-secondary text-2xl" />
+                                ) : (
+                                    <AiOutlineStar key={i} className="text-gray-300 text-2xl" />
+                                )
+                            ))}
+                            </div>
+                            <span className="text-dark text-lg font-medium">{reviewCountLabel} {dict.common.review}</span>
                         </div>
-                        <span className="text-dark text-lg font-medium">{guide?.reviewCount} {dict.common.review}</span>
-                    </div>
+                    )}
                     <p className="text-lg font-medium flex items-center gap-2 mt-2"><MdLanguage className="text-3xl" /> {guide?.languages}</p>
-                    <div className="grid grid-cols-3 mt-8 max-w-4xl">
+                    <div className="grid grid-cols-2 mt-8 max-w-4xl">
                         <div className="flex-col col-span-1 border border-gray-light px-5 py-2">
                             <h4 className="flex items-center gap-3 mb-3 font-normal"><BsCalendar2 className="text-md" /> {dict.guides.profile.reservations} </h4>
                             <p className="text-2xl text-center font-bold">{guide?.experiencesCount}</p>
@@ -68,10 +79,6 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
                         <div className="flex-col col-span-1 border border-gray-light px-5 py-2">
                             <h4 className="flex items-center gap-3 mb-3"><PiHandbagLight className="text-2xl" /> {dict.guides.profile.experience} </h4>
                             <p className="text-2xl text-center font-bold">{guide?.years_of_experience} {dict.guides.profile.years}</p>
-                        </div>
-                        <div className="flex-col col-span-1 border border-gray-light px-5 py-2">
-                            <h4 className="flex items-center gap-3 mb-3"><SlClock className="text-md" /> {dict.guides.profile.delayResponse} </h4>
-                            <p className="text-2xl text-center font-bold">{guide?.response_time_hours}h</p>
                         </div>
                     </div>
                     <button className="text-white font-medium text-lg mt-6">{dict.guides.profile.contactGuide}</button>

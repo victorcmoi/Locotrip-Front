@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import Link from "next/link";
 import BookingStatusBadge from "./BookingStatusBadge";
+import GuidesRoutes from "@/utils/routes/guides.routes";
 
 dayjs.locale("fr");
 
@@ -195,7 +196,10 @@ export default function BookingDetailsModal({
 
             {/* Guide */}
             {guideUser && (showGuide || showBoth) && (
-              <div className="block bg-gray-light/30 border border-gray-light rounded-xl p-4">
+              <Link
+                href={guide?.id ? GuidesRoutes.PROFILE(guide.id) : "#"}
+                className="block bg-gray-light/30 border border-gray-light rounded-xl p-4 transition-colors hover:bg-gray-light/60"
+              >
                 <p className="text-sm font-bold text-dark uppercase tracking-wider mb-3 flex items-center">
                   <UserIcon className="h-4 w-4 inline mr-1" />
                   Guide
@@ -210,8 +214,13 @@ export default function BookingDetailsModal({
                       {guideUser.phone}
                     </p>
                   )}
+                  {guide?.id && (
+                    <p className="text-xs text-accent mt-2 font-medium">
+                      Voir le profil du guide
+                    </p>
+                  )}
                 </div>
-              </div>
+              </Link>
             )}
 
             {/* Expérience */}

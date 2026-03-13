@@ -1,6 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { ApiRequest } from '@/services/instance';
 import { bookingsSchema, type Bookings } from '@/schemas/booking';
+import { z } from 'zod';
+
+const bookingCountSchema = z.object({
+  count: z.number().int().nonnegative(),
+});
+
+export type BookingCountResponse = z.infer<typeof bookingCountSchema>;
 
 // --- Guide bookings ---
 
@@ -31,5 +38,19 @@ export const useMyBookings = (userId: string | undefined) => {
     queryKey: ['my-bookings', userId],
     queryFn: () => getMyBookings(userId!),
     enabled: !!userId,
+  });
+};
+
+export const getExperienceBookingsCount = async (experienceId: string): Promise<BookingCountResponse> => {
+  return new ApiRequest<BookingCountResponse>(bookingCountSchema).get(
+    `bookings/experience/${experienceId}/count`
+  );
+};
+
+export const useExperienceBookingsCount = (experienceId: string | undefined) => {
+  return useQuery({
+    queryKey: ['experience-bookings-count', experienceId],
+    queryFn: () => getExperienceBookingsCount(experienceId!),
+    enabled: !!experienceId,
   });
 };

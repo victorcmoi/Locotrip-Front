@@ -3,7 +3,7 @@
 import React, {useState} from "react";
 import {signIn} from "next-auth/react";
 import {toast} from "sonner";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import { HOME_ROUTES, AUTH_ROUTES } from "@/utils/routes";
 import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import Link from "next/link";
@@ -12,6 +12,7 @@ export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dict = useTranslations();
   const localizedPath = useLocalizedPath();
 
@@ -29,7 +30,8 @@ export default function LoginForm() {
             setLoading(false);
             toast.error(error);
           } else {
-            router.replace(localizedPath(HOME_ROUTES.HOME));
+            const redirect = searchParams.get("redirect");
+            router.replace(redirect || localizedPath(HOME_ROUTES.HOME));
           }
         });
       }}
