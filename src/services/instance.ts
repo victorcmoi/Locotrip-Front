@@ -96,8 +96,7 @@ export class ApiRequest<T> {
     if (response.ok) {
       try {
         return this._schema.parse(body) as T;
-      } catch (e) {
-        console.error("Schema validation failed:", e);
+      } catch {
         throw new Error("Invalid response format from API");
       }
     }

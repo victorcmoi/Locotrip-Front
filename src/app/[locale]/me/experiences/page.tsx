@@ -18,12 +18,13 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { BsStarHalf } from "react-icons/bs";
 import type { Experience } from "@/schemas/experience";
 import Image from "next/image";
-import { useLocalizedPath } from "@/providers/i18n.provider";
+import { useLocalizedPath, useTranslations } from "@/providers/i18n.provider";
 import DropdownMenu from "@/components/ui/DropdownMenu";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import Link from "next/link";
 
 export default function ExperiencesPage() {
+  const dict = useTranslations();
   const { data: session } = useSession();
   const guideId = session?.user?.guide_id;
   const isGuide = session?.user?.role === "guide";
@@ -45,7 +46,7 @@ export default function ExperiencesPage() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <p className="text-dark/60 text-lg">
-          Cette page est réservée aux guides.
+          {dict.experiences.guideOnlyPage}
         </p>
       </div>
     );
@@ -66,35 +67,35 @@ export default function ExperiencesPage() {
       {/* Header */}
       <div className="my-12 flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold text-dark !text-left mb-1">
-            Bienvenue {session?.user?.first_name} {session?.user?.last_name}
+          <h1 className="text-3xl font-extrabold text-dark text-left! mb-1">
+            {dict.bookings.welcome} {session?.user?.first_name} {session?.user?.last_name}
           </h1>
-          <p className="text-lg text-dark/80 font-semibold">Gérer vos offres</p>
+          <p className="text-lg text-dark/80 font-semibold">{dict.experiences.manageOffers}</p>
         </div>
         <Link
           href={localizedPath("/me/experiences/create")}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-white font-semibold text-sm hover:bg-accent/90 transition-colors duration-200 shadow-md shadow-accent/20 cursor-pointer"
         >
           <Plus size={16} />
-          Créer une expérience
+          {dict.experiences.createExperience}
         </Link>
       </div>
 
       {/* Loading */}
       {isLoading && (
-        <p className="text-dark/60">Chargement des expériences...</p>
+        <p className="text-dark/60">{dict.experiences.loading}</p>
       )}
 
       {/* Error */}
       {error && (
         <p className="text-red-600">
-          Erreur lors du chargement des expériences.
+          {dict.experiences.error}
         </p>
       )}
 
       {/* Empty state */}
       {!isLoading && !error && experiences && experiences.length === 0 && (
-        <p className="text-dark/60">Vous n&apos;avez aucune expérience.</p>
+        <p className="text-dark/60">{dict.experiences.noExperienceYet}</p>
       )}
 
       {/* Experience cards grid */}
@@ -133,26 +134,26 @@ export default function ExperiencesPage() {
                           : "bg-yellow-100 text-yellow-700"
                       }`}
                     >
-                      {experience.is_published ? "Publiée" : "Brouillon"}
+                      {experience.is_published ? dict.experiences.published : dict.experiences.draft}
                     </span>
                     <DropdownMenu
                       items={[
                         {
-                          label: "Ouvrir",
+                          label: dict.experiences.open,
                           icon: ExternalLink,
                           href: localizedPath(
                             `/me/experiences/${experience.id}`,
                           ),
                         },
                         {
-                          label: "Modifier",
+                          label: dict.common.edit,
                           icon: Pencil,
                           href: localizedPath(
                             `/me/experiences/${experience.id}/update`,
                           ),
                         },
                         {
-                          label: "Supprimer",
+                          label: dict.common.delete,
                           icon: Trash2,
                           variant: "danger",
                           onClick: () =>
@@ -187,7 +188,7 @@ export default function ExperiencesPage() {
                   {/* Guide name + pro badge */}
                   <div className="flex items-center gap-1.5 mb-1">
                     <p className="text-sm text-dark">
-                      Avec{" "}
+                      {dict.bookings.with}{" "}
                       <span className="font-bold">
                         {guide?.user?.first_name}{" "}
                         {guide?.user?.last_name?.toUpperCase()}
@@ -212,7 +213,7 @@ export default function ExperiencesPage() {
                       ))}
                     </div>
                     <span className="text-sm text-dark/60">
-                      {reviewCount} avis
+                      {reviewCount} {dict.guides.profile.reviews}
                     </span>
                   </div>
 
@@ -234,7 +235,7 @@ export default function ExperiencesPage() {
                   {/* Languages */}
                   {guide?.languages && (
                     <p className="text-sm text-dark/70 mb-3">
-                      Langue : {guide.languages}
+                      {dict.common.languages} {guide.languages}
                     </p>
                   )}
 
@@ -244,7 +245,7 @@ export default function ExperiencesPage() {
                       {formatDuration(experience.duration)}
                     </span>
                     <span className="text-dark font-semibold text-lg">
-                      {experience.price}€/Pers
+                      {experience.price}€/{dict.common.person}
                     </span>
                   </div>
 
@@ -260,7 +261,7 @@ export default function ExperiencesPage() {
 
                   {/* Booster button */}
                   <button className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer bg-transparent mt-2 w-full">
-                    Booster
+                    {dict.experiences.booster}
                   </button>
                 </div>
               </div>
@@ -280,10 +281,10 @@ export default function ExperiencesPage() {
             });
           }
         }}
-        title="Supprimer l'expérience"
-        message={`Êtes-vous sûr de vouloir supprimer « ${deleteTarget?.title} » ? Cette action est irréversible.`}
-        confirmLabel="Supprimer"
-        cancelLabel="Annuler"
+        title={dict.experiences.deleteExperienceTitle}
+        message={dict.experiences.deleteExperienceMessage.replace("{title}", deleteTarget?.title || "")}
+        confirmLabel={dict.common.delete}
+        cancelLabel={dict.common.cancel}
         variant="danger"
         loading={deleteMutation.isPending}
       />

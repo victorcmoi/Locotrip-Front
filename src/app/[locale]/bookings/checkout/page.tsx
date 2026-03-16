@@ -16,55 +16,91 @@ import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-
 const SERVICE_FEE_RATE = 0.1;
 const TAX_RATE = 0.2;
 
+const getReadableErrorMessage = (error: unknown): string => {
+  if (!error) return 'Erreur inconnue';
+  if (error instanceof Error && error.message) return error.message;
+
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    const maybeMessage = (error as { message?: unknown }).message;
+    if (typeof maybeMessage === 'string' && maybeMessage.trim().length > 0) {
+      return maybeMessage;
+    }
+  }
+
+  return 'Erreur inconnue';
+};
+
 function CheckoutForm({
-  clientSecret,
   total,
   onSuccess,
 }: {
-  clientSecret: string;
   total: number;
   onSuccess: (paymentIntentId: string) => Promise<void>;
 }) {
+  const dict = useTranslations();
   const stripe = useStripe();
   const elements = useElements();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPaymentElementReady, setIsPaymentElementReady] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
     setIsSubmitting(true);
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      redirect: 'if_required',
-    });
+    try {
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        toast.error(submitError.message || dict.checkout.paymentInfoInvalid);
+        return;
+      }
 
-    if (error) {
-      toast.error(error.message || 'Paiement échoué');
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        redirect: 'if_required',
+        confirmParams: {
+          return_url: window.location.href,
+        },
+      });
+
+      if (error) {
+        toast.error(error.message || dict.checkout.paymentFailed);
+        return;
+      }
+
+      if (!paymentIntent || paymentIntent.status !== 'succeeded') {
+        toast.error(dict.checkout.paymentNotConfirmed);
+        return;
+      }
+
+      await onSuccess(paymentIntent.id);
+    } catch (error) {
+      toast.error(`Erreur Stripe: ${getReadableErrorMessage(error)}`);
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    if (!paymentIntent || paymentIntent.status !== 'succeeded') {
-      toast.error('Le paiement n\'a pas pu être confirmé.');
-      setIsSubmitting(false);
-      return;
-    }
-
-    await onSuccess(paymentIntent.id);
-    setIsSubmitting(false);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <PaymentElement />
+      <PaymentElement
+        options={{ layout: 'tabs' }}
+        onReady={() => setIsPaymentElementReady(true)}
+        onLoadError={() => {
+          toast.error(dict.checkout.stripeLoadMethodsError);
+        }}
+      />
       <button
         type="submit"
-        disabled={!stripe || isSubmitting}
+        disabled={!stripe || !elements || !isPaymentElementReady || isSubmitting}
         className="w-full bg-accent hover:bg-accent/90 text-white font-semibold rounded-xl py-3 disabled:opacity-60"
       >
-        {isSubmitting ? 'Paiement en cours...' : `Payer ${total.toFixed(2)} €`}
+        {isSubmitting ? dict.checkout.paymentInProgress : `${dict.checkout.pay} ${total.toFixed(2)} €`}
       </button>
+
+      {!isPaymentElementReady && (
+        <p className="text-sm text-dark/70">{dict.checkout.loadingPaymentMethods}</p>
+      )}
     </form>
   );
 }
@@ -97,11 +133,21 @@ export default function CheckoutPage() {
 
   const [clientSecret, setClientSecret] = useState<string>('');
   const [creatingIntent, setCreatingIntent] = useState(false);
+  const stripePublicKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY?.trim();
 
   const stripePromise = useMemo(() => {
-    const key = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
-    return key ? loadStripe(key) : null;
-  }, []);
+    return stripePublicKey ? loadStripe(stripePublicKey) : null;
+  }, [stripePublicKey]);
+
+  const elementsOptions = useMemo(() => {
+    if (!clientSecret) return undefined;
+    return {
+      clientSecret,
+      appearance: {
+        theme: 'stripe' as const,
+      },
+    };
+  }, [clientSecret]);
 
   if (status === 'unauthenticated') {
     router.replace(localizedPath(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`));
@@ -113,6 +159,11 @@ export default function CheckoutPage() {
   }
 
   const initializePayment = async () => {
+    if (!stripePromise) {
+      toast.error(dict.checkout.stripePublicKeyMissing);
+      return;
+    }
+
     if (clientSecret) return;
     setCreatingIntent(true);
 
@@ -122,9 +173,10 @@ export default function CheckoutPage() {
         currency: 'eur',
         description: `Reservation ${experience.title}`,
       });
+
       setClientSecret(result.clientSecret);
-    } catch {
-      toast.error('Impossible d\'initialiser le paiement Stripe.');
+    } catch (error) {
+      toast.error(dict.checkout.stripeInitError);
     } finally {
       setCreatingIntent(false);
     }
@@ -156,30 +208,31 @@ export default function CheckoutPage() {
         },
       });
 
-      toast.success('Réservation confirmée et paiement validé.');
+      toast.success(dict.checkout.bookingAndPaymentSuccess);
       router.push(localizedPath('/me/bookings'));
     } catch {
-      toast.error('Paiement reçu mais réservation non finalisée. Contactez le support.');
+      toast.error(dict.checkout.bookingFinalizeError);
     }
   };
 
   return (
-    <section className="max-w-[92vw] mx-auto py-24 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <section className="max-w-[92vw] mx-auto py-10 md:py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
       <div className="lg:col-span-7 rounded-2xl border border-gray-200 bg-white p-6 space-y-6">
-        <h1 className="text-2xl font-bold text-dark">Paiement sécurisé</h1>
+        <h1 className="text-2xl font-bold text-dark">{dict.checkout.securePayment}</h1>
 
         {!clientSecret ? (
           <button
             onClick={initializePayment}
-            disabled={creatingIntent}
+            disabled={creatingIntent || !stripePromise}
             className="bg-accent hover:bg-accent/90 text-white rounded-xl px-5 py-3 font-semibold"
           >
-            {creatingIntent ? 'Préparation du paiement...' : 'Continuer vers Stripe'}
+            {creatingIntent ? dict.checkout.paymentPreparing : dict.checkout.continueToStripe}
           </button>
         ) : (
-          stripePromise && (
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <CheckoutForm clientSecret={clientSecret} total={pricing.total} onSuccess={onPaymentSuccess} />
+          stripePromise &&
+          elementsOptions && (
+            <Elements key={clientSecret} stripe={stripePromise} options={elementsOptions}>
+              <CheckoutForm total={pricing.total} onSuccess={onPaymentSuccess} />
             </Elements>
           )
         )}
@@ -196,27 +249,27 @@ export default function CheckoutPage() {
         </div>
 
         <h2 className="text-xl font-bold text-dark mb-2">{experience.title}</h2>
-        <p className="text-dark/70 mb-4">{participants} participant(s)</p>
+        <p className="text-dark/70 mb-4">{participants} {dict.checkout.participant}</p>
 
         <div className="space-y-2 text-sm text-dark border-t border-gray-300 pt-4">
           <div className="flex items-center justify-between">
-            <span>Prix unitaire</span>
+            <span>{dict.checkout.unitPrice}</span>
             <span>{pricing.unitPrice.toFixed(2)} €</span>
           </div>
           <div className="flex items-center justify-between">
-            <span>Sous-total</span>
+            <span>{dict.checkout.subtotal}</span>
             <span>{pricing.subtotal.toFixed(2)} €</span>
           </div>
           <div className="flex items-center justify-between">
-            <span>Frais de service</span>
+            <span>{dict.checkout.serviceFee}</span>
             <span>{pricing.serviceFee.toFixed(2)} €</span>
           </div>
           <div className="flex items-center justify-between">
-            <span>Taxes</span>
+            <span>{dict.checkout.taxes}</span>
             <span>{pricing.tax.toFixed(2)} €</span>
           </div>
           <div className="flex items-center justify-between text-base font-bold border-t border-gray-300 pt-3 mt-3">
-            <span>Total</span>
+            <span>{dict.checkout.total}</span>
             <span>{pricing.total.toFixed(2)} €</span>
           </div>
         </div>

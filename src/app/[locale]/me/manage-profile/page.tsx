@@ -28,6 +28,7 @@ import { useResubmitGuideDocument } from "@/services/guides/resubmitGuideDocumen
 import { toast } from "sonner";
 import type { UpdateUser } from "@/schemas/user";
 import type { UpdateGuide } from "@/schemas/guide";
+import { useTranslations } from "@/providers/i18n.provider";
 
 dayjs.locale("fr");
 
@@ -40,6 +41,7 @@ function ResubmitButton({
   documentId: string;
   userId: string;
 }) {
+  const dict = useTranslations();
   const resubmitMutation = useResubmitGuideDocument(userId);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -49,9 +51,9 @@ function ResubmitButton({
 
     try {
       await resubmitMutation.mutateAsync({ guideId, documentId, file });
-      toast.success("Document re-soumis avec succès !");
+      toast.success(dict.profile.documentResubmittedSuccess);
     } catch {
-      toast.error("Erreur lors de la re-soumission du document.");
+      toast.error(dict.profile.documentResubmittedError);
     }
 
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -69,13 +71,14 @@ function ResubmitButton({
       />
       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 text-accent text-xs font-semibold hover:bg-accent/20 transition-colors cursor-pointer">
         <Upload size={12} />
-        {resubmitMutation.isPending ? "Envoi..." : "Resoumettre"}
+        {resubmitMutation.isPending ? dict.profile.sending : dict.profile.resubmit}
       </span>
     </label>
   );
 }
 
 export default function ManageProfilePage() {
+  const dict = useTranslations();
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const isGuide = session?.user?.role === "guide";
@@ -133,27 +136,27 @@ export default function ManageProfilePage() {
   return (
     <div>
       <div className="my-12">
-        <h1 className="text-3xl font-extrabold text-dark !text-left mb-1">
-          Votre profil
+        <h1 className="text-3xl font-extrabold text-dark text-left! mb-1">
+          {dict.profile.yourProfile}
         </h1>
         <p className="text-lg text-dark/80 font-normal">
-          Consultez et gérez vos informations personnelles
+          {dict.profile.profileSubtitle}
         </p>
       </div>
 
       {(isLoadingUser || (isGuide && isLoadingGuide)) && (
-        <p className="text-dark/60">Chargement de votre profil...</p>
+        <p className="text-dark/60">{dict.profile.loadingProfile}</p>
       )}
 
       {errorUser && (
         <p className="text-red-600">
-          Erreur lors du chargement de vos informations globales.
+          {dict.profile.globalInfoError}
         </p>
       )}
 
       {isGuide && errorGuide && (
         <p className="text-red-600">
-          Erreur lors du chargement de vos informations de guide.
+          {dict.profile.guideInfoError}
         </p>
       )}
 
@@ -183,7 +186,7 @@ export default function ManageProfilePage() {
                   type="button"
                   onClick={() => setIsPictureModalOpen(true)}
                   className="absolute bottom-0 right-0 bg-accent text-white rounded-full p-1.5 shadow-md hover:bg-accent/90 transition-colors cursor-pointer border-2 border-white"
-                  title="Modifier la photo"
+                  title={dict.profile.editPhoto}
                 >
                   <Camera size={14} />
                 </button>
@@ -203,7 +206,7 @@ export default function ManageProfilePage() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-black/5">
             <div className="flex items-center justify-between mb-4 border-b border-black/5 pb-2">
               <h2 className="text-xl font-bold text-dark">
-                Informations Globales
+                {dict.profile.globalInfo}
               </h2>
               <button
                 type="button"
@@ -211,36 +214,36 @@ export default function ManageProfilePage() {
                 className="flex bg-transparent items-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer"
               >
                 <Pencil size={15} />
-                Modifier
+                {dict.common.edit}
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <p className="text-sm text-dark/60 font-medium mb-1">Prénom</p>
+                <p className="text-sm text-dark/60 font-medium mb-1">{dict.auth.firstName}</p>
                 <p className="font-semibold text-dark">
                   {user.first_name || "-"}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-dark/60 font-medium mb-1">Nom</p>
+                <p className="text-sm text-dark/60 font-medium mb-1">{dict.auth.lastName}</p>
                 <p className="font-semibold text-dark">
                   {user.last_name || "-"}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-dark/60 font-medium mb-1">Email</p>
+                <p className="text-sm text-dark/60 font-medium mb-1">{dict.auth.email}</p>
                 <p className="font-semibold text-dark">{user.email || "-"}</p>
               </div>
               <div>
                 <p className="text-sm text-dark/60 font-medium mb-1">
-                  Téléphone
+                  {dict.profile.phone}
                 </p>
                 <p className="font-semibold text-dark">
-                  {user.phone || "Non renseigné"}
+                  {user.phone || dict.profile.notProvided}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-dark/60 font-medium mb-1">Rôle</p>
+                <p className="text-sm text-dark/60 font-medium mb-1">{dict.profile.role}</p>
                 <p className="font-semibold text-dark capitalize">
                   {user.role}
                 </p>
@@ -253,19 +256,19 @@ export default function ManageProfilePage() {
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-black/5">
               <div className="flex items-center justify-between mb-4 border-b border-black/5 pb-2">
                 <h2 className="text-xl font-bold text-dark">
-                  Informations Guide
-                </h2>
+                {dict.profile.guideInfo}
+              </h2>
                 <div className="flex items-center gap-3">
                   {isAlreadyPro && (
                     <span className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent border border-accent/20 text-white font-semibold text-sm shadow-sm">
                       <Crown size={15} />
-                      Guide Professionnel
+                      {dict.profile.proGuide}
                     </span>
                   )}
                   {hasPendingProRequest && (
                     <span className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 font-semibold text-sm">
                       <Clock size={15} />
-                      Demande pro en cours
+                      {dict.profile.proRequestPending}
                     </span>
                   )}
                   {canRequestPro && (
@@ -275,7 +278,7 @@ export default function ManageProfilePage() {
                       className="flex bg-transparent items-center gap-2 px-4 py-2 rounded-lg border border-emerald-500 text-emerald-600 font-semibold text-sm hover:bg-emerald-500 hover:text-white transition-colors duration-200 cursor-pointer"
                     >
                       <Crown size={15} />
-                      Passer pro
+                      {dict.profile.becomePro}
                     </button>
                   )}
                   <button
@@ -284,7 +287,7 @@ export default function ManageProfilePage() {
                     className="flex bg-transparent items-center gap-2 px-4 py-2 rounded-lg border border-accent text-accent font-semibold text-sm hover:bg-accent hover:text-white transition-colors duration-200 cursor-pointer"
                   >
                     <Pencil size={15} />
-                    Modifier
+                    {dict.common.edit}
                   </button>
                 </div>
               </div>
@@ -292,39 +295,39 @@ export default function ManageProfilePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <p className="text-sm text-dark/60 font-medium mb-1">
-                      Pays
+                      {dict.profile.country}
                     </p>
                     <p className="font-semibold text-dark">
-                      {guide.country || "Non renseigné"}
+                      {guide.country || dict.profile.notProvided}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-dark/60 font-medium mb-1">
-                      Langues
+                      {dict.common.languages}
                     </p>
                     <p className="font-semibold text-dark">
-                      {guide.languages || "Non renseignées"}
+                      {guide.languages || dict.profile.notProvided}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-dark/60 font-medium mb-1">
-                      Années d&apos;expérience
+                      {dict.profile.yearsOfExperience}
                     </p>
                     <p className="font-semibold text-dark">
-                      {guide.years_of_experience ?? 0} an(s)
+                      {guide.years_of_experience ?? 0} {dict.profile.yearsUnit}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-dark/60 font-medium mb-1">
-                      Carte Professionnelle
+                      {dict.profile.proCardLabel}
                     </p>
                     <p className="font-semibold text-dark">
-                      {guide.pro_card ? "Oui" : "Non"}
+                      {guide.pro_card ? dict.common.yes : dict.common.no}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-dark/60 font-medium mb-1">
-                      Statut
+                      {dict.profile.statusLabel}
                     </p>
                     <p className="font-semibold text-dark capitalize">
                       {guide.guide_status}
@@ -333,10 +336,10 @@ export default function ManageProfilePage() {
                 </div>
                 <div>
                   <p className="text-sm text-dark/60 font-medium mb-1">
-                    Biographie
+                    {dict.profile.biography}
                   </p>
                   <p className="text-dark bg-light p-4 rounded-xl text-sm leading-relaxed mt-1">
-                    {guide.bio || "Aucune biographie."}
+                    {guide.bio || dict.profile.noBio}
                   </p>
                 </div>
               </div>
@@ -356,13 +359,13 @@ export default function ManageProfilePage() {
               const getDocTypeName = (type: string) => {
                 switch (type) {
                   case "CV":
-                    return "CV";
+                    return dict.profile.docTypeCV;
                   case "diploma":
-                    return "Diplôme";
+                    return dict.profile.docTypeDiploma;
                   case "proof_of_residence":
-                    return "Justificatif de domicile";
+                    return dict.profile.docTypeProofResidence;
                   case "guide_card":
-                    return "Carte professionnelle";
+                    return dict.profile.docTypeProCard;
                   default:
                     return type;
                 }
@@ -373,19 +376,19 @@ export default function ManageProfilePage() {
                   case "verified":
                     return (
                       <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
-                        <CheckCircle size={12} /> Validé
+                        <CheckCircle size={12} /> {dict.profile.verified}
                       </span>
                     );
                   case "rejected":
                     return (
                       <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
-                        <XCircle size={12} /> Refusé
+                        <XCircle size={12} /> {dict.profile.rejected}
                       </span>
                     );
                   default:
                     return (
                       <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold">
-                        <Clock size={12} /> En attente
+                        <Clock size={12} /> {dict.profile.pending}
                       </span>
                     );
                 }
@@ -395,11 +398,11 @@ export default function ManageProfilePage() {
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-black/5">
                   <div className="flex items-center justify-between mb-4 border-b border-black/5 pb-2">
                     <h2 className="text-xl font-bold text-dark">
-                      Ma demande pro
+                      {dict.profile.proRequest}
                     </h2>
                     <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 font-semibold text-xs">
                       <Clock size={13} />
-                      En cours de traitement
+                      {dict.profile.proRequestProcessing}
                     </span>
                   </div>
                   <div className="space-y-3">

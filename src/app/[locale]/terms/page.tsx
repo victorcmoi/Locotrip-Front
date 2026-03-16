@@ -47,13 +47,13 @@ export default function TermsPage() {
 
     return (
         <section id="terms-of-use" className="w-full bg-light">
-            <div className="flex items-center w-full py-24 px-12 bg-linear-to-r from-accent to-primary">
-                <div className="max-w-7xl mx-auto w-full">
+            <div className="page-hero flex items-center bg-linear-to-r from-accent to-primary">
+                <div className="page-content">
                     <h1 className="text-white">{dict.terms.title}</h1>
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-8 py-16">
+            <div className="page-content page-section">
                 <p className="text-sm text-gray mb-8 italic">{dict.terms.lastUpdate}</p>
 
                 <Section title={`1. ${dict.terms.section1Title}`}>

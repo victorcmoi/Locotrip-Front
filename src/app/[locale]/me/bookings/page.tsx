@@ -14,25 +14,12 @@ import Image from "next/image";
 import { MinioHelpers } from "@/utils/minio";
 import BookingDetailsModal from "@/components/ui/bookings/BookingDetailsModal";
 import CreateDisputeModal from "@/components/ui/bookings/CreateDisputeModal";
+import { useTranslations } from "@/providers/i18n.provider";
 
 dayjs.locale("fr");
 
-const BookingStatusLabel: Record<string, { label: string; color: string }> = {
-  pending: { label: "En Attente de réponse", color: "text-primary" },
-  confirmed: { label: "Confirmé", color: "text-green-600" },
-  completed: { label: "Terminé", color: "text-blue-600" },
-  cancelled: { label: "Annulé", color: "text-red-600" },
-};
-
-const statusFilters = [
-  { value: "all", label: "Tous" },
-  { value: "pending", label: "En attente" },
-  { value: "confirmed", label: "Confirmé" },
-  { value: "completed", label: "Terminé" },
-  { value: "cancelled", label: "Annulé" },
-];
-
 export default function BookingsPage() {
+  const dict = useTranslations();
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const guideId = session?.user?.guide_id;
@@ -71,15 +58,30 @@ export default function BookingsPage() {
     return dayjs(dateString).format("D MMMM YYYY");
   };
 
+  const bookingStatusLabel: Record<string, { label: string; color: string }> = {
+    pending: { label: dict.bookings.statusPendingResponse, color: "text-primary" },
+    confirmed: { label: dict.bookings.statusConfirmed, color: "text-green-600" },
+    completed: { label: dict.bookings.statusCompleted, color: "text-blue-600" },
+    cancelled: { label: dict.bookings.statusCancelled, color: "text-red-600" },
+  };
+
+  const statusFilters = [
+    { value: "all", label: dict.bookings.filterAll },
+    { value: "pending", label: dict.bookings.filterPending },
+    { value: "confirmed", label: dict.bookings.filterConfirmed },
+    { value: "completed", label: dict.bookings.filterCompleted },
+    { value: "cancelled", label: dict.bookings.filterCancelled },
+  ];
+
   return (
     <div>
       {/* Header */}
       <div className="my-12">
-        <h1 className="text-3xl font-extrabold text-dark !text-left mb-1">
-          Bienvenue {session?.user?.first_name} {session?.user?.last_name}
+        <h1 className="text-3xl font-extrabold text-dark text-left! mb-1">
+          {dict.bookings.welcome} {session?.user?.first_name} {session?.user?.last_name}
         </h1>
         <p className="text-lg text-dark/80 font-normal">
-          {isGuide ? "Gérer vos réservations reçues" : "Gérer vos réservations"}
+          {isGuide ? dict.bookings.manageReceivedBookings : dict.bookings.manageBookings}
         </p>
       </div>
 
@@ -102,13 +104,13 @@ export default function BookingsPage() {
 
       {/* Loading */}
       {isLoading && (
-        <p className="text-dark/60">Chargement des réservations...</p>
+        <p className="text-dark/60">{dict.bookings.loadingBookings}</p>
       )}
 
       {/* Error */}
       {error && (
         <p className="text-red-600">
-          Erreur lors du chargement des réservations.
+          {dict.bookings.errorLoadingBookings}
         </p>
       )}
 
@@ -117,7 +119,7 @@ export default function BookingsPage() {
         !error &&
         filteredBookings &&
         filteredBookings.length === 0 && (
-          <p className="text-dark/60">Aucune réservation pour ce filtre.</p>
+          <p className="text-dark/60">{dict.bookings.noBookingsForFilter}</p>
         )}
 
       {/* Bookings list */}
@@ -132,8 +134,8 @@ export default function BookingsPage() {
               const city = experience?.city;
               const guideUser = experience?.guide?.user;
               const status =
-                BookingStatusLabel[booking.status] ||
-                BookingStatusLabel.pending;
+                bookingStatusLabel[booking.status] ||
+                bookingStatusLabel.pending;
 
               // Get first media image
               const imageUrl = experience?.medias?.[0]?.url;
@@ -157,30 +159,30 @@ export default function BookingsPage() {
               return (
                 <div
                   key={booking.id}
-                  className="flex items-center rounded-2xl p-4 gap-5 shadow-sm hover:shadow-md transition"
+                  className="flex flex-col md:flex-row md:items-center rounded-2xl p-4 gap-4 md:gap-5 shadow-sm hover:shadow-md transition"
                 >
                   {/* Experience image */}
-                  <div className="w-[130px] h-[100px] rounded-xl overflow-hidden shrink-0 bg-gray-light/30 relative">
+                  <div className="w-full md:w-32.5 h-44 md:h-25 rounded-xl overflow-hidden shrink-0 bg-gray-light/30 relative">
                     {imageUrl ? (
                       <Image
                         src={MinioHelpers.experience(imageUrl)}
-                        alt={experience?.title || "Expérience"}
+                        alt={experience?.title || dict.bookings.experienceAlt}
                         fill
                         className="object-cover"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray text-xs">
-                        Pas d&apos;image
+                        {dict.bookings.noImage}
                       </div>
                     )}
                   </div>
 
                   {/* Booking info */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-primary font-semibold !text-xl truncate leading-tight mb-1 w-fit">
-                      {experience?.title || "Expérience inconnue"}
+                    <h3 className="text-primary font-semibold text-xl! truncate leading-tight mb-1 w-fit">
+                      {experience?.title || dict.bookings.unknownExperience}
                     </h3>
-                    <p className="text-sm text-dark/80 font-normal flex gap-3">
+                    <div className="text-sm text-dark/80 font-normal flex flex-col sm:flex-row gap-1 sm:gap-3">
                       <p>
                         {formatDate(booking.booking_date)}
                         <span className="text-dark/80 ml-2 font-normal">
@@ -193,10 +195,10 @@ export default function BookingsPage() {
                           {city.name}
                         </p>
                       )}
-                    </p>
+                    </div>
                     {meetingPoint && (
                       <p className="text-sm text-dark/70 font-normal mt-0.5">
-                        Lieu de rdv :{" "}
+                        {dict.bookings.meetingPointLabel}{" "}
                         <span className="font-medium text-dark/90">
                           {meetingPoint}
                         </span>
@@ -204,7 +206,7 @@ export default function BookingsPage() {
                     )}
                     {withName && (
                       <p className="text-sm text-dark/60 font-normal mt-0.5">
-                        Avec{" "}
+                        {dict.bookings.with}{" "}
                         <span className="text-accent font-semibold text-sm">
                           {withName}
                         </span>
@@ -213,13 +215,13 @@ export default function BookingsPage() {
                   </div>
 
                   {/* Status + Price */}
-                  <div className="text-right shrink-0 min-w-[140px]">
-                    <p className="text-xs text-dark/50 font-normal">Statut</p>
+                  <div className="text-left md:text-right shrink-0 md:min-w-35 w-full md:w-auto">
+                    <p className="text-xs text-dark/50 font-normal">{dict.bookings.status}</p>
                     <p className={`text-sm font-semibold ${status.color}`}>
                       {status.label}
                     </p>
                     <p className="text-xs text-dark/50 font-normal mt-2">
-                      Prix
+                      {dict.bookings.price}
                     </p>
                     <p className="text-lg font-bold text-accent">
                       {booking.total_price} €
@@ -230,12 +232,12 @@ export default function BookingsPage() {
                   <DropdownMenu
                     items={[
                       {
-                        label: "Modifier le statut",
+                        label: dict.bookings.updateStatus,
                         icon: RefreshCw,
                         onClick: () => setEditingBookingId(booking.id),
                       },
                       {
-                        label: "Signaler un problème",
+                        label: dict.bookings.reportIssue,
                         icon: HelpCircle,
                         onClick: () => setReportingBookingId(booking.id),
                       },

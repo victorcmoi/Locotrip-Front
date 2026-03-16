@@ -643,7 +643,7 @@ export default function SearchPage() {
     <div className="min-h-screen bg-light pt-8 pb-12">
       {/* Sticky Search Bar + Filters */}
       <div className="sticky top-16 z-40 bg-light shadow-md">
-        <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12 pt-3 pb-2">
+        <div className="page-content max-w-[90%] pt-3 pb-2">
           <SearchBar
             onSearch={handleSearch}
             currentMode={modeParam}
@@ -679,7 +679,7 @@ export default function SearchPage() {
       </div>
 
       {/* Results */}
-      <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12 mt-10">
+      <div className="page-content max-w-[90%] mt-10">
         <div className="mt-12">
           <SearchResults
             mode={modeParam}

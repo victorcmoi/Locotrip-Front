@@ -10,6 +10,13 @@ html {
   scroll-padding-top: 6rem;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
 @theme inline {
 
   /* font variables */
@@ -68,8 +75,16 @@ html {
     background: var(--color-light);
     color: var(--color-dark);
     font-family: var(--font-sans);
-    font-size: var(--font-size-xl);
+    font-size: clamp(1rem, 1.2vw, var(--font-size-xl));
     line-height: 1.2;
+    overflow-x: hidden;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
   }
 
   h1 {
@@ -98,6 +113,26 @@ html {
 
   a {
     @apply font-semibold;
+  }
+
+  .page-hero {
+    @apply w-full py-14 px-4 sm:px-8 md:py-20 md:px-10 lg:py-24 lg:px-12;
+  }
+
+  .page-content {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .page-section {
+    @apply py-10 md:py-14 lg:py-16;
+  }
+
+  .prose-block {
+    @apply leading-relaxed text-base md:text-lg;
+  }
+
+  .stack-mobile {
+    @apply grid grid-cols-1 lg:grid-cols-12;
   }
 
 

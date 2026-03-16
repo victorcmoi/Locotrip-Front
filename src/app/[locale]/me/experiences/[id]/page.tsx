@@ -36,7 +36,7 @@ const LocationDisplay = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-[260px] rounded-xl bg-gray-100 animate-pulse" />
+      <div className="h-65 rounded-xl bg-gray-100 animate-pulse" />
     ),
   },
 );
@@ -167,7 +167,7 @@ export default function ExperienceDetailPage({
         {/* Left column — details */}
         <div className="lg:col-span-2">
           {/* Title */}
-          <h1 className="text-3xl font-extrabold text-dark mb-2 !text-left">
+          <h1 className="text-3xl font-extrabold text-dark mb-2 text-left!">
             {experience.title}
           </h1>
 

@@ -49,7 +49,7 @@ export default function LoginForm() {
           required
           autoComplete="email"
           className="w-full px-4 py-3 rounded-xl border border-gray-light bg-white text-dark focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-          placeholder="exemple@email.com"
+          placeholder={dict.auth.emailPlaceholder}
         />
       </div>
 
@@ -65,7 +65,7 @@ export default function LoginForm() {
           required
           autoComplete="current-password"
           className="w-full px-4 py-3 rounded-xl border border-gray-light bg-white text-dark focus:outline-none focus:ring-2 focus:ring-accent transition-all"
-          placeholder="••••••••"
+          placeholder={dict.auth.passwordPlaceholder}
         />
       </div>
 
@@ -80,7 +80,7 @@ export default function LoginForm() {
             onChange={(e) => setRememberMe(e.target.checked)}
             className="w-4 h-4 rounded border-gray-light text-accent focus:ring-accent cursor-pointer"
           />
-          <span className="ml-2 text-sm text-dark">Rester connecté</span>
+          <span className="ml-2 text-sm text-dark">{dict.auth.rememberMe}</span>
         </label>
 
         <Link 
@@ -98,7 +98,7 @@ export default function LoginForm() {
           disabled={loading}
           className="w-full bg-primary hover:bg-accent text-white font-bold py-3 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-button cursor-pointer"
         >
-          {loading ? "Connexion en cours..." : dict.auth.login}
+          {loading ? dict.auth.signingIn : dict.auth.login}
         </button>
       </div>
 

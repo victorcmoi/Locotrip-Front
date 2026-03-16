@@ -23,11 +23,11 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
         "offers"
     );
     if (isLoading) {
-        return <div className="flex items-center justify-center min-h-95 text-2xl font-medium">Chargement...</div>;
+        return <div className="flex items-center justify-center min-h-95 text-2xl font-medium">{dict.guides.profile.loading}</div>;
     }
 
     if (error) {
-        return <div className="flex items-center justify-center min-h-95 text-2xl font-medium text-red-500">Erreur lors du chargement du guide</div>;
+        return <div className="flex items-center justify-center min-h-95 text-2xl font-medium text-red-500">{dict.guides.profile.error}</div>;
     }
 
     const hobbies = guide?.hobbies?.map((h: { category?: { id: string; name: string } }) => h.category?.name).filter((name: string | undefined): name is string => !!name) || [];
@@ -37,8 +37,8 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
     const reviewCountLabel = reviewCount > 99 ? '99+' : `${reviewCount}`;
     return (
         <section id="guide-profile" className="flex flex-col w-full items-center justify-center pt-20 pb-16">
-            <div className="w-full min-h-[85vh] grid grid-cols-12 items-start bg-light p-12 py-16 gap-16">
-                <div className="flex col-span-5 text-center flex-col items-center gap-4">
+            <div className="w-full min-h-[85vh] grid grid-cols-1 lg:grid-cols-12 items-start bg-light px-4 sm:px-6 lg:px-12 py-10 lg:py-16 gap-10 lg:gap-16">
+                <div className="flex lg:col-span-5 text-center flex-col items-center gap-4">
                     <Image
                         src={MinioHelpers.guideProfile(guide?.id, profilePicture)}
                         alt={`${guide?.user?.first_name} ${guide?.user?.last_name}`}
@@ -49,8 +49,8 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
                     <p className="flex items-center justify-center gap-2 text-2xl font-bold text-dark mt-4"><LuMapPin className="text-2xl" /> {guide?.country}</p>    
                     <p className="mt-2 text-lg leading-relaxed text-dark max-w-lg">"{guide?.bio}"</p>
                 </div>
-                <div className="flex flex-col justify-start items-start col-span-7 gap-6">
-                    <h1 className="text-4xl font-bold">{guide?.user?.first_name} <span className="uppercase text-dark">{guide?.user?.last_name}</span></h1>
+                <div className="flex flex-col justify-start items-start lg:col-span-7 gap-6 w-full">
+                    <h1 className="text-3xl md:text-4xl font-bold">{guide?.user?.first_name} <span className="uppercase text-dark">{guide?.user?.last_name}</span></h1>
                     {guide?.guide_status === 'pro' && (
                         <p className="flex items-center gap-2 text-lg font-medium text-accent"><IoCheckmarkCircle className="text-3xl" /> {dict.guides.profile.guidePro}</p>
                     )}
@@ -84,8 +84,8 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
                     <button className="text-white font-medium text-lg mt-6">{dict.guides.profile.contactGuide}</button>
                 </div>
             </div>
-            <div className="w-full grid grid-cols-12 p-24 gap-32" style={{ background: "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)" }}>
-                <div className="col-span-5 flex flex-col items-start justify-start gap-6">
+            <div className="w-full grid grid-cols-1 lg:grid-cols-12 px-4 sm:px-6 lg:px-24 py-10 lg:py-24 gap-10 lg:gap-32" style={{ background: "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)" }}>
+                <div className="lg:col-span-5 flex flex-col items-start justify-start gap-6">
                     <h3 className="mb-6">{dict.guides.profile.hobbies}</h3>
                     <div className="flex flex-wrap gap-3">
                         {hobbies.length > 0 ? (
@@ -102,7 +102,7 @@ export default function GuideProfile({params}: {params: Promise<{ guide_id: stri
                         )}
                     </div>
                 </div>
-                <div className="col-span-7 flex flex-col items-start justify-start gap-6">
+                <div className="lg:col-span-7 flex flex-col items-start justify-start gap-6">
                     <h3 className="mb-6">{dict.guides.profile.about}</h3>
                 </div>
             </div>

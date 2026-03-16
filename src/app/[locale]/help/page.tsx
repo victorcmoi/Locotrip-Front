@@ -56,14 +56,14 @@ export default function HelpPage() {
 
     return (
         <section id="help-center" className="w-full bg-light">
-            <div className="flex items-center w-full py-24 px-12 bg-linear-to-r from-accent to-primary">
-                <div className="max-w-7xl mx-auto w-full">
+            <div className="page-hero flex items-center bg-linear-to-r from-accent to-primary">
+                <div className="page-content">
                     <h1 className="text-white">{dict.help.title}</h1>
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-8 py-16">
-                <p className="text-xl font-semibold mb-12 leading-relaxed text-left w-3/5">{dict.help.intro}</p>
+            <div className="page-content page-section">
+                <p className="text-lg md:text-xl font-semibold mb-12 leading-relaxed text-left w-full lg:w-3/5">{dict.help.intro}</p>
 
                 {/* FAQ Section */}
                 <div className="mb-16">

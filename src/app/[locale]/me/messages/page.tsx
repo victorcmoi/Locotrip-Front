@@ -517,7 +517,7 @@ export default function MessagesPage() {
         >
           {/* Sidebar header */}
           <div className="px-4 py-4">
-            <h1 className="text-3xl font-extrabold text-dark !text-left mb-1">
+            <h1 className="text-3xl font-extrabold text-dark text-left! mb-1">
               Messagerie
             </h1>
             <p className="text-sm font-semibold text-dark flex items-center gap-2">

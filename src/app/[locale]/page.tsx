@@ -60,7 +60,7 @@ export default function Page() {
         />
 
         <div className="relative z-10 h-full flex items-center justify-center pb-24">
-          <main className="w-[95%] md:w-[90%] lg:max-w-6xl mx-auto text-center px-4 md:px-8 md:pb-8 text-white">
+          <main className="page-content max-w-6xl text-center md:pb-8 text-white">
             <h1 className="mb-8 md:mb-12">{dict.home.title}</h1>
             <p className="text-xl md:text-3xl mb-12 md:mb-16 w-full md:w-3/5 mx-auto">{dict.home.subtitle}</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8 md:mt-12 mb-12 md:mb-20">
@@ -94,7 +94,7 @@ export default function Page() {
       </section>
 
       <section id="destinations" className="bg-light py-12 md:py-16 lg:py-20">
-        <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12">
+        <div className="page-content max-w-[90%]">
           <h2 className="mb-12">
             {dict.home.popularDestinationsStart}
             <span className="text-accent">
@@ -138,7 +138,7 @@ export default function Page() {
       </section>
 
       <section id="guides" className="bg-light py-12 md:py-16 lg:py-20">
-        <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12">
+        <div className="page-content max-w-[90%]">
           <h2 className="mb-12">
             {dict.home.guidesTitleStart}
             <span className="text-accent">
@@ -168,7 +168,7 @@ export default function Page() {
       </section>
 
       <section id="stats" className="bg-light pb-12 md:pb-16 lg:pb-20">
-        <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12 grid grid-cols-1 md:grid-cols-3 items-center gap-8 md:gap-12 lg:gap-16">
+        <div className="page-content max-w-[90%] grid grid-cols-1 md:grid-cols-3 items-center gap-8 md:gap-12 lg:gap-16">
           <h2 className="text-left cols-span-1">
             {dict.home.statsTitleStart}
             <span className="text-accent">
@@ -189,7 +189,7 @@ export default function Page() {
       </section>
 
       <section id="reviews" className="bg-light py-12 md:py-16 lg:py-20" style={{ background: "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)" }}>
-        <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12">
+        <div className="page-content max-w-[90%]">
             <h2 className="mb-4">{dict.home.reviewsTitle}</h2>
             {reviewsLoading && (
               <div className="mt-8 text-center text-gray">
@@ -214,7 +214,7 @@ export default function Page() {
       </section>
 
       <section id="becomeGuide" className="bg-light py-12 md:py-16 lg:py-20">
-        <div className="w-[95%] md:w-[92%] lg:max-w-[90%] mx-auto px-4 md:px-8 lg:px-12 flex flex-col items-center text-center">
+        <div className="page-content max-w-[90%] flex flex-col items-center text-center">
           <h2 className="mb-12">{dict.home.becomeGuideTitle}</h2>
           <div className="mt-12 mb-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 w-full lg:max-w-[90%]">
             <div className="flex flex-col items-center h-full">

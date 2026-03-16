@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Video, { Room, RemoteParticipant } from "twilio-video";
 import VideoParticipant from "./VideoParticipant";
+import { useTranslations } from "@/providers/i18n.provider";
 
 interface VideoRoomProps {
   roomName: string;
@@ -15,6 +16,7 @@ export default function VideoRoom({
   token,
   onDisconnect,
 }: VideoRoomProps) {
+  const dict = useTranslations();
   const [room, setRoom] = useState<Room | null>(null);
   const [participants, setParticipants] = useState<RemoteParticipant[]>([]);
 
@@ -98,9 +100,9 @@ export default function VideoRoom({
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             </div>
-            <p className="text-sm font-medium">En attente des participants…</p>
+            <p className="text-sm font-medium">{dict.video.waitingParticipants}</p>
             <p className="text-xs text-white/40">
-              Salon : {roomName.slice(0, 8)}…
+              {dict.video.room}: {roomName.slice(0, 8)}…
             </p>
           </div>
         )}

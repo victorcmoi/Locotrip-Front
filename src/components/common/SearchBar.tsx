@@ -125,7 +125,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 setSelectedMode("guide");
                 onModeChange?.("guide");
               }}
-              className={`px-15 py-3 rounded-full cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-300 ${
+              className={`px-8 sm:px-15 py-3 rounded-full cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-300 ${
                 selectedMode === "guide"
                   ? "bg-accent text-light"
                   : "bg-light text-dark"
@@ -138,7 +138,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 setSelectedMode("activity");
                 onModeChange?.("activity");
               }}
-              className={`px-18 py-3 rounded-full -ml-10 cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-300 ${
+              className={`px-10 sm:px-18 py-3 rounded-full -ml-6 sm:-ml-10 cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-300 ${
                 selectedMode === "activity"
                   ? "bg-accent text-light"
                   : "bg-light text-dark"

@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Video, Mic, MicOff, VideoOff, PhoneOff } from "lucide-react";
 import VideoRoom from "./VideoRoom";
+import { useTranslations } from "@/providers/i18n.provider";
 
 interface VideoCallModalProps {
   open: boolean;
@@ -19,6 +20,7 @@ export default function VideoCallModal({
   roomName,
   correspondentName,
 }: VideoCallModalProps) {
+  const dict = useTranslations();
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [roomRef, setRoomRef] = useState<any>(null);
@@ -82,11 +84,11 @@ export default function VideoCallModal({
           </div>
           <div>
             <p className="text-white font-semibold text-sm">
-              Appel vidéo avec {correspondentName}
+              {dict.video.callWith} {correspondentName}
             </p>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <p className="text-white/50 text-xs">En cours</p>
+              <p className="text-white/50 text-xs">{dict.video.inProgress}</p>
             </div>
           </div>
         </div>
@@ -111,7 +113,7 @@ export default function VideoCallModal({
               ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
               : "bg-white/10 text-white hover:bg-white/20"
           }`}
-          title={isMuted ? "Activer le micro" : "Couper le micro"}
+          title={isMuted ? dict.video.unmute : dict.video.mute}
         >
           {isMuted ? <MicOff size={20} /> : <Mic size={20} />}
         </button>
@@ -124,7 +126,7 @@ export default function VideoCallModal({
               ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
               : "bg-white/10 text-white hover:bg-white/20"
           }`}
-          title={isVideoOff ? "Activer la caméra" : "Couper la caméra"}
+          title={isVideoOff ? dict.video.turnOnCamera : dict.video.turnOffCamera}
         >
           {isVideoOff ? <VideoOff size={20} /> : <Video size={20} />}
         </button>
@@ -133,7 +135,7 @@ export default function VideoCallModal({
         <button
           onClick={handleDisconnect}
           className="w-14 h-14 rounded-full bg-red-500 text-white flex items-center justify-center transition-all hover:bg-red-600 hover:scale-105 cursor-pointer shadow-lg shadow-red-500/25"
-          title="Raccrocher"
+          title={dict.video.hangUp}
         >
           <PhoneOff size={22} />
         </button>

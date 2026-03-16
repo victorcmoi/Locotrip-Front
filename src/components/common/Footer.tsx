@@ -19,11 +19,11 @@ export default function Footer() {
           alt="Locotrip Logo Footer"
           width={300}
           height={50}
-          className="px-16"
+          className="px-4 sm:px-8 lg:px-16 mx-auto"
         />
       </Link>
-      <div className="grid grid-cols-4 justify-center mt-2 px-16 text-left gap-12">
-        <div className="bg-light rounded-xl shadow-lg pl-6 pr-2 text-black p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-center mt-2 px-4 sm:px-8 lg:px-16 text-left gap-8 lg:gap-12">
+        <div className="bg-light rounded-xl shadow-lg pl-6 pr-2 text-black p-6 sm:col-span-2 lg:col-span-1">
           <div className="flex items-center">
             <input
               type="text"
@@ -109,7 +109,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="w-full bg-accent text-white py-8 mt-12 text-center flex justify-center gap-12 text-base">
+      <div className="w-full bg-accent text-white py-6 mt-8 text-center flex flex-wrap justify-center gap-4 sm:gap-12 text-base px-4">
         <Link
           href={localizedPath(HOME_ROUTES.POLITIQUE_CONFIDENTIALITE)}
           className="mx-2 hover:underline"

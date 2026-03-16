@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useUpdateBooking } from "@/services/bookings/updateBooking";
 import { ChevronDownIcon } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslations } from "@/providers/i18n.provider";
 
 interface BookingStatusBadgeProps {
   bookingId: string;
@@ -11,49 +12,50 @@ interface BookingStatusBadgeProps {
   onStatusUpdated?: () => void;
 }
 
-const STATUS_OPTIONS = [
-  {
-    value: "pending",
-    label: "En attente",
-    bgClass: "bg-yellow-100",
-    textClass: "text-yellow-800",
-    dotClass: "bg-yellow-500",
-  },
-  {
-    value: "confirmed",
-    label: "Confirmé",
-    bgClass: "bg-green-100",
-    textClass: "text-green-800",
-    dotClass: "bg-green-500",
-  },
-  {
-    value: "completed",
-    label: "Terminé",
-    bgClass: "bg-blue-100",
-    textClass: "text-blue-800",
-    dotClass: "bg-blue-500",
-  },
-  {
-    value: "cancelled",
-    label: "Annulé",
-    bgClass: "bg-red-100",
-    textClass: "text-red-800",
-    dotClass: "bg-red-500",
-  },
-];
-
 export default function BookingStatusBadge({
   bookingId,
   currentStatus,
   onStatusUpdated,
 }: BookingStatusBadgeProps) {
+  const dict = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { mutate: updateBooking, isPending } = useUpdateBooking();
 
+  const statusOptions = [
+    {
+      value: "pending",
+      label: dict.bookings.filterPending,
+      bgClass: "bg-yellow-100",
+      textClass: "text-yellow-800",
+      dotClass: "bg-yellow-500",
+    },
+    {
+      value: "confirmed",
+      label: dict.bookings.filterConfirmed,
+      bgClass: "bg-green-100",
+      textClass: "text-green-800",
+      dotClass: "bg-green-500",
+    },
+    {
+      value: "completed",
+      label: dict.bookings.filterCompleted,
+      bgClass: "bg-blue-100",
+      textClass: "text-blue-800",
+      dotClass: "bg-blue-500",
+    },
+    {
+      value: "cancelled",
+      label: dict.bookings.filterCancelled,
+      bgClass: "bg-red-100",
+      textClass: "text-red-800",
+      dotClass: "bg-red-500",
+    },
+  ];
+
   const currentStatusOption =
-    STATUS_OPTIONS.find((option) => option.value === currentStatus) ||
-    STATUS_OPTIONS[0];
+    statusOptions.find((option) => option.value === currentStatus) ||
+    statusOptions[0];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -86,11 +88,10 @@ export default function BookingStatusBadge({
         onSuccess: () => {
           setIsOpen(false);
           if (onStatusUpdated) onStatusUpdated();
-          toast.success("Statut de la réservation mis à jour");
+          toast.success(dict.bookings.statusUpdatedSuccess);
         },
-        onError: (error) => {
-          console.error("Erreur lors de la mise à jour du statut:", error);
-          toast.error("Erreur lors de la mise à jour du statut");
+        onError: () => {
+          toast.error(dict.bookings.statusUpdatedError);
         },
       },
     );
@@ -114,7 +115,7 @@ export default function BookingStatusBadge({
             <div
               className={`inline-block animate-spin rounded-full h-3 w-3 border-2 border-t-transparent border-current`}
             ></div>
-            <span>Mise à jour...</span>
+            <span>{dict.bookings.updating}</span>
           </>
         ) : (
           <>
@@ -128,7 +129,7 @@ export default function BookingStatusBadge({
 
       {isOpen && !isPending && (
         <div className="absolute z-50 mt-2 w-40 rounded-lg bg-white shadow-lg border border-gray-light overflow-hidden left-0">
-          {STATUS_OPTIONS.map((option) => (
+          {statusOptions.map((option) => (
             <div
               key={option.value}
               onClick={() => handleStatusChange(option.value)}

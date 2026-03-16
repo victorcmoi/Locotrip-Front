@@ -10,18 +10,18 @@ export default function GuidePage() {
 
     return (
         <section id="become-guide" className="w-full">
-            <div className="flex items-center w-full py-24 px-32 bg-[url(/assets/guide-banner.avif)] bg-cover bg-center">
+            <div className="page-hero flex items-center bg-[url(/assets/guide-banner.avif)] bg-cover bg-center">
                 <h1 className="text-white">{dict.guides.becomeGuide.title}</h1>
             </div>  
 
-            <div className="flex flex-wrap justify-between py-16">
+            <div className="page-content page-section flex flex-wrap justify-between">
                 <h2 className="text-center text-accent w-full">
                     {dict.guides.becomeGuide.introTitle}<br />
                     {dict.guides.becomeGuide.introTitle2}
                 </h2>
-                <div className="flex px-32 py-16">
-                    <h2 className="w-1/3">{dict.guides.becomeGuide.reasonsTitle1}</h2>
-                    <div className="grid grid-cols-2 gap-6 w-2/3">
+                <div className="flex flex-col lg:flex-row w-full gap-8 lg:gap-12 py-10 md:py-16">
+                    <h2 className="w-full lg:w-1/3">{dict.guides.becomeGuide.reasonsTitle1}</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full lg:w-2/3">
                         <div className="flex flex-col justify-start gap-6">
                             <Image 
                                 src="/assets/visibilite.png"
@@ -67,9 +67,9 @@ export default function GuidePage() {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col px-32 py-16 w-full">
+                <div className="flex flex-col py-10 md:py-16 w-full">
                     <h2 className="">{dict.guides.becomeGuide.reasonsTitle2}</h2>
-                    <div className="flex flex-col gap-8 mt-12 ms-16">
+                    <div className="flex flex-col gap-8 mt-12 ms-0 md:ms-6 lg:ms-16">
                         <div className="flex items-center gap-6">
                             <GrStatusGood
                                 size={48}
@@ -96,8 +96,8 @@ export default function GuidePage() {
                         </div>
                     </div>    
                 </div>
-                <div className="flex px-32 py-16 w-full gap-42 items-center">
-                    <div className="px-16 py-20 w-5/12 rounded-3xl shadow-2xl">
+                <div className="flex flex-col lg:flex-row py-10 md:py-16 w-full gap-8 lg:gap-16 items-center">
+                    <div className="px-6 md:px-10 lg:px-12 py-10 md:py-14 w-full lg:w-5/12 rounded-3xl shadow-2xl">
                         <h2 className="mb-16 text-center">{dict.guides.becomeGuide.reasonTitle3}</h2>
                         
                         <div className="flex flex-col relative">
@@ -160,7 +160,7 @@ export default function GuidePage() {
                     </div>
 
                     
-                    <div className="w-1/2 h-150 relative rounded-2xl overflow-hidden">
+                    <div className="w-full lg:w-1/2 h-96 md:h-136 relative rounded-2xl overflow-hidden">
                         <Image 
                             src="/assets/guide-home-4.avif"
                             alt="Become a guide"

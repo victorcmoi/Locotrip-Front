@@ -54,13 +54,13 @@ export default function GuidesCarousel({ guides }: GuidesCarouselProps) {
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-12 pb-4">
           {guides.map((guide: Guide) => (
-            <div key={guide.id} className="flex-[0_0_calc(32%-34px)] min-w-0">
+            <div key={guide.id} className="flex-[0_0_85%] sm:flex-[0_0_calc(50%-24px)] lg:flex-[0_0_calc(32%-34px)] min-w-0">
               <GuideCard guide={guide} />
             </div>
           ))}
 
           {/* Carte "Voir plus" */}
-          <div className="flex-[0_0_calc(32%-34px)] min-w-0">
+          <div className="flex-[0_0_85%] sm:flex-[0_0_calc(50%-24px)] lg:flex-[0_0_calc(32%-34px)] min-w-0">
             <div
               className="bg-accent rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 h-full flex items-center justify-center cursor-pointer group"
               style={{ minHeight: "400px" }}

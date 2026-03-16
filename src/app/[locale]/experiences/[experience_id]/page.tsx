@@ -182,9 +182,9 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
 
     return (
         <section id="detail-experience" className="flex flex-col w-full items-center justify-center pt-20 pb-16">
-            <div className="max-w-[90vw] grid grid-cols-12 items-start bg-light p-12 py-16 gap-20">
-                <div className="flex col-span-7 flex-col items-start gap-6">
-                    <h1 className="text-4xl font-bold text-left">{experience.title}</h1>
+            <div className="max-w-[92vw] mx-auto grid grid-cols-1 lg:grid-cols-12 items-start bg-light px-4 sm:px-6 lg:px-12 py-8 lg:py-16 gap-8 lg:gap-20">
+                <div className="flex lg:col-span-7 flex-col items-start gap-6">
+                    <h1 className="text-3xl md:text-4xl font-bold text-left">{experience.title}</h1>
                     {(reviewCount > 0 || bookingsCount > 0) && (
                         <div className="flex items-center gap-3">
                             {reviewCount > 0 && (
@@ -261,7 +261,7 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
                     </div>
 
                     {/* Tableau d'informations */}
-                    <div className="w-full mt-6 grid grid-cols-4 divide-x divide-gray-500 border border-gray-500 rounded-xl">
+                    <div className="w-full mt-6 grid grid-cols-2 lg:grid-cols-4 divide-x divide-gray-500 border border-gray-500 rounded-xl">
                         <div className="flex flex-col items-center justify-center py-6 gap-4">
                             <div className="flex items-center gap-2">
                                 <Clock size={28} />
@@ -294,7 +294,7 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
                 </div>
 
                 {/* Sidebar de réservation */}
-                <div className="col-span-5 sticky top-24">
+                <div className="lg:col-span-5 lg:sticky lg:top-24">
                     <div className="rounded-2xl shadow-lg p-8 flex flex-col gap-6">
                         {/* Prix */}
                         <div>
@@ -400,20 +400,20 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
                                 </div>
                                 <div>
                                     <p className="font-semibold text-accent">{guide.user.first_name} {guide.user.last_name}</p>
-                                    <p className="text-xs text-dark/60">Voir le profil du guide</p>
+                                    <p className="text-xs text-dark/60">{dict.bookings.viewGuideProfile}</p>
                                 </div>
                             </Link>
                         )}
 
                         {/* Bouton réserver */}
-                        <button onClick={handleBook} className="w-full hover:bg-primary/90 text-white mt-2">
+                        <button onClick={handleBook} className="w-full hover:bg-primary/90 text-white mt-2 cursor-pointer">
                             {dict.experiences.book}
                         </button>
                     </div>
                 </div>
             </div>
             {/* Navigation des sections */}
-            <div className="w-full h-24 flex items-center justify-center bg-accent text-white mt-12 gap-8">
+            <div className="w-full min-h-24 flex flex-wrap items-center justify-center bg-accent text-white mt-12 gap-3 px-4 py-3">
                 <button
                     onClick={() => setSelectedSection('informations')}
                     className={`px-6 py-2 rounded-full transition-all duration-300 cursor-pointer font-semibold border-2 ${selectedSection === 'informations' ? 'bg-secondary text-dark border-secondary' : 'bg-accent text-white border-transparent hover:border-secondary'}`}
@@ -442,8 +442,8 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
 
             {/* Section Programme */}
             {selectedSection === 'programme' && (
-                <div className="max-w-[90vw] w-full mt-12">
-                    <h2 className="text-2xl font-bold text-dark mb-8 text-center">Programme</h2>
+                <div className="max-w-[92vw] w-full mt-12">
+                    <h2 className="text-2xl font-bold text-dark mb-8 text-center">{dict.experiences.program}</h2>
                     {steps.length > 0 ? (
                         <div className="mx-auto max-w-4xl space-y-4">
                             {steps.map((step) => (
@@ -464,14 +464,14 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
                         </div>
                     ) : (
                         <div className="w-full py-12 bg-gray-100 rounded-xl flex items-center justify-center">
-                            <p className="text-gray-500">Programme non renseigné pour le moment</p>
+                            <p className="text-gray-500">{dict.experiences.programNotProvided}</p>
                         </div>
                     )}
                 </div>
             )}
 
             {selectedSection === 'informations' && (
-                <div className="max-w-[90vw] w-full mt-12">
+                <div className="max-w-[92vw] w-full mt-12">
                     <h2 className="text-2xl font-bold text-dark mb-8 text-center">{dict.experiences.informations}</h2>
                     <div className="grid grid-cols-1 gap-8">
                         {/* Lieu de rendez-vous */}
@@ -502,7 +502,7 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
 
             {/* Section Photos */}
             {selectedSection === 'photos' && (
-                <div className="max-w-[90vw] w-full mt-12">
+                <div className="max-w-[92vw] w-full mt-12">
                     <h2 className="text-2xl font-bold text-dark mb-8 text-center">{dict.experiences.pictures}</h2>
                     {experience.medias && experience.medias.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -535,7 +535,7 @@ export default function ExperiencePage({ params }: { params: Promise<{ experienc
 
             {/* Section Avis */}
             {selectedSection === 'reviews' && (
-                <div className="max-w-[90vw] w-full mt-12">
+                <div className="max-w-[92vw] w-full mt-12">
                     <h2 className="text-2xl font-bold text-dark mb-8 text-center">{dict.experiences.reviews}</h2>
                     
                     {/* Note moyenne */}

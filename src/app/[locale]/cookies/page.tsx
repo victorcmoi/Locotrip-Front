@@ -34,13 +34,13 @@ export default function CookiesPage() {
 
     return (
         <section id="cookies-policy" className="w-full bg-light">
-            <div className="flex items-center w-full py-24 px-12 bg-linear-to-r from-accent to-primary">
-                <div className="max-w-7xl mx-auto w-full">
+            <div className="page-hero flex items-center bg-linear-to-r from-accent to-primary">
+                <div className="page-content">
                     <h1 className="text-white">{dict.cookies.title}</h1>
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-8 py-16">
+            <div className="page-content page-section">
                 <Section title={`1. ${dict.cookies.section1Title}`}>
                     <p>{renderTextWithLinks(dict.cookies.section1Text)}</p>
                 </Section>
