@@ -9,13 +9,22 @@ import { useTranslations } from "@/providers/i18n.provider";
 interface BookingStatusBadgeProps {
   bookingId: string;
   currentStatus: string;
+  canEdit?: boolean;
   onStatusUpdated?: () => void;
 }
+
+const TRANSITIONS: Record<string, string[]> = {
+  pending: ["confirmed", "cancelled"],
+  confirmed: ["completed", "cancelled"],
+  completed: [],
+  cancelled: [],
+};
 
 export default function BookingStatusBadge({
   bookingId,
   currentStatus,
   onStatusUpdated,
+  canEdit,
 }: BookingStatusBadgeProps) {
   const dict = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
@@ -56,6 +65,13 @@ export default function BookingStatusBadge({
   const currentStatusOption =
     statusOptions.find((option) => option.value === currentStatus) ||
     statusOptions[0];
+
+  const allowedTransitions = TRANSITIONS[currentStatus] || [];
+  const isInteractable = canEdit && allowedTransitions.length > 0 && !isPending;
+
+  const visibleOptions = statusOptions.filter((option) =>
+    allowedTransitions.includes(option.value),
+  );
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -100,15 +116,15 @@ export default function BookingStatusBadge({
   return (
     <div className="relative inline-block" ref={dropdownRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        disabled={isPending}
+        onClick={() => isInteractable && setIsOpen(!isOpen)}
+        disabled={isPending || !isInteractable}
         className={`inline-flex items-center text-left gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm transition-all ${
           currentStatusOption.bgClass
         } ${currentStatusOption.textClass} ${
-          isPending
-            ? "opacity-50 cursor-not-allowed"
-            : "hover:opacity-90 cursor-pointer"
-        }`}
+          isInteractable
+            ? "hover:opacity-90 cursor-pointer"
+            : "cursor-default"
+        } ${isPending ? "opacity-50" : ""}`}
       >
         {isPending ? (
           <>
@@ -122,22 +138,18 @@ export default function BookingStatusBadge({
             <span className="whitespace-nowrap">
               {currentStatusOption.label}
             </span>
-            <ChevronDownIcon className="h-3 w-3" />
+            {isInteractable && <ChevronDownIcon className="h-3 w-3" />}
           </>
         )}
       </button>
 
-      {isOpen && !isPending && (
+      {isOpen && isInteractable && (
         <div className="absolute z-50 mt-2 w-40 rounded-lg bg-white shadow-lg border border-gray-light overflow-hidden left-0">
-          {statusOptions.map((option) => (
+          {visibleOptions.map((option) => (
             <div
               key={option.value}
               onClick={() => handleStatusChange(option.value)}
-              className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors ${
-                option.value === currentStatus
-                  ? `${option.bgClass} ${option.textClass}`
-                  : "text-dark hover:bg-gray-light/60"
-              }`}
+              className="w-full text-left px-4 py-2.5 text-sm font-medium text-dark hover:bg-gray-light/60 transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-2">
                 <span

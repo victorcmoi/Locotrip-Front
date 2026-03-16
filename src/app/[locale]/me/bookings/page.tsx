@@ -252,6 +252,7 @@ export default function BookingsPage() {
                       trigger={null}
                       isOpen={true}
                       onClose={() => setEditingBookingId(null)}
+                      canEdit={isGuide}
                     />
                   )}
 

@@ -36,6 +36,7 @@ interface BookingDetailsModalProps {
   isOpen?: boolean;
   onClose?: () => void;
   trigger?: React.ReactNode;
+  canEdit?: boolean;
 }
 
 export default function BookingDetailsModal({
@@ -46,6 +47,7 @@ export default function BookingDetailsModal({
   isOpen: externalIsOpen,
   onClose: externalOnClose,
   trigger,
+  canEdit = false,
 }: BookingDetailsModalProps) {
   const dict = useTranslations();
   const [internalIsOpen, setInternalIsOpen] = useState(false);
@@ -108,6 +110,7 @@ export default function BookingDetailsModal({
                 <BookingStatusBadge
                   bookingId={booking.id}
                   currentStatus={booking.status || "pending"}
+                  canEdit={canEdit}
                 />
               </div>
               <div>
