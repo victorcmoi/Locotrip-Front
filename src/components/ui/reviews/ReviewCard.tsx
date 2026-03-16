@@ -43,7 +43,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
           )}
           {review.experience?.city && (
             <p className="text-sm text-gray-600">
-              {review.experience.city.name} {formatDate(review.review_date)}
+              {review.experience.city.name} {formatDate(review.review_date.toString())}
             </p>
           )}
         </div>
