@@ -14,6 +14,7 @@ export const searchParamsSchema = z.object({
     sort: z.string().optional(),
     order: z.enum(['asc', 'desc']).optional(),
     location: z.string().optional(),
+    country: z.string().optional(),
     startDate: z.string().or(z.date()).optional(),
     endDate: z.string().or(z.date()).optional(),
     minRating: z.number().min(0).max(5).optional(),

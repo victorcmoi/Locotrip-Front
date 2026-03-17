@@ -45,6 +45,21 @@ export default function Page() {
     }
     router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${searchParams.toString()}`));
   };
+
+  const goToCountrySearch = (country: "France" | "Spain") => {
+    const searchParams = new URLSearchParams();
+    const today = new Date();
+    const oneMonthLater = new Date(today);
+    oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+
+    searchParams.append("mode", "activity");
+    searchParams.append("startDate", today.toISOString());
+    searchParams.append("endDate", oneMonthLater.toISOString());
+    searchParams.append("country", country);
+    searchParams.append("limit", "100");
+
+    router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${searchParams.toString()}`));
+  };
   
   return (
     <div className="min-h-screen">
@@ -103,7 +118,10 @@ export default function Page() {
             {dict.home.popularDestinationsEnd}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
-            <div className="relative h-145 rounded-xl overflow-hidden shadow-lg cursor-pointer">
+            <div
+              className="relative h-145 rounded-xl overflow-hidden shadow-lg cursor-pointer"
+              onClick={() => goToCountrySearch("France")}
+            >
               <Image
                 src="/assets/france.avif"
                 alt="France"
@@ -118,7 +136,10 @@ export default function Page() {
                 <ButtonAvaibleGuide />
               </div>
             </div>
-            <div className="relative h-145 rounded-xl overflow-hidden shadow-lg cursor-pointer">
+            <div
+              className="relative h-145 rounded-xl overflow-hidden shadow-lg cursor-pointer"
+              onClick={() => goToCountrySearch("Spain")}
+            >
               <Image
                 src="/assets/spain.avif"
                 alt="Spain"

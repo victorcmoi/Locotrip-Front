@@ -151,8 +151,13 @@
       "contactGuide": "Contact the guide",
       "bookExperience": "Book an experience",
       "noExperiences": "No experiences available at the moment",
+      "noReviews": "No reviews yet",
+      "noAvailability": "No availability yet",
       "guidePro": "Certified professional guide",
-      "proCard": "Professional card"
+      "proCard": "Professional card",
+      "availabilityTitle": "Availability",
+      "experiencesSectionTitle": "Experiences offered",
+      "reviewsSectionTitle": "Reviews"
     },
     "becomeGuide": {
       "title": "Become a local guide with Locotrip",
@@ -299,7 +304,9 @@
     "saturday": "Sat.",
     "sunday": "Sun.",
     "previousMonth": "Previous month",
-    "nextMonth": "Next month"
+    "nextMonth": "Next month",
+    "availabilityCountSingular": "{count} availability",
+    "availabilityCountPlural": "{count} availabilities"
   },
   "about": {
     "title": "Who are we?",

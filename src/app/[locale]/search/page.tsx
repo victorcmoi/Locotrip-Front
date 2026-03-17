@@ -54,6 +54,9 @@ export default function SearchPage() {
   const startDateParam = searchParams.get("startDate") || undefined;
   const endDateParam = searchParams.get("endDate") || undefined;
   const locationParam = searchParams.get("location") || undefined;
+  const countryParam = searchParams.get("country") || undefined;
+  const limitParam = Number(searchParams.get("limit") || "20");
+  const safeLimit = Number.isFinite(limitParam) && limitParam > 0 ? Math.min(limitParam, 100) : 20;
   const languagesParam = searchParams.get("languages") || undefined;
   const categoriesParam = searchParams.get("categories") || undefined;
   const pageParam = parseInt(searchParams.get("page") || "1", 10);
@@ -108,6 +111,7 @@ export default function SearchPage() {
       location: locationParam,
       startDate: startDateParam,
       endDate: endDateParam,
+      limit: safeLimit,
     },
     modeParam === "guide" && !!(startDateParam || endDateParam || locationParam)
   );
@@ -115,10 +119,12 @@ export default function SearchPage() {
   const { data: experiencesResponse, isLoading: experiencesLoading, error: experiencesError } = useSearchExperiences(
     {
       location: locationParam,
+      country: countryParam,
       startDate: startDateParam,
       endDate: endDateParam,
+      limit: safeLimit,
     },
-    modeParam === "activity" && !!(startDateParam || endDateParam || locationParam)
+    modeParam === "activity" && !!(startDateParam || endDateParam || locationParam || countryParam)
   );
 
   // Extraire les IDs de catégories sélectionnées depuis les paramètres URL
@@ -469,12 +475,16 @@ export default function SearchPage() {
     const location = current.get("location");
     const startDate = current.get("startDate");
     const endDate = current.get("endDate");
+    const country = current.get("country");
+    const limit = current.get("limit");
     
     const newParams = new URLSearchParams();
     newParams.set("mode", mode);
     if (location) newParams.set("location", location);
     if (startDate) newParams.set("startDate", startDate);
     if (endDate) newParams.set("endDate", endDate);
+    if (country) newParams.set("country", country);
+    if (limit) newParams.set("limit", limit);
     
     setMinPrice(undefined);
     setMaxPrice(undefined);
@@ -610,12 +620,16 @@ export default function SearchPage() {
     const location = current.get("location");
     const startDate = current.get("startDate");
     const endDate = current.get("endDate");
+    const country = current.get("country");
+    const limit = current.get("limit");
     
     const newParams = new URLSearchParams();
     if (mode) newParams.set("mode", mode);
     if (location) newParams.set("location", location);
     if (startDate) newParams.set("startDate", startDate);
     if (endDate) newParams.set("endDate", endDate);
+    if (country) newParams.set("country", country);
+    if (limit) newParams.set("limit", limit);
     
     setMinPrice(undefined);
     setMaxPrice(undefined);

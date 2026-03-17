@@ -77,7 +77,7 @@ export default function Footer() {
           <h5>{dict.common.followUs}</h5>
           <div className="flex gap-6 mt-5">
             <Link
-              href="https://www.instagram.com/locotrip"
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
             >

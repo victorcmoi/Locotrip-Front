@@ -77,7 +77,7 @@ export const FiltersModal: React.FC<FiltersModalProps> = ({
   const dict = useTranslations();
 
   return (
-    <Modal open={isOpen} onClose={onClose} title={dict.search.allFilters}>
+    <Modal open={isOpen} onClose={onClose} title={dict.search.allFilters} maxWidthClassName="sm:max-w-3xl">
       <div className="space-y-6 max-h-[70vh] overflow-y-auto overflow-x-hidden px-4">
         <div>
           <h3 className="mb-2 font-semibold flex items-center gap-2 text-2xl!">

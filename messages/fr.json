@@ -152,12 +152,17 @@
       "contactGuide": "Contactez-moi",
       "bookExperience": "Réserver une expérience",
       "noExperiences": "Aucune expérience disponible pour le moment",
+      "noReviews": "Aucun avis pour le moment",
+      "noAvailability": "Aucune disponibilité pour le moment",
       "noHobbies": "Aucun centre d'intérêt renseigné",
       "guidePro": "Certifié guide professionnel",
       "proCard": "Carte professionnelle",
       "reservations": "Réservations",
       "delayResponse": "Délai réponse",
       "hobbies": "Centres d'intérêts",
+      "availabilityTitle": "Disponibilité",
+      "experiencesSectionTitle": "Expériences proposées",
+      "reviewsSectionTitle": "Avis",
       "availability": "Disponibilités du guide",
       "offers": "Offres",
       "pictures": "Photos",
@@ -312,7 +317,9 @@
     "saturday": "Sam.",
     "sunday": "Dim.",
     "previousMonth": "Mois précédent",
-    "nextMonth": "Mois suivant"
+    "nextMonth": "Mois suivant",
+    "availabilityCountSingular": "{count} disponibilité",
+    "availabilityCountPlural": "{count} disponibilités"
   },
   "about": {
     "title": "Qui sommes-nous ?",

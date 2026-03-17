@@ -1,6 +1,9 @@
 import { useTranslations } from "@/providers/i18n.provider";
+import { useLocalizedPath } from "@/providers/i18n.provider";
 import { ReviewApiResponse } from "@/schemas/reviews";
 import { AiFillStar } from "react-icons/ai";
+import Link from "next/link";
+import GuidesRoutes from "@/utils/routes/guides.routes";
 
 interface ReviewCardProps {
   review: ReviewApiResponse;
@@ -20,6 +23,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
   };
 
   const dict = useTranslations(); 
+  const localizedPath = useLocalizedPath();
   
   return (
     <div className="bg-light rounded-2xl shadow-lg px-8 py-16 lg:py-10 hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
@@ -36,9 +40,13 @@ export default function ReviewCard({ review }: ReviewCardProps) {
           </h4>
           {review.experience?.guide?.user && (
             <p className="text-sm font-bold">
-              {dict.home.reviewCardLocal} <span className="text-primary">
+              {dict.home.reviewCardLocal}{" "}
+              <Link
+                href={localizedPath(GuidesRoutes.PROFILE(review.experience.guide.id))}
+                className="text-primary hover:underline"
+              >
                 {review.experience.guide.user.first_name}
-              </span>
+              </Link>
             </p>
           )}
           {review.experience?.city && (

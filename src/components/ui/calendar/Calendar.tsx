@@ -25,6 +25,7 @@ export interface CalendarProps {
   title?: string;
   strikeThroughUnavailableDates?: boolean;
   monthsToShow?: number;
+  dateHoverCounts?: Record<string, number>;
 }
 
 export const Calendar: React.FC<CalendarProps> = ({
@@ -43,6 +44,7 @@ export const Calendar: React.FC<CalendarProps> = ({
   title = 'Disponibilité du guide',
   strikeThroughUnavailableDates = false,
   monthsToShow = 2,
+  dateHoverCounts,
 }) => {
   const dict = useTranslations();
   const [currentMonth, setCurrentMonth] = useState(dayjs().locale(locale));
@@ -99,6 +101,19 @@ export const Calendar: React.FC<CalendarProps> = ({
 
   const isDateDisabled = (date: Dayjs) => {
     return isDateUnavailable(date) || isDateBeforeMin(date) || isDateAfterMax(date) || isDateNotSelectable(date);
+  };
+
+  const getDateHoverLabel = (date: Dayjs) => {
+    const dateKey = date.format('YYYY-MM-DD');
+    const count = dateHoverCounts?.[dateKey];
+
+    if (!count) return undefined;
+
+    const template = count === 1
+      ? dict.calendar.availabilityCountSingular
+      : dict.calendar.availabilityCountPlural;
+
+    return template.replace('{count}', String(count));
   };
 
   const isDateSelected = (date: Dayjs) => {
@@ -178,6 +193,7 @@ export const Calendar: React.FC<CalendarProps> = ({
       const disabled = isDateDisabled(date);
       const selected = isDateSelected(date);
       const unavailable = isDateUnavailable(date);
+      const hoverLabel = getDateHoverLabel(date);
 
       const disabledClassName =
         strikeThroughUnavailableDates && unavailable
@@ -185,25 +201,32 @@ export const Calendar: React.FC<CalendarProps> = ({
           : 'text-gray-300 cursor-not-allowed border-gray-200';
 
       days.push(
-        <button
-          key={day}
-          onClick={() => handleDateClick(date)}
-          disabled={disabled}
-          className={`
-            h-10 rounded-3xl flex items-center justify-center text-sm font-medium
-            transition-all duration-200 border bg-light px-2
-            ${disabled 
-              ? disabledClassName
-              : 'text-gray-800 hover:bg-gray-100 cursor-pointer border-accent'
-            }
-            ${selected && !disabled 
-              ? 'bg-accent! text-white hover:bg-accent/90 border-accent'
-              : ''
-            }
-          `}
-        >
-          {day}
-        </button>
+        <div key={day} className="relative group">
+          <button
+            onClick={() => handleDateClick(date)}
+            disabled={disabled}
+            aria-label={hoverLabel}
+            className={`
+              h-10 w-full rounded-3xl flex items-center justify-center text-sm font-medium
+              transition-all duration-200 border bg-light px-2
+              ${disabled 
+                ? disabledClassName
+                : 'text-gray-800 hover:bg-gray-100 cursor-pointer border-accent'
+              }
+              ${selected && !disabled 
+                ? 'bg-accent! text-white hover:bg-accent/90 border-accent'
+                : ''
+              }
+            `}
+          >
+            {day}
+          </button>
+          {hoverLabel && !disabled && (
+            <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-full bg-dark px-3 py-1 text-xs font-medium text-white shadow-lg group-hover:block">
+              {hoverLabel}
+            </span>
+          )}
+        </div>
       );
     }
 
