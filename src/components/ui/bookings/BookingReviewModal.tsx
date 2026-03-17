@@ -29,7 +29,7 @@ export default function BookingReviewModal({
   const [hoveredRating, setHoveredRating] = useState(0);
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
-  
+
   const { mutate: createReview, isPending } = useCreateReview();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -64,10 +64,12 @@ export default function BookingReviewModal({
         },
         onError: (error: any) => {
           // Si le backend renvoie un message spécifique (déjà un avis, etc.)
-          const errorMsg = error?.response?.data?.message || "Erreur lors de l'envoi de votre avis.";
+          const errorMsg =
+            error?.response?.data?.message ||
+            "Erreur lors de l'envoi de votre avis.";
           toast.error(errorMsg);
         },
-      }
+      },
     );
   };
 
@@ -76,12 +78,14 @@ export default function BookingReviewModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         {experienceTitle && (
           <p className="text-sm font-medium text-dark/80 mb-2">
-            Concernant : <span className="text-dark font-bold">{experienceTitle}</span>
+            Concernant :{" "}
+            <span className="text-dark font-bold">{experienceTitle}</span>
           </p>
         )}
-        
+
         <p className="text-sm text-dark/80 mb-4">
-          Votre avis aidera d'autres voyageurs à choisir leur prochaine aventure.
+          Votre avis aidera d'autres voyageurs à choisir leur prochaine
+          aventure.
         </p>
 
         <div className="flex flex-col items-center justify-center my-6">
@@ -93,7 +97,7 @@ export default function BookingReviewModal({
               <button
                 key={star}
                 type="button"
-                className="cursor-pointer transition-transform hover:scale-110"
+                className="cursor-pointer transition-transform bg-white hover:scale-110"
                 onMouseEnter={() => setHoveredRating(star)}
                 onMouseLeave={() => setHoveredRating(0)}
                 onClick={() => setRating(star)}
