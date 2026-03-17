@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const NotificationTypeEnum = z.enum(["new_message", "booking_reminder"]);
+export const NotificationTypeEnum = z.enum(["new_message", "booking_reminder", "new_review"]);
 
 export const notificationSchema = z.object({
   id: z.string().uuid(),

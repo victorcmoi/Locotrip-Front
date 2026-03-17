@@ -55,9 +55,11 @@ export default function Header() {
     "language" | "currency"
   >("language");
 
-  const userMenuRef = useRef<HTMLDivElement>(null);
+  const userMenuDesktopRef = useRef<HTMLDivElement>(null);
+  const userMenuMobileRef = useRef<HTMLDivElement>(null);
   const langMenuRef = useRef<HTMLDivElement>(null);
-  const notificationsRef = useRef<HTMLDivElement>(null);
+  const notificationsDesktopRef = useRef<HTMLDivElement>(null);
+  const notificationsMobileRef = useRef<HTMLDivElement>(null);
 
   const { data: notifications } = useNotifications(
     isAuthenticated ? session?.user?.id : undefined,
@@ -74,22 +76,23 @@ export default function Header() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        userMenuRef.current &&
-        !userMenuRef.current.contains(event.target as Node)
-      ) {
+      const isInsideUserMenu =
+        (userMenuDesktopRef.current && userMenuDesktopRef.current.contains(event.target as Node)) ||
+        (userMenuMobileRef.current && userMenuMobileRef.current.contains(event.target as Node));
+      if (!isInsideUserMenu) {
         setIsUserMenuOpen(false);
       }
-      if (
-        langMenuRef.current &&
-        !langMenuRef.current.contains(event.target as Node)
-      ) {
+
+      const isInsideLangMenu =
+        langMenuRef.current && langMenuRef.current.contains(event.target as Node);
+      if (langMenuRef.current && !isInsideLangMenu) {
         setIsLangMenuOpen(false);
       }
-      if (
-        notificationsRef.current &&
-        !notificationsRef.current.contains(event.target as Node)
-      ) {
+
+      const isInsideNotificationsMenu =
+        (notificationsDesktopRef.current && notificationsDesktopRef.current.contains(event.target as Node)) ||
+        (notificationsMobileRef.current && notificationsMobileRef.current.contains(event.target as Node));
+      if (!isInsideNotificationsMenu) {
         setIsNotificationsOpen(false);
       }
     }
@@ -244,7 +247,7 @@ export default function Header() {
         )}
 
         {isAuthenticated && (
-          <div className="relative" ref={notificationsRef}>
+          <div className="relative" ref={notificationsDesktopRef}>
             <div
               className="nav-item cursor-pointer relative"
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
@@ -317,7 +320,7 @@ export default function Header() {
         )}
 
         {/* User menu */}
-        <div className="relative" ref={userMenuRef}>
+        <div className="relative" ref={userMenuDesktopRef}>
           <div
             className={`flex items-center ${isAuthenticated ? "ps-2" : "p-2.5"} border border-dark rounded-full ml-2 gap-3 cursor-pointer hover:shadow-xl transition`}
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -409,7 +412,7 @@ export default function Header() {
           </Link>
         )}
         {isAuthenticated && (
-          <div className="relative" ref={notificationsRef}>
+          <div className="relative" ref={notificationsMobileRef}>
             <button
               className="nav-item relative bg-light"
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
@@ -458,7 +461,7 @@ export default function Header() {
           </div>
         )}
         {/* User menu on mobile */}
-        <div className="relative" ref={userMenuRef}>
+        <div className="relative" ref={userMenuMobileRef}>
           <div
             className={`flex items-center ${isAuthenticated ? "ps-1.5" : "p-2"} border border-dark rounded-full ml-1 gap-2 cursor-pointer hover:shadow-xl transition`}
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}

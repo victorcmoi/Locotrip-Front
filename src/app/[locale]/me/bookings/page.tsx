@@ -8,12 +8,13 @@ import {
 } from "@/services/bookings/getBookings";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import { RefreshCw, HelpCircle, PinIcon } from "lucide-react";
+import { RefreshCw, HelpCircle, PinIcon, StarIcon } from "lucide-react";
 import DropdownMenu from "@/components/ui/DropdownMenu";
 import Image from "next/image";
 import { MinioHelpers } from "@/utils/minio";
 import BookingDetailsModal from "@/components/ui/bookings/BookingDetailsModal";
 import CreateDisputeModal from "@/components/ui/bookings/CreateDisputeModal";
+import BookingReviewModal from "@/components/ui/bookings/BookingReviewModal";
 import { useTranslations } from "@/providers/i18n.provider";
 
 dayjs.locale("fr");
@@ -29,6 +30,7 @@ export default function BookingsPage() {
   const [reportingBookingId, setReportingBookingId] = useState<string | null>(
     null,
   );
+  const [reviewingBooking, setReviewingBooking] = useState<{id: string, experienceId: string, experienceTitle: string} | null>(null);
 
   const {
     data: guideBookings,
@@ -156,6 +158,34 @@ export default function BookingsPage() {
               const endTime = startTime.add(duration, "minute");
               const timeSchedule = `${startTime.format("HH:mm")} - ${endTime.format("HH:mm")}`;
 
+              // Determine which dropdown items to show
+              const dropdownItems = [];
+              
+              dropdownItems.push({
+                label: dict.bookings.updateStatus,
+                icon: RefreshCw,
+                onClick: () => setEditingBookingId(booking.id),
+              });
+              
+              dropdownItems.push({
+                label: dict.bookings.reportIssue,
+                icon: HelpCircle,
+                onClick: () => setReportingBookingId(booking.id),
+              });
+
+              // Add Leave Review button if booking is completed and user is not guide
+              if (!isGuide && booking.status === "completed" && experience?.id) {
+                dropdownItems.push({
+                  label: "Laisser un avis",
+                  icon: StarIcon,
+                  onClick: () => setReviewingBooking({
+                    id: booking.id,
+                    experienceId: experience.id,
+                    experienceTitle: experience.title
+                  }),
+                });
+              }
+
               return (
                 <div
                   key={booking.id}
@@ -229,20 +259,7 @@ export default function BookingsPage() {
                   </div>
 
                   {/* Three dots menu */}
-                  <DropdownMenu
-                    items={[
-                      {
-                        label: dict.bookings.updateStatus,
-                        icon: RefreshCw,
-                        onClick: () => setEditingBookingId(booking.id),
-                      },
-                      {
-                        label: dict.bookings.reportIssue,
-                        icon: HelpCircle,
-                        onClick: () => setReportingBookingId(booking.id),
-                      },
-                    ]}
-                  />
+                  <DropdownMenu items={dropdownItems} />
 
                   {/* Booking Details (Admin Style) Modal */}
                   {editingBookingId === booking.id && (
@@ -262,6 +279,16 @@ export default function BookingsPage() {
                       bookingId={booking.id}
                       isOpen={true}
                       onClose={() => setReportingBookingId(null)}
+                    />
+                  )}
+                  
+                  {/* Booking Review Modal */}
+                  {reviewingBooking?.id === booking.id && (
+                    <BookingReviewModal
+                      experienceId={reviewingBooking.experienceId}
+                      experienceTitle={reviewingBooking.experienceTitle}
+                      isOpen={true}
+                      onClose={() => setReviewingBooking(null)}
                     />
                   )}
                 </div>

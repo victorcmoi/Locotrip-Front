@@ -42,7 +42,7 @@ export default function DropdownMenu({ items }: DropdownMenuProps) {
         <EllipsisVertical size={16} className="text-dark/70" />
       </button>
       {open && (
-        <div className="absolute right-0 mt-1 bg-white rounded-xl shadow-lg w-40 z-20 overflow-hidden">
+        <div className="absolute right-0 mt-1 bg-white rounded-xl shadow-lg w-50   z-20 overflow-hidden">
           {items.map((item, i) => {
             const isDanger = item.variant === "danger";
             const className = `${baseItemClass} ${

@@ -36,5 +36,5 @@ export type SubscriptionType = z.infer<typeof SubscriptionTypeEnum>;
 export const SupportTicketStatusEnum = z.enum(['open', 'in_progress', 'closed']);
 export type SupportTicketStatus = z.infer<typeof SupportTicketStatusEnum>;
 
-export const NotificationTypeEnum = z.enum(['booking_reminder', 'new_message']);
+export const NotificationTypeEnum = z.enum(['booking_reminder', 'new_message', 'new_review']);
 export type NotificationType = z.infer<typeof NotificationTypeEnum>;
