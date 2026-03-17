@@ -5,6 +5,7 @@ class GuidesRoutes {
   private static readonly BASE = '/guides';
   static readonly LIST = this.BASE;
   static readonly BECOME_GUIDE = `${this.BASE}/become-guide`;
+  static readonly REGISTER_GUIDE = `${this.BASE}/guide-register`;
   static readonly DASHBOARD = `${this.BASE}/dashboard`;
   static readonly MY_EXPERIENCES = `${this.BASE}/my-experiences`;
   static readonly STATISTICS = `${this.BASE}/statistics`;
