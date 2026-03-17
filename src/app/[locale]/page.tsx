@@ -15,14 +15,26 @@ import ReviewCard from "@/components/ui/reviews/ReviewCard";
 import { GUIDES_ROUTES, HOME_ROUTES } from "@/utils/routes";
 import { SearchBar } from "@/components/common/SearchBar";
 import { City } from "@/schemas/city";
+import GuidePricing from "@/components/ui/guides/GuidePricing";
 
 export default function Page() {
   const dict = useTranslations();
   const localizedPath = useLocalizedPath();
   const router = useRouter();
-  const { data: guides, isLoading: guidesLoading, error: guidesError } = useTopRatedGuides();
-  const { data: reviews, isLoading: reviewsLoading, error: reviewsError } = useTopRatedReviews();
-   const [initialDateRange, setInitialDateRange] = useState<{ start: Date | null; end: Date | null }>({
+  const {
+    data: guides,
+    isLoading: guidesLoading,
+    error: guidesError,
+  } = useTopRatedGuides();
+  const {
+    data: reviews,
+    isLoading: reviewsLoading,
+    error: reviewsError,
+  } = useTopRatedReviews();
+  const [initialDateRange, setInitialDateRange] = useState<{
+    start: Date | null;
+    end: Date | null;
+  }>({
     start: null,
     end: null,
   });
@@ -36,14 +48,17 @@ export default function Page() {
   }) => {
     const searchParams = new URLSearchParams();
     searchParams.append("mode", params.mode);
-    if (params.selectedCity) searchParams.append("location", params.selectedCity.name);
+    if (params.selectedCity)
+      searchParams.append("location", params.selectedCity.name);
     if (params.dateRange.start) {
       searchParams.append("startDate", params.dateRange.start.toISOString());
     }
     if (params.dateRange.end) {
       searchParams.append("endDate", params.dateRange.end.toISOString());
     }
-    router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${searchParams.toString()}`));
+    router.push(
+      localizedPath(`${HOME_ROUTES.SEARCH}?${searchParams.toString()}`),
+    );
   };
 
   const goToCountrySearch = (country: "France" | "Spain") => {
@@ -58,9 +73,11 @@ export default function Page() {
     searchParams.append("country", country);
     searchParams.append("limit", "100");
 
-    router.push(localizedPath(`${HOME_ROUTES.SEARCH}?${searchParams.toString()}`));
+    router.push(
+      localizedPath(`${HOME_ROUTES.SEARCH}?${searchParams.toString()}`),
+    );
   };
-  
+
   return (
     <div className="min-h-screen">
       <section
@@ -77,7 +94,9 @@ export default function Page() {
         <div className="relative z-10 h-full flex items-center justify-center pb-24">
           <main className="page-content max-w-6xl text-center md:pb-8 text-white">
             <h1 className="mb-8 md:mb-12">{dict.home.title}</h1>
-            <p className="text-xl md:text-3xl mb-12 md:mb-16 w-full md:w-3/5 mx-auto">{dict.home.subtitle}</p>
+            <p className="text-xl md:text-3xl mb-12 md:mb-16 w-full md:w-3/5 mx-auto">
+              {dict.home.subtitle}
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8 md:mt-12 mb-12 md:mb-20">
               <div className="flex flex-col gap-2 border-r-2 border-dashed">
                 <p className="text-2xl font-semibold">{dict.home.assistance}</p>
@@ -192,9 +211,7 @@ export default function Page() {
         <div className="page-content max-w-[90%] grid grid-cols-1 md:grid-cols-3 items-center gap-8 md:gap-12 lg:gap-16">
           <h2 className="text-left cols-span-1">
             {dict.home.statsTitleStart}
-            <span className="text-accent">
-              {dict.home.statsTitleHighlight}
-            </span>
+            <span className="text-accent">{dict.home.statsTitleHighlight}</span>
             {dict.home.statsTitleNext}
             <span className="text-accent">
               {dict.home.statusTitleHighlight2}
@@ -202,36 +219,43 @@ export default function Page() {
             {dict.home.statsTitleEnd}
           </h2>
           <div className="relative h-150 overflow-hidden col-span-2">
-            {bubbles.map(bubble => (
+            {bubbles.map((bubble) => (
               <FloatingBubble key={bubble.id} {...bubble} />
             ))}
           </div>
         </div>
       </section>
 
-      <section id="reviews" className="bg-light py-12 md:py-16 lg:py-20" style={{ background: "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)" }}>
+      <section
+        id="reviews"
+        className="bg-light py-12 md:py-16 lg:py-20"
+        style={{
+          background:
+            "linear-gradient(180deg, #FCC13D 0%, rgba(226, 128, 32, 0.07) 100%)",
+        }}
+      >
         <div className="page-content max-w-[90%]">
-            <h2 className="mb-4">{dict.home.reviewsTitle}</h2>
-            {reviewsLoading && (
-              <div className="mt-8 text-center text-gray">
-                {dict.home.reviewsLoading}
-              </div>
-            )}
-            {reviewsError && (
-              <div className="mt-8 text-center text-error">
-                {dict.home.errorLoadingReviews}
-              </div>
-            )}
-            {reviews && reviews.length > 0 && (
-              <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
-                {reviews.map((review) => (
-                  <div key={review.id}>
-                    <ReviewCard review={review} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <h2 className="mb-4">{dict.home.reviewsTitle}</h2>
+          {reviewsLoading && (
+            <div className="mt-8 text-center text-gray">
+              {dict.home.reviewsLoading}
+            </div>
+          )}
+          {reviewsError && (
+            <div className="mt-8 text-center text-error">
+              {dict.home.errorLoadingReviews}
+            </div>
+          )}
+          {reviews && reviews.length > 0 && (
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
+              {reviews.map((review) => (
+                <div key={review.id}>
+                  <ReviewCard review={review} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </section>
 
       <section id="becomeGuide" className="bg-light py-12 md:py-16 lg:py-20">
@@ -245,7 +269,9 @@ export default function Page() {
                 width={80}
                 height={80}
               />
-              <h4 className="my-8 min-h-16 flex items-center justify-center">{dict.home.guideTitle1}</h4>
+              <h4 className="my-8 min-h-16 flex items-center justify-center">
+                {dict.home.guideTitle1}
+              </h4>
               <span className="text-black flex-1">{dict.home.guideSub1}</span>
             </div>
             <div className="flex flex-col items-center h-full">
@@ -255,7 +281,9 @@ export default function Page() {
                 width={80}
                 height={80}
               />
-              <h4 className="my-8 min-h-16 flex items-center justify-center">{dict.home.guideTitle2}</h4>
+              <h4 className="my-8 min-h-16 flex items-center justify-center">
+                {dict.home.guideTitle2}
+              </h4>
               <span className="text-black flex-1">{dict.home.guideSub2}</span>
             </div>
             <div className="flex flex-col items-center h-full">
@@ -265,7 +293,9 @@ export default function Page() {
                 width={80}
                 height={80}
               />
-              <h4 className="my-8 min-h-16 flex items-center justify-center">{dict.home.guideTitle3}</h4>
+              <h4 className="my-8 min-h-16 flex items-center justify-center">
+                {dict.home.guideTitle3}
+              </h4>
               <span className="text-black flex-1">{dict.home.guideSub3}</span>
             </div>
             <div className="flex flex-col items-center h-full">
@@ -275,16 +305,25 @@ export default function Page() {
                 width={80}
                 height={80}
               />
-              <h4 className="my-8 min-h-16 flex items-center justify-center">{dict.home.guideTitle4}</h4>
+              <h4 className="my-8 min-h-16 flex items-center justify-center">
+                {dict.home.guideTitle4}
+              </h4>
               <span className="text-black flex-1">{dict.home.guideSub4}</span>
             </div>
           </div>
-          <Link 
+          <Link
             href={localizedPath(GUIDES_ROUTES.BECOME_GUIDE)}
             className="px-8 py-3 mt-12 rounded-full font-bold text-white cursor-pointer hover:opacity-70 transition-opacity duration-300 bg-primary inline-block"
           >
             {dict.home.becomeGuideButton}
           </Link>
+        </div>
+      </section>
+
+      {/* PRICING SECTION */}
+      <section id="pricing" className="bg-white py-12 md:py-16 lg:py-20">
+        <div className="page-content max-w-[95%] lg:container mx-auto">
+          <GuidePricing />
         </div>
       </section>
     </div>

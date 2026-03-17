@@ -182,6 +182,84 @@
       "step2": "We review your profile and get back to you within a few days",
       "step3": "If your proposal is accepted, you access your personal space to create your experiences",
       "step4": "You start receiving requests and manage your bookings freely"
+    },
+    "pricing": {
+      "title": "Our Offers for Guides",
+      "subtitle": "Grow your business with Locotrip using tools tailored to every stage of your growth.",
+      "essential": {
+        "title": "Essential",
+        "price": "29 €",
+        "perMonth": " / month",
+        "commission": "+ commission only if you sell",
+        "badge": "Start risk-free",
+        "targetTitle": "Who is this offer for?",
+        "targets": [
+          "Student guides",
+          "Occasional guides / in testing phase",
+          "People without an official card",
+          "Complementary or seasonal activity"
+        ],
+        "activitiesTitle": "Activity Management",
+        "activitiesDesc": "Up to 3 publishable activities, creation/modification of listings, calendar management. Voluntary limitation to avoid overload.",
+        "bookingsTitle": "Bookings & Payments",
+        "bookingsDesc": "Online booking, online payment. Commission only on materialized sales.",
+        "crmTitle": "Client CRM (Basic)",
+        "crmDesc": "Automatic client profile, history, internal notes.",
+        "commsTitle": "Communication & Tracking",
+        "commsDesc": "Transactional messages, basic messaging, revenue/booking tracking for current month.",
+        "whyTitle": "Why this offer?",
+        "whyDesc": "Very low barrier to entry, no financial risk. You pay mainly when you sell, to learn and test.",
+        "cta": "Start in Essential"
+      },
+      "pro": {
+        "recommended": "Recommended",
+        "title": "Pro",
+        "price": "99 €",
+        "perMonth": " / month",
+        "commission": "Zero commission",
+        "badge": "Turn your activity into a real profession",
+        "targetTitle": "Who is this offer for?",
+        "targets": [
+          "Professional & certified guides",
+          "Regular or main activity",
+          "Need for profitability and revenue control"
+        ],
+        "activitiesTitle": "Activity Management",
+        "activitiesDesc": "Up to 15 activities, duplication, fine-grained management (availabilities, quotas).",
+        "bookingsTitle": "Bookings & Payments",
+        "bookingsDesc": "Integrated payment without commission, advanced cancellations, refunds.",
+        "crmTitle": "Client CRM (Complete)",
+        "crmDesc": "Enriched profiles, complete history, tags, and segmentation.",
+        "commsTitle": "Automations & Stats",
+        "commsDesc": "Customizable automatic emails (reminders, follow-ups). Detailed revenue, occupancy rate.",
+        "whyTitle": "Why this offer?",
+        "whyDesc": "You keep 100% of your revenue. The cost becomes fixed and predictable, turning Locotrip into a comprehensive business tool.",
+        "cta": "Upgrade to Pro"
+      },
+      "expert": {
+        "title": "Expert",
+        "price": "199 €",
+        "perMonth": " / month",
+        "commission": "Everything unlocked",
+        "badge": "For agencies and highly active guides",
+        "targetTitle": "Who is this offer for?",
+        "targets": [
+          "Tourism agencies",
+          "Guide collectives",
+          "Multi-activity structures"
+        ],
+        "activitiesTitle": "Advanced Management",
+        "activitiesDesc": "Unlimited activities, multi-guide/accounts, permissions, multiple calendars.",
+        "bookingsTitle": "Invoicing & CRM",
+        "bookingsDesc": "Integrated payment, invoicing, unified client database, cross-activity history and segmentation.",
+        "crmTitle": "Automations & Reporting",
+        "crmDesc": "Custom workflows, automatic follow-ups. Dashboards, overall performance analysis.",
+        "commsTitle": "Integrations & Support",
+        "commsDesc": "API (future), third-party tool integrations, premium support with a dedicated contact.",
+        "whyTitle": "Why this offer?",
+        "whyDesc": "Designed for growth with massive time savings. Comprehensive view of your business without variable costs.",
+        "cta": "Become Expert"
+      }
     }
   },
   "footer": {

@@ -195,6 +195,84 @@
       "step2": "Nous étudions votre profil et revenons vers vous sous quelques jours",
       "step3": "Si votre proposition est retenue, vous accédez à votre espace personnel pour créer vos expériences",
       "step4": "Vous commencez à recevoir des demandes et gérez vos réservations librement"
+    },
+    "pricing": {
+      "title": "Nos Offres pour les Guides",
+      "subtitle": "Développez votre activité avec Locotrip grâce à des outils adaptés à chaque étape de votre croissance.",
+      "essential": {
+        "title": "Essentiel",
+        "price": "29 €",
+        "perMonth": " / mois",
+        "commission": "+ commission uniquement si vous gagnez",
+        "badge": "Démarrez sans risque",
+        "targetTitle": "À qui s’adresse cette offre ?",
+        "targets": [
+          "Étudiants guides",
+          "Guides occasionnels / en phase de test",
+          "Personnes sans carte officielle",
+          "Activité complémentaire ou saisonnière"
+        ],
+        "activitiesTitle": "Gestion des activités",
+        "activitiesDesc": "Jusqu’à 3 activités publiables, création/modification des fiches, gestion calendrier. Limitation volontaire pour éviter la surcharge.",
+        "bookingsTitle": "Réservations & paiements",
+        "bookingsDesc": "Prise de réservation, paiement en ligne. Commission uniquement sur les ventes.",
+        "crmTitle": "CRM clients (basique)",
+        "crmDesc": "Fiche client auto, historique, notes internes.",
+        "commsTitle": "Communication & Suivi",
+        "commsDesc": "Messages transactionnels, messagerie basique, suivi CA / réservations mois en cours.",
+        "whyTitle": "Pourquoi cette offre ?",
+        "whyDesc": "Barrière d’entrée très basse, aucun risque financier. Vous payez surtout quand vous vendez pour apprendre et tester.",
+        "cta": "Commencer en Essentiel"
+      },
+      "pro": {
+        "recommended": "Recommandé",
+        "title": "Pro",
+        "price": "99 €",
+        "perMonth": " / mois",
+        "commission": "Zéro commission",
+        "badge": "Faites de votre activité un vrai métier",
+        "targetTitle": "À qui s’adresse cette offre ?",
+        "targets": [
+          "Guides professionnels & certifiés",
+          "Activité régulière ou principale",
+          "Besoin de rentabilité et de maîtrise du CA"
+        ],
+        "activitiesTitle": "Gestion des activités",
+        "activitiesDesc": "Jusqu’à 15 activités, duplication, gestion fine (disponibilités, quotas).",
+        "bookingsTitle": "Réservations & paiements",
+        "bookingsDesc": "Paiement intégré sans commission, annulations avancées, remboursements.",
+        "crmTitle": "CRM clients (complet)",
+        "crmDesc": "Fiches enrichies, historique complet, tags et segmentation.",
+        "commsTitle": "Automatisations & Stats",
+        "commsDesc": "Emails automatiques (rappel, suivi). CA détaillé, taux de remplissage.",
+        "whyTitle": "Pourquoi cette offre ?",
+        "whyDesc": "Vous gardez 100% de votre chiffre. Le coût devient fixe et prévisible, outil métier complet.",
+        "cta": "Passer en Pro"
+      },
+      "expert": {
+        "title": "Expert",
+        "price": "199 €",
+        "perMonth": " / mois",
+        "commission": "Tout débloqué",
+        "badge": "Pour les agences et les guides très actifs",
+        "targetTitle": "À qui s’adresse cette offre ?",
+        "targets": [
+          "Agences de tourisme",
+          "Collectifs de guides",
+          "Structures multi-activités"
+        ],
+        "activitiesTitle": "Gestion avancée",
+        "activitiesDesc": "Activités illimitées, multi-guides / comptes, permissions, calendriers multiples.",
+        "bookingsTitle": "Facturation & CRM",
+        "bookingsDesc": "Paiement intégré, facturation, base clients unifiée, segmentation et historique.",
+        "crmTitle": "Automatisations & Reporting",
+        "crmDesc": "Workflows personnalisés, relances. Tableaux de bord, analyse de performance globale.",
+        "commsTitle": "Intégrations & Support",
+        "commsDesc": "API (future), intégrations outils tiers, support premium avec interlocuteur dédié.",
+        "whyTitle": "Pourquoi cette offre ?",
+        "whyDesc": "Pensée pour la croissance avec un gain de temps massif. Vision globale de votre activité sans coût variable.",
+        "cta": "Devenir Expert"
+      }
     }
   },
   "footer": {

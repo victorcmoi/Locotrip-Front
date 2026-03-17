@@ -182,6 +182,85 @@
       "step2": "Wir prüfen Ihr Profil und melden uns innerhalb weniger Tage zurück",
       "step3": "Wenn Ihr Vorschlag angenommen wird, erhalten Sie Zugang zu Ihrem persönlichen Bereich, um Ihre Erlebnisse zu erstellen",
       "step4": "Sie beginnen Anfragen zu erhalten und verwalten Ihre Buchungen frei"
+    },
+    "pricing": {
+      "title": "Locotrip für Guides",
+      "subtitle": "Wählen Sie das Angebot, das zu Ihrer Aktivität passt",
+      "essential": {
+        "title": "Essential",
+        "price": "29 €",
+        "perMonth": " / Monat",
+        "commission": "+ Provision nur, wenn Sie verdienen",
+        "badge": "Starten Sie ohne Risiko",
+        "targetTitle": "Für wen ist dieses Angebot?",
+        "targets": [
+          "Studentische Guides",
+          "Gelegentliche Guides",
+          "Guides in der Testphase",
+          "Personen ohne offizielle Karte",
+          "Zusätzliche oder saisonale Aktivität"
+        ],
+        "activitiesTitle": "Aktivitätsverwaltung",
+        "activitiesDesc": "Bis zu 3 veröffentlichbare Aktivitäten, Erstellung und Änderung, Verfügbarkeits- und Kalenderverwaltung.",
+        "bookingsTitle": "Buchungen & Zahlungen",
+        "bookingsDesc": "Online-Buchung, integrierte Zahlung.",
+        "crmTitle": "Kunden-CRM",
+        "crmDesc": "Kundendatenbank, Nachrichten.",
+        "commsTitle": "Kommunikation & Tracking",
+        "commsDesc": "Einfache E-Mail-Erinnerungen, einfache Statistiken.",
+        "whyTitle": "Warum dieses Angebot?",
+        "whyDesc": "Ideal zum Starten und Testen Ihrer Aktivität ohne große Fixkosten.",
+        "cta": "Starten Sie mit Essential"
+      },
+      "pro": {
+        "recommended": "Empfohlen",
+        "title": "Pro",
+        "price": "99 €",
+        "perMonth": " / Monat",
+        "commission": "Keine Provision",
+        "badge": "Machen Sie Ihre Aktivität zu einem echten Beruf",
+        "targetTitle": "Für wen ist dieses Angebot?",
+        "targets": [
+          "Professionelle Guides",
+          "100% ihrer Aktivität gewidmet",
+          "Zertifizierte Guides mit stabilem Volumen"
+        ],
+        "activitiesTitle": "Erweiterte Verwaltung",
+        "activitiesDesc": "Bis zu 15 Aktivitäten, detaillierte Berichte.",
+        "bookingsTitle": "Buchungen & Zahlungen",
+        "bookingsDesc": "Online-Buchung, integrierte Zahlung, einfache Rückerstattungen.",
+        "crmTitle": "Kunden-CRM",
+        "crmDesc": "Erweiterte Datenbank, detaillierte Statistiken.",
+        "commsTitle": "Automatisierungen & Statistiken",
+        "commsDesc": "Automatisierte E-Mail-Sequenz, vorrangiger Support.",
+        "whyTitle": "Warum dieses Angebot?",
+        "whyDesc": "Perfekt für Guides, die sich professionalisieren und ihre Zeit optimieren möchten.",
+        "cta": "Werden Sie Pro"
+      },
+      "expert": {
+        "title": "Expert",
+        "price": "199 €",
+        "perMonth": " / Monat",
+        "commission": "Alles freigeschaltet",
+        "badge": "Für Agenturen und sehr aktive Guides",
+        "targetTitle": "Für wen ist dieses Angebot?",
+        "targets": [
+          "Tourismusagenturen",
+          "Guide-Kollektive",
+          "Multi-Aktivitäts-Strukturen"
+        ],
+        "activitiesTitle": "Erweiterte Verwaltung",
+        "activitiesDesc": "Unbegrenzte Aktivitäten, Multi-Guides / Konten, Berechtigungen, mehrere Kalender.",
+        "bookingsTitle": "Abrechnung & CRM",
+        "bookingsDesc": "Integrierte Zahlung, Abrechnung, einheitlicher Kundenstamm, Segmentierung und Historie.",
+        "crmTitle": "Automatisierungen & Reporting",
+        "crmDesc": "Benutzerdefinierte Workflows, Erinnerungen. Dashboards, globale Leistungsanalyse.",
+        "commsTitle": "Integrationen & Support",
+        "commsDesc": "API (zukünftig), Integration von Drittanbieter-Tools, Premium-Support mit festem Ansprechpartner.",
+        "whyTitle": "Warum dieses Angebot?",
+        "whyDesc": "Entwickelt für Wachstum mit massiver Zeitersparnis. Globale Vision Ihrer Aktivität ohne variable Kosten.",
+        "cta": "Werden Sie Expert"
+      }
     }
   },
   "footer": {

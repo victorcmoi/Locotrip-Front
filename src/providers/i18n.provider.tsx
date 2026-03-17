@@ -10,6 +10,7 @@ type Dictionary = {
   guides: {
     profile: Record<string, string>;
     becomeGuide: Record<string, string>;
+    pricing: Record<string, any>;
   };
   footer: Record<string, string>;
   privacy: Record<string, string>;

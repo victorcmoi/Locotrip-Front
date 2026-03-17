@@ -182,6 +182,85 @@
       "step2": "Estudiamos tu perfil y te respondemos en unos días",
       "step3": "Si tu propuesta es aceptada, accedes a tu espacio personal para crear tus experiencias",
       "step4": "Empiezas a recibir solicitudes y gestionas tus reservas libremente"
+    },
+    "pricing": {
+      "title": "Locotrip para Guías",
+      "subtitle": "Elige la oferta que se adapte a tu actividad",
+      "essential": {
+        "title": "Esencial",
+        "price": "29 €",
+        "perMonth": " / mes",
+        "commission": "+ comisión solo si ganas",
+        "badge": "Empieza sin riesgo",
+        "targetTitle": "¿A quién va dirigida esta oferta?",
+        "targets": [
+          "Estudiantes de guía",
+          "Guías ocasionales",
+          "Guías en fase de prueba",
+          "Personas sin tarjeta oficial",
+          "Actividad complementaria o estacional"
+        ],
+        "activitiesTitle": "Gestión de actividades",
+        "activitiesDesc": "Hasta 3 actividades publicables, creación y modificación, gestión de disponibilidad y calendario.",
+        "bookingsTitle": "Reservas y pagos",
+        "bookingsDesc": "Reserva en línea, pago integrado.",
+        "crmTitle": "CRM de clientes",
+        "crmDesc": "Base de datos de clientes, mensajes.",
+        "commsTitle": "Comunicación y seguimiento",
+        "commsDesc": "Recordatorios básicos por correo electrónico, estadísticas simples.",
+        "whyTitle": "¿Por qué esta oferta?",
+        "whyDesc": "Ideal para comenzar y probar tu actividad sin grandes costos fijos.",
+        "cta": "Empieza con Esencial"
+      },
+      "pro": {
+        "recommended": "Recomendado",
+        "title": "Pro",
+        "price": "99 €",
+        "perMonth": " / mes",
+        "commission": "Cero comisión",
+        "badge": "Haz de tu actividad una verdadera profesión",
+        "targetTitle": "¿A quién va dirigida esta oferta?",
+        "targets": [
+          "Guías profesionales",
+          "100% dedicados a su actividad",
+          "Guías certificados con volumen estable"
+        ],
+        "activitiesTitle": "Gestión avanzada",
+        "activitiesDesc": "Hasta 15 actividades, informes detallados.",
+        "bookingsTitle": "Reservas y pagos",
+        "bookingsDesc": "Reserva en línea, pago integrado, reembolsos fáciles.",
+        "crmTitle": "CRM de clientes",
+        "crmDesc": "Base de datos avanzada, estadísticas detalladas.",
+        "commsTitle": "Automatizaciones y estadísticas",
+        "commsDesc": "Secuencia de correos electrónicos automatizada, soporte prioritario.",
+        "whyTitle": "¿Por qué esta oferta?",
+        "whyDesc": "Perfecto para guías que desean profesionalizarse y optimizar su tiempo.",
+        "cta": "Conviértete en Pro"
+      },
+      "expert": {
+        "title": "Experto",
+        "price": "199 €",
+        "perMonth": " / mes",
+        "commission": "Todo desbloqueado",
+        "badge": "Para agencias y guías muy activos",
+        "targetTitle": "¿A quién va dirigida esta oferta?",
+        "targets": [
+          "Agencias de turismo",
+          "Colectivos de guías",
+          "Estructuras multiactividad"
+        ],
+        "activitiesTitle": "Gestión avanzada",
+        "activitiesDesc": "Actividades ilimitadas, múltiples guías/cuentas, permisos, múltiples calendarios.",
+        "bookingsTitle": "Facturación y CRM",
+        "bookingsDesc": "Pago integrado, facturación, base de clientes unificada, segmentación e historial.",
+        "crmTitle": "Automatizaciones e informes",
+        "crmDesc": "Flujos de trabajo personalizados, recordatorios. Paneles de control, análisis de rendimiento global.",
+        "commsTitle": "Integraciones y soporte",
+        "commsDesc": "API (futuro), integraciones con herramientas de terceros, soporte premium con contacto dedicado.",
+        "whyTitle": "¿Por qué esta oferta?",
+        "whyDesc": "Diseñado para el crecimiento con un ahorro de tiempo masivo. Visión global de tu actividad sin costos variables.",
+        "cta": "Conviértete en Experto"
+      }
     }
   },
   "footer": {

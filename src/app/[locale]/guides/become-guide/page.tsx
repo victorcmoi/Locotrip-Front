@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { GrStatusGood } from "react-icons/gr";
 import { GUIDES_ROUTES } from "@/utils/routes";
+import GuidePricing from "@/components/ui/guides/GuidePricing";
 
 export default function GuidePage() {
   const dict = useTranslations();
@@ -102,6 +103,14 @@ export default function GuidePage() {
             </div>
           </div>
         </div>
+
+        {/* PRICING SECTION */}
+        <section id="pricing" className="py-12 md:py-16 lg:py-20">
+          <div className="page-content lg:container mx-auto">
+            <GuidePricing />
+          </div>
+        </section>
+
         <div className="flex flex-col lg:flex-row py-10 md:py-16 w-full gap-8 lg:gap-16 items-center">
           <div className="px-6 md:px-10 lg:px-12 py-10 md:py-14 w-full lg:w-5/12 rounded-3xl shadow-2xl">
             <h2 className="mb-16 text-center">
