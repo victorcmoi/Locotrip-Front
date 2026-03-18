@@ -351,7 +351,7 @@ export default function Header() {
           </div>
 
           {isUserMenuOpen && (
-            <div className="absolute top-full right-0 mt-2 bg-light border border-gray-light rounded-xl shadow-xl p-2 min-w-120 z-50">
+            <div className="absolute top-full right-0 mt-2 bg-light border border-gray-light rounded-xl shadow-xl p-2 w-60 z-50">
               {!isAuthenticated ? (
                 <>
                   <Link href={localizedPath(AUTH_ROUTES.LOGIN)} className="block w-full text-left p-3 hover:bg-gray-light rounded-lg" onClick={() => setIsUserMenuOpen(false)}>
@@ -480,7 +480,7 @@ export default function Header() {
             )}
           </div>
           {isUserMenuOpen && (
-            <div className="absolute top-full right-0 mt-2 bg-light border border-gray-light rounded-xl shadow-xl p-2 min-w-70 z-50">
+            <div className="absolute top-full right-0 mt-2 bg-light border border-gray-light rounded-xl shadow-xl p-2 w-70 z-50">
               {!isAuthenticated ? (
                 <>
                   <Link href={localizedPath(AUTH_ROUTES.LOGIN)} className="block w-full text-left p-3 hover:bg-gray-light rounded-lg" onClick={() => setIsUserMenuOpen(false)}>{dict.auth.login}</Link>

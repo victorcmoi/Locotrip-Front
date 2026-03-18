@@ -321,7 +321,7 @@ export default function Page() {
       </section>
 
       {/* PRICING SECTION */}
-      <section id="pricing" className="bg-white py-12 md:py-16 lg:py-20">
+      <section id="pricing" className="bg-light py-12 md:py-16 lg:py-20">
         <div className="page-content max-w-[95%] lg:container mx-auto">
           <GuidePricing />
         </div>
