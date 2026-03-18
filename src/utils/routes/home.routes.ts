@@ -5,7 +5,7 @@ class HomeRoutes {
   static readonly HOME = '/';
   static readonly SEARCH = '/search';
   static readonly HELP = '/help';
-  static readonly MESSAGES = '/messages';
+  static readonly MESSAGES = '/me/messages';
   static readonly NOTIFICATIONS = '/notifications';
   static readonly ABOUT = '/about';
   static readonly CONTACT = '/contact';

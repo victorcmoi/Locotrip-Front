@@ -6,7 +6,7 @@ class BookingsRoutes {
 
   static readonly LIST = this.BASE;
   static readonly CREATE = `${this.BASE}/create`;
-  static readonly MY_BOOKINGS = `${this.BASE}/my-bookings`;
+  static readonly MY_BOOKINGS = `/me/bookings`;
   
   // Routes paramétrées
   static readonly DETAIL = (id: string) => `${this.BASE}/${id}`;

@@ -118,7 +118,7 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
         <nav className="bg-black-accent lg:rounded-r-2xl p-4 lg:p-6 flex flex-col h-full shadow-sm">
           {/* Retour au site */}
           <Link
-            href={localizedPath("/")}
+            href="/"
             className="flex items-center gap-3 text-sm text-white transition mb-6 font-normal"
           >
             <ArrowLeft size={14} />
@@ -139,7 +139,7 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
                 userInitials
               )}
             </div>
-            <Link href={localizedPath("/me/profile")} className="">
+            <Link href={localizedPath("/me/manage-profile")} className="">
               <p className="font-semibold text-sm text-white">
                 {session?.user?.first_name} {session?.user?.last_name}
               </p>
@@ -184,7 +184,9 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 lg:py-8">{children}</main>
+      <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+        {children}
+      </main>
     </div>
   );
 }

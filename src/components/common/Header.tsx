@@ -391,7 +391,7 @@ export default function Header() {
                     <CiUser className="w-6 h-6 stroke-1" /> {dict.navigation.profileManagement}
                   </Link>
                   <hr className="my-2 border-gray-light" />
-                  <Link href={localizedPath(SUPPORT_ROUTES.FAQ)} className="flex items-center gap-2 w-full text-left p-3 hover:bg-gray-light rounded-lg" onClick={() => setIsUserMenuOpen(false)}>
+                  <Link href={localizedPath(HOME_ROUTES.HELP)} className="flex items-center gap-2 w-full text-left p-3 hover:bg-gray-light rounded-lg" onClick={() => setIsUserMenuOpen(false)}>
                     <TfiHelpAlt className="w-6 h-6 stroke-0.5" /> {dict.navigation.support}
                   </Link>
                   <button onClick={handleLogout} className="w-full text-left p-3 mt-2 bg-gray-200 hover:bg-gray-light rounded-lg duration-300 cursor-pointer">

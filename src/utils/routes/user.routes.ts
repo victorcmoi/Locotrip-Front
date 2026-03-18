@@ -4,12 +4,7 @@
 class UserRoutes {
   private static readonly BASE = '/me';
 
-  static readonly PROFILE = this.BASE;
-  static readonly EDIT = `${this.BASE}/edit`;
-  static readonly SETTINGS = `${this.BASE}/settings`;
-  static readonly NOTIFICATIONS_SETTINGS = `${this.BASE}/notifications`;
-  static readonly DELETE_ACCOUNT = `${this.BASE}/delete-account`;
-  static readonly MY_REVIEWS = `${this.BASE}/reviews`;
+  static readonly PROFILE = `${this.BASE}/manage-profile`;
 }
 
 export default UserRoutes;

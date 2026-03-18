@@ -44,7 +44,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     start: Date | null;
     end: Date | null;
   }>(initialDateRange);
-  const [selectedMode, setSelectedMode] = useState<"guide" | "activity">(currentMode);
+  const [selectedMode, setSelectedMode] = useState<"guide" | "activity">(
+    currentMode,
+  );
 
   useEffect(() => {
     setSelectedMode(currentMode);
@@ -58,7 +60,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     setSelectedDateRange(initialDateRange);
     if (initialDateRange.start && initialDateRange.end) {
       setSearchDate(
-        `${initialDateRange.start.toLocaleDateString()} - ${initialDateRange.end.toLocaleDateString()}`
+        `${initialDateRange.start.toLocaleDateString()} - ${initialDateRange.end.toLocaleDateString()}`,
       );
     } else if (initialDateRange.start) {
       setSearchDate(initialDateRange.start.toLocaleDateString());
@@ -74,7 +76,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     setSelectedDateRange(range);
     if (range.start && range.end) {
       setSearchDate(
-        `${range.start.toLocaleDateString()} - ${range.end.toLocaleDateString()}`
+        `${range.start.toLocaleDateString()} - ${range.end.toLocaleDateString()}`,
       );
     }
   };
@@ -87,7 +89,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const defaultCity: City = {
       id: "default-paris",
       name: "Paris",
@@ -97,17 +99,17 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       is_suggested: true,
       created_at: new Date(),
     };
-    
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     const finalCity = selectedCity || defaultCity;
     const finalLocation = location || "Paris";
     const finalDateRange = {
       start: selectedDateRange.start || today,
       end: selectedDateRange.end || null,
     };
-    
+
     onSearch({
       mode: selectedMode,
       location: finalLocation,
@@ -117,93 +119,104 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-      <div className={`relative ${className}`}>
-        {showModeButtons && (
-          <nav className="flex justify-center mb-8 md:mb-12">
-            <button
-              onClick={() => {
-                setSelectedMode("guide");
-                onModeChange?.("guide");
-              }}
-              className={`px-8 sm:px-15 py-3 rounded-full cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-300 ${
-                selectedMode === "guide"
-                  ? "bg-accent text-light"
-                  : "bg-light text-dark"
-              }`}
-            >
-              {dict.home.localGuide}
-            </button>
-            <button
-              onClick={() => {
-                setSelectedMode("activity");
-                onModeChange?.("activity");
-              }}
-              className={`px-10 sm:px-18 py-3 rounded-full -ml-6 sm:-ml-10 cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.15)] transition-all duration-300 ${
-                selectedMode === "activity"
-                  ? "bg-accent text-light"
-                  : "bg-light text-dark"
-              }`}
-            >
-              {dict.home.activity}
-            </button>
-          </nav>
-        )}
-        <form
-            onSubmit={handleSearch}
-            className="w-full flex items-center bg-light rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] pl-6 text-black"
+    <div className={`relative ${className}`}>
+      {showModeButtons && (
+        <nav className="relative inline-flex justify-center mb-6 bg-light rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] p-1">
+          {/* Fond animé */}
+          <div
+            className={`absolute top-0 bottom-0 rounded-full bg-accent transition-all duration-300 ease-in-out ${
+              selectedMode === "guide"
+                ? "left-0 right-[50%]"
+                : "left-[50%] right-0"
+            }`}
+            aria-hidden="true"
+          />
+
+          <button
+            onClick={() => {
+              setSelectedMode("guide");
+              onModeChange?.("guide");
+            }}
+            role="tab"
+            aria-selected={selectedMode === "guide"}
+            className={`bg-transparent relative z-10 px-8 sm:px-15 py-3 rounded-full cursor-pointer transition-colors duration-300 ${
+              selectedMode === "guide" ? "text-light" : "text-dark"
+            }`}
           >
-            <LuMapPin size={24} className="text-dark shrink-0" />
-            <input
-              ref={locationInputRef}
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              onFocus={() => setShowLocation(true)}
-              placeholder={dict.home.searchPlace}
-              className="grow px-4 py-2 md:py-3 bg-transparent border-none rounded-full focus:outline-none placeholder:text-gray-500"
-            />
+            {dict.home.localGuide}
+          </button>
 
-            <BsCalendar2 size={24} className="text-dark shrink-0" />
-            <input
-              type="text"
-              value={searchDate}
-              onClick={() => setShowCalendar(!showCalendar)}
-              readOnly
-              placeholder={dict.home.searchDate}
-              className="grow px-4 py-2 md:py-3 bg-transparent border-none rounded-full focus:outline-none placeholder:text-gray-500 cursor-pointer"
-            />
+          <button
+            onClick={() => {
+              setSelectedMode("activity");
+              onModeChange?.("activity");
+            }}
+            role="tab"
+            aria-selected={selectedMode === "activity"}
+            className={`bg-transparent relative z-10 px-10 sm:px-18 py-3 rounded-full cursor-pointer transition-colors duration-300 ${
+              selectedMode === "activity" ? "text-light" : "text-dark"
+            }`}
+          >
+            {dict.home.activity}
+          </button>
+        </nav>
+      )}
+      <form
+        onSubmit={handleSearch}
+        className="w-full flex items-center bg-light rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] pl-6 text-black"
+      >
+        <LuMapPin size={24} className="text-dark shrink-0" />
+        <input
+          ref={locationInputRef}
+          type="text"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          onFocus={() => setShowLocation(true)}
+          placeholder={dict.home.searchPlace}
+          className="grow px-4 py-2 md:py-3 bg-transparent border-none rounded-full focus:outline-none placeholder:text-gray-500"
+        />
 
-            <button
-              type="submit"
-              className="bg-accent text-light p-4 rounded-full hover:bg-accent-dark hover:scale-110 transition-all duration-300 cursor-pointer flex items-center justify-center shrink-0"
-            >
-              <HiMagnifyingGlass size={24} />
-            </button>
-          </form>
+        <BsCalendar2 size={24} className="text-dark shrink-0" />
+        <input
+          type="text"
+          value={searchDate}
+          onClick={() => setShowCalendar(!showCalendar)}
+          readOnly
+          placeholder={dict.home.searchDate}
+          className="grow px-4 py-2 md:py-3 bg-transparent border-none rounded-full focus:outline-none placeholder:text-gray-500 cursor-pointer"
+        />
 
-          {showCalendar && (
-            <Calendar
-              mode="range"
-              selectedRange={selectedDateRange}
-              onChange={(range) =>
-                handleDateRangeChange(
-                  range as { start: Date | null; end: Date | null }
-                )
-              }
-              onClose={() => setShowCalendar(false)}
-              locale="fr"
-            />
-          )}
+        <button
+          type="submit"
+          className="bg-accent text-light p-4 rounded-full hover:bg-accent-dark hover:scale-110 transition-all duration-300 cursor-pointer flex items-center justify-center shrink-0"
+        >
+          <HiMagnifyingGlass size={24} />
+        </button>
+      </form>
 
-          {showLocation && (
-            <Location
-              selectedCity={selectedCity}
-              onChange={handleCitySelect}
-              onClose={() => setShowLocation(false)}
-              searchQuery={location}
-              ignoreRef={locationInputRef}
-            />
-          )}
-      </div>
+      {showCalendar && (
+        <Calendar
+          mode="range"
+          selectedRange={selectedDateRange}
+          onChange={(range) =>
+            handleDateRangeChange(
+              range as { start: Date | null; end: Date | null },
+            )
+          }
+          onClose={() => setShowCalendar(false)}
+          locale="fr"
+        />
+      )}
+
+      {showLocation && (
+        <Location
+          selectedCity={selectedCity}
+          onChange={handleCitySelect}
+          onClose={() => setShowLocation(false)}
+          searchQuery={location}
+          ignoreRef={locationInputRef}
+        />
+      )}
+    </div>
   );
 };

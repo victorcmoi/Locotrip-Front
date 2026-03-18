@@ -9,7 +9,7 @@ export default function MePage() {
   const localizedPath = useLocalizedPath();
 
   useEffect(() => {
-    router.replace(localizedPath("/me/bookings"));
+    router.replace(localizedPath("/me/manage-profile"));
   }, [router, localizedPath]);
 
   return null;
