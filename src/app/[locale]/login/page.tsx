@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import LoginForm from "@/components/auth/FormLogin";
 import { HOME_ROUTES, SUPPORT_ROUTES } from "@/utils/routes";
@@ -37,7 +37,9 @@ export default function Page() {
 
         {/* Formulaire */}
         <div className="mt-8">
-          <LoginForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <LoginForm />
+          </Suspense>
         </div>
       </div>
     </div>

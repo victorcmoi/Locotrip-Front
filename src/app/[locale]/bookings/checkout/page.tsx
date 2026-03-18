@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useLocalizedPath, useTranslations } from '@/providers/i18n.provider';
@@ -105,7 +105,7 @@ function CheckoutForm({
   );
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const dict = useTranslations();
   const localizedPath = useLocalizedPath();
   const router = useRouter();
@@ -277,3 +277,12 @@ export default function CheckoutPage() {
     </section>
   );
 }
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center">Loading checkout...</div>}>
+      <CheckoutContent />
+    </Suspense>
+  );
+}
+

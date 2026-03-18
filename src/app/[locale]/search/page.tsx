@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocalizedPath } from "@/providers/i18n.provider";
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSearchGuides, useSearchExperiences } from "@/services/search/search";
 import { HOME_ROUTES } from "@/utils/routes";
@@ -15,7 +15,7 @@ import type { Experience } from "@/schemas/experience";
 
 const ITEMS_PER_PAGE = 12;
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const localizedPath = useLocalizedPath();
@@ -741,5 +741,13 @@ export default function SearchPage() {
         onReset={handleResetModalFilters}
       />
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-light pt-8 pb-12 flex items-center justify-center">Loading search...</div>}>
+      <SearchContent />
+    </Suspense>
   );
 }
