@@ -107,7 +107,7 @@ export default function Header() {
   }, []);
 
   const handleLogout = async () => {
-    await signOut({ callbackUrl: localizedPath("/") });
+    await signOut({ callbackUrl: `${window.location.origin}${localizedPath("/")}` });
   };
 
   const changeLanguage = (newLocale: string) => {
@@ -145,7 +145,7 @@ export default function Header() {
           </div>
 
           {isLangMenuOpen && (
-            <div className="absolute top-full right-0 mt-2 bg-white border border-gray-light rounded-xl shadow-xl min-w-150 sm:min-w-160 z-50">
+            <div className="absolute top-full right-0 mt-2 bg-white border border-gray-light rounded-xl shadow-xl w-60 z-50">
               <div className="flex border-b border-gray-light">
                 <button
                   onClick={() => setLangCurrencyTab("language")}

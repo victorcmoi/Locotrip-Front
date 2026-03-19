@@ -99,7 +99,7 @@ export default function MeLayout({ children }: { children: React.ReactNode }) {
   }
 
   const handleLogout = async () => {
-    await signOut({ callbackUrl: localizedPath("/") });
+    await signOut({ callbackUrl: `${window.location.origin}${localizedPath("/")}` });
   };
 
   const userInitials =
