@@ -1,4 +1,4 @@
-import { useTranslations } from "@/providers/i18n.provider";
+import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import Image from "next/image";
 import { Guide } from "@/schemas/guide";
 import { IoCheckmarkCircle } from "react-icons/io5";
@@ -15,6 +15,7 @@ interface GuideCardProps {
 
 export default function GuideCard({ guide }: GuideCardProps) {
   const dict = useTranslations();
+  const localizedPath = useLocalizedPath();
   const hobbies = guide.hobbies?.map((h) => h.category?.name).filter((name): name is string => Boolean(name)) || [];
   const profilePicture = guide.medias?.[0]?.url;
   const avgRating = guide.avgRating ?? 0;
@@ -24,7 +25,7 @@ export default function GuideCard({ guide }: GuideCardProps) {
   return (
     <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col border border-gray-light ">
       {/* Image de fond avec infos du guide */}
-      <Link href={GuidesRoutes.PROFILE(guide.id)} className="relative h-48 w-full block cursor-pointer overflow-hidden group">
+      <Link href={localizedPath(GuidesRoutes.PROFILE(guide.id))} className="relative h-48 w-full block cursor-pointer overflow-hidden group">
         <Image
           src={MinioHelpers.guideProfile(guide.id, profilePicture)}
           alt={`${guide.user?.first_name || guide.user?.first_name} ${guide.user?.last_name || guide.user?.last_name}`}
@@ -114,7 +115,9 @@ export default function GuideCard({ guide }: GuideCardProps) {
 
         {/* Bouton */}
         <button className="mx-auto hover:bg-accent text-light transition-colors duration-300 cursor-pointer text-base py-2.5">
-          {dict.home.sendMessage}
+          <Link href={localizedPath(GuidesRoutes.PROFILE(guide.id))}>
+            {dict.common.viewProfile}
+          </Link>
         </button>
       </div>
     </div>

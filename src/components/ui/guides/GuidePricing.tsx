@@ -24,7 +24,11 @@ import Link from "next/link";
 import { useLocalizedPath, useTranslations } from "@/providers/i18n.provider";
 import { GUIDES_ROUTES } from "@/utils/routes";
 
-export default function GuidePricing() {
+interface GuidePricingProps {
+  variant?: "short" | "detailed";
+}
+
+export default function GuidePricing({ variant = "detailed" }: GuidePricingProps) {
   const localizedPath = useLocalizedPath();
   const dict = useTranslations();
 
@@ -87,7 +91,9 @@ export default function GuidePricing() {
               </ul>
             </div>
 
-            <div className="space-y-4">
+            {variant === "detailed" && (
+              <>
+                <div className="space-y-4">
               <div className="text-sm">
                 <h5 className="font-bold flex items-center gap-2 mb-1 text-gray-800">
                   <Compass size={16} className="text-accent" />{" "}
@@ -135,13 +141,15 @@ export default function GuidePricing() {
                 {dict.guides.pricing.essential.whyDesc}
               </p>
             </div>
+              </>
+            )}
 
             <div className="pt-4 mt-auto">
               <Link
-                href={localizedPath(GUIDES_ROUTES.REGISTER_GUIDE)}
+                href={variant === "short" ? localizedPath(GUIDES_ROUTES.BECOME_GUIDE) : localizedPath(GUIDES_ROUTES.REGISTER_GUIDE)}
                 className="block text-center w-full py-3 px-6 rounded-full font-semibold border-2 border-accent text-accent hover:bg-accent hover:text-white transition-colors duration-300"
               >
-                {dict.guides.pricing.essential.cta}
+                {variant === "short" ? dict.guides.pricing.seeMoreDetails : dict.guides.pricing.essential.cta}
               </Link>
             </div>
           </div>
@@ -195,7 +203,9 @@ export default function GuidePricing() {
               </ul>
             </div>
 
-            <div className="space-y-4">
+            {variant === "detailed" && (
+              <>
+                <div className="space-y-4">
               <div className="text-sm">
                 <h5 className="font-bold !text-base flex items-center gap-2 mb-1 text-gray-800">
                   <Compass size={16} className="text-primary" />{" "}
@@ -243,13 +253,15 @@ export default function GuidePricing() {
                 {dict.guides.pricing.pro.whyDesc}
               </p>
             </div>
+              </>
+            )}
 
             <div className="pt-4 mt-auto">
               <Link
-                href={localizedPath(GUIDES_ROUTES.REGISTER_GUIDE)}
+                href={variant === "short" ? localizedPath(GUIDES_ROUTES.BECOME_GUIDE) : localizedPath(GUIDES_ROUTES.REGISTER_GUIDE)}
                 className="block text-center w-full py-3 px-6 rounded-full font-semibold bg-primary text-white hover:opacity-80 transition-opacity duration-300 shadow-md"
               >
-                {dict.guides.pricing.pro.cta}
+                {variant === "short" ? dict.guides.pricing.seeMoreDetails : dict.guides.pricing.pro.cta}
               </Link>
             </div>
           </div>
@@ -300,7 +312,9 @@ export default function GuidePricing() {
               </ul>
             </div>
 
-            <div className="space-y-4">
+            {variant === "detailed" && (
+              <>
+                <div className="space-y-4">
               <div className="text-sm">
                 <h5 className="font-bold !text-base flex items-center gap-2 mb-1 text-gray-800">
                   <Compass size={16} className="text-accent" />{" "}
@@ -348,13 +362,15 @@ export default function GuidePricing() {
                 {dict.guides.pricing.expert.whyDesc}
               </p>
             </div>
+              </>
+            )}
 
             <div className="pt-4 mt-auto">
               <Link
-                href={localizedPath(GUIDES_ROUTES.REGISTER_GUIDE)}
+                href={variant === "short" ? localizedPath(GUIDES_ROUTES.BECOME_GUIDE) : localizedPath(GUIDES_ROUTES.REGISTER_GUIDE)}
                 className="block text-center w-full py-3 px-6 rounded-full font-semibold border-2 border-accent text-accent hover:bg-accent hover:text-white transition-colors duration-300"
               >
-                {dict.guides.pricing.expert.cta}
+                {variant === "short" ? dict.guides.pricing.seeMoreDetails : dict.guides.pricing.expert.cta}
               </Link>
             </div>
           </div>

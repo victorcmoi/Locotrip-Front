@@ -17,7 +17,8 @@
     "review": "opiniones",
     "languages": "Idioma:",
     "person": "Pers",
-    "checkAvailability": "Verificar disponibilidad",
+    "checkAvailability": "Ver la experiencia",
+    "viewProfile": "Ver perfil",
     "yes": "Sí",
     "no": "No",
     "backToSite": "Volver al sitio",
@@ -184,6 +185,7 @@
       "step4": "Empiezas a recibir solicitudes y gestionas tus reservas libremente"
     },
     "pricing": {
+      "seeMoreDetails": "Ver más detalles",
       "title": "Locotrip para Guías",
       "subtitle": "Elige la oferta que se adapte a tu actividad",
       "essential": {
@@ -636,5 +638,17 @@
     "booster": "Impulsar",
     "deleteExperienceTitle": "Eliminar experiencia",
     "deleteExperienceMessage": "¿Seguro que deseas eliminar « {title} »? Esta acción es irreversible."
+  },
+  "contact": {
+    "title": "Contáctenos",
+    "subtitle": "¿Una pregunta? ¿Un proyecto? Nuestro equipo está a su disposición.",
+    "name": "Nombre completo",
+    "email": "Dirección de correo electrónico",
+    "subject": "Asunto",
+    "message": "Su mensaje",
+    "send": "Enviar mensaje",
+    "sending": "Enviando...",
+    "success": "¡Su mensaje ha sido enviado con éxito! Le responderemos pronto.",
+    "error": "Se produjo un error al enviar el mensaje. Por favor, inténtelo de nuevo."
   }
 }

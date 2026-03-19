@@ -1,4 +1,4 @@
-import { useTranslations } from "@/providers/i18n.provider";
+import { useTranslations, useLocalizedPath } from "@/providers/i18n.provider";
 import Image from "next/image";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { LuMapPin } from "react-icons/lu";
@@ -13,10 +13,12 @@ import GuidesRoutes from "@/utils/routes/guides.routes";
 
 interface ExperienceCardProps {
   experience: Experience;
+  showGuide?: boolean;
 }
 
-export default function ExperienceCard({ experience }: ExperienceCardProps) {
+export default function ExperienceCard({ experience, showGuide = true }: ExperienceCardProps) {
   const dict = useTranslations();
+  const localizedPath = useLocalizedPath();
   const guide = experience.guide;
   const experienceReviewCount = experience.reviewCount ?? experience.reviews?.length ?? 0;
   const avgRating =
@@ -43,7 +45,7 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
   return (
     <div className="bg-light rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col border border-gray-light">
       {/* Image de l'expérience */}
-      <Link href={ExperiencesRoutes.DETAIL(experience.id)} target="_blank" rel="noopener noreferrer" className="relative h-48 w-full block cursor-pointer overflow-hidden group">
+      <Link href={localizedPath(ExperiencesRoutes.DETAIL(experience.id))} className="relative h-48 w-full block cursor-pointer overflow-hidden group">
         <Image
           src={MinioHelpers.experience(experienceImage)}
           alt={experience.title}
@@ -55,26 +57,30 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
       {/* Contenu de la carte */}
       <div className="p-6 flex-1 flex flex-col">
         {/* Pp guide */}
-        <Link href={GuidesRoutes.PROFILE(guide.id)} className="flex justify-center -mt-20 mb-3">
-          <div className="relative w-24 h-24 rounded-full border-4 border-white overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300">
-            <Image
-              src={MinioHelpers.guideProfile(guide.id, guideProfilePicture)}
-              alt={`${guide.user?.first_name} ${guide.user?.last_name}`}
-              fill
-              className="object-cover"
-            />
-          </div>
-        </Link>
+        {showGuide && (
+          <Link href={localizedPath(GuidesRoutes.PROFILE(guide.id))} className="flex justify-center -mt-20 mb-3">
+            <div className="relative w-24 h-24 rounded-full border-4 border-white overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300">
+              <Image
+                src={MinioHelpers.guideProfile(guide.id, guideProfilePicture)}
+                alt={`${guide.user?.first_name} ${guide.user?.last_name}`}
+                fill
+                className="object-cover"
+              />
+            </div>
+          </Link>
+        )}
 
         {/* Nom guide */}
-        <Link href={GuidesRoutes.PROFILE(guide.id)} className="flex items-center gap-2 mb-4 justify-center hover:opacity-80 transition-opacity">
-          <p className="text-base text-dark">
-            {dict.search.experienceName} <span className="font-bold text-dark">{guide.user?.first_name}</span> <span className="font-bold uppercase text-dark">{guide.user?.last_name}</span>
-          </p>
-          {guide?.pro_card && (
-            <IoCheckmarkCircle className="text-accent text-2xl" />
-          )}
-        </Link>
+        {showGuide && (
+          <Link href={localizedPath(GuidesRoutes.PROFILE(guide.id))} className="flex items-center gap-2 mb-4 justify-center hover:opacity-80 transition-opacity">
+            <p className="text-base text-dark">
+              {dict.search.experienceName} <span className="font-bold text-dark">{guide.user?.first_name}</span> <span className="font-bold uppercase text-dark">{guide.user?.last_name}</span>
+            </p>
+            {guide?.pro_card && (
+              <IoCheckmarkCircle className="text-accent text-2xl" />
+            )}
+          </Link>
+        )}
 
         {/* Note */}
         {experienceReviewCount > 0 ? (
@@ -97,7 +103,7 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
         )}
 
         {/* Titre expérience */}
-        <Link href={ExperiencesRoutes.DETAIL(experience.id)} target="_blank" rel="noopener noreferrer">
+        <Link href={localizedPath(ExperiencesRoutes.DETAIL(experience.id))}>
           <h3 className="text-center font-bold text-2xl! text-accent mb-4 line-clamp-2 hover:underline cursor-pointer">
             {experience.title}
           </h3>
@@ -141,7 +147,7 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
 
         {/* Bouton */}
         <button className="mx-auto hover:bg-accent text-light transition-colors duration-300 cursor-pointer text-base py-2.5">
-          <Link href={ExperiencesRoutes.DETAIL(experience.id)} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+          <Link href={localizedPath(ExperiencesRoutes.DETAIL(experience.id))} className="block w-full h-full">
             {dict.common.checkAvailability}
           </Link>
         </button>

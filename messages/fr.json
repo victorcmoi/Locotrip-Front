@@ -17,7 +17,8 @@
     "review": "avis",
     "languages": "Langues :",
     "person": "Pers",
-    "checkAvailability": "Vérifier ses disponibilités",
+    "checkAvailability": "Voir l'expérience",
+    "viewProfile": "Voir le profil",
     "yes": "Oui",
     "no": "Non",
     "backToSite": "Retour au site",
@@ -197,6 +198,7 @@
       "step4": "Vous commencez à recevoir des demandes et gérez vos réservations librement"
     },
     "pricing": {
+      "seeMoreDetails": "Voir plus de détails",
       "title": "Nos Offres pour les Guides",
       "subtitle": "Développez votre activité avec Locotrip grâce à des outils adaptés à chaque étape de votre croissance.",
       "essential": {
@@ -652,5 +654,17 @@
     "booster": "Booster",
     "deleteExperienceTitle": "Supprimer l'expérience",
     "deleteExperienceMessage": "Êtes-vous sûr de vouloir supprimer « {title} » ? Cette action est irréversible."
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Une question ? Un projet ? Notre éguipe est à votre écoute.",
+    "name": "Nom complet",
+    "email": "Adresse e-mail",
+    "subject": "Objet",
+    "message": "Votre message",
+    "send": "Envoyer le message",
+    "sending": "Envoi en cours...",
+    "success": "Votre message a été envoyé avec succès ! Nous vous répondrons sous peu.",
+    "error": "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer."
   }
 }

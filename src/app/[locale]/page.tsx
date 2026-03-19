@@ -82,7 +82,7 @@ export default function Page() {
     <div className="min-h-screen">
       <section
         id="research"
-        className="relative min-h-screen pt-20 md:pt-10 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-24 after:bg-light after:rounded-t-[50%]"
+        className="relative min-h-screen flex flex-col justify-center pt-20 md:pt-10 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-24 after:bg-light after:rounded-t-[50%]"
       >
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-[0.75]"
@@ -323,7 +323,7 @@ export default function Page() {
       {/* PRICING SECTION */}
       <section id="pricing" className="bg-light py-12 md:py-16 lg:py-20">
         <div className="page-content max-w-[95%] lg:container mx-auto">
-          <GuidePricing />
+          <GuidePricing variant="short" />
         </div>
       </section>
     </div>

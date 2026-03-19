@@ -17,7 +17,8 @@
     "review": "Bewertungen",
     "languages": "Sprache:",
     "person": "Pers",
-    "checkAvailability": "Verfügbarkeit prüfen",
+    "checkAvailability": "Erlebnis ansehen",
+    "viewProfile": "Profil ansehen",
     "yes": "Ja",
     "no": "Nein",
     "backToSite": "Zurück zur Website",
@@ -184,6 +185,7 @@
       "step4": "Sie beginnen Anfragen zu erhalten und verwalten Ihre Buchungen frei"
     },
     "pricing": {
+      "seeMoreDetails": "Weitere Details ansehen",
       "title": "Locotrip für Guides",
       "subtitle": "Wählen Sie das Angebot, das zu Ihrer Aktivität passt",
       "essential": {
@@ -636,5 +638,17 @@
     "booster": "Boosten",
     "deleteExperienceTitle": "Erlebnis löschen",
     "deleteExperienceMessage": "Möchten Sie \"{title}\" wirklich löschen? Diese Aktion ist unwiderruflich."
+  },
+  "contact": {
+    "title": "Kontaktieren Sie uns",
+    "subtitle": "Eine Frage? Ein Projekt? Unser Team steht Ihnen zur Verfügung.",
+    "name": "Vollständiger Name",
+    "email": "E-Mail-Adresse",
+    "subject": "Betreff",
+    "message": "Ihre Nachricht",
+    "send": "Nachricht senden",
+    "sending": "Wird gesendet...",
+    "success": "Ihre Nachricht wurde erfolgreich gesendet! Wir werden uns in Kürze bei Ihnen melden.",
+    "error": "Beim Senden der Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
   }
 }

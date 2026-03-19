@@ -8,9 +8,10 @@ import ExperienceCard from "./ExperienceCard";
 
 interface ExperiencesCarouselProps {
   experiences: Experience[];
+  showGuide?: boolean;
 }
 
-export default function ExperiencesCarousel({ experiences }: ExperiencesCarouselProps) {
+export default function ExperiencesCarousel({ experiences, showGuide = true }: ExperiencesCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     containScroll: "trimSnaps",
@@ -46,7 +47,7 @@ export default function ExperiencesCarousel({ experiences }: ExperiencesCarousel
         <div className="flex gap-8 pb-4">
           {experiences.map((experience) => (
             <div key={experience.id} className="flex-[0_0_88%] sm:flex-[0_0_calc(50%-16px)] xl:flex-[0_0_calc(33.333%-22px)] min-w-0">
-              <ExperienceCard experience={experience} />
+              <ExperienceCard experience={experience} showGuide={showGuide} />
             </div>
           ))}
         </div>
